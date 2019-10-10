@@ -30,11 +30,11 @@ class LoginPresenter(private val _view: LoginView) : ILoginPresenter<LoginView>(
     }
 
     fun validate(email: String, password: String) : Boolean{
-        if(email.isNullOrEmpty()){
+        if(email.isEmpty()){
             Toast.makeText(_view.getContext(), "Введите Email", Toast.LENGTH_SHORT).show()
             return false
         }
-        else if (password.isNullOrEmpty()){
+        else if (password.isEmpty()){
             Toast.makeText(_view.getContext(), "Введите пароль", Toast.LENGTH_SHORT).show()
             return false
         }else{
