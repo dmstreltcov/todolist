@@ -1,4 +1,4 @@
 package ru.skillbranch.todolist.ui.task
 
-class TaskPresenter : ITaskPresenter{
+interface ITaskPresenter {
 }
