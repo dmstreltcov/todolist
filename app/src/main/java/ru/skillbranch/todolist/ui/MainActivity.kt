@@ -3,11 +3,11 @@ package ru.skillbranch.todolist.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import ru.skillbranch.todolist.R
 import ru.skillbranch.todolist.ui.auth.login.LoginActivity
-import ru.skillbranch.todolist.ui.auth.singup.SingUpActivity
 import ru.skillbranch.todolist.ui.tasklist.TaskListActivity
 
 class MainActivity : AppCompatActivity() {
@@ -28,23 +28,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateUI(currentUser: FirebaseUser?) {
-        when(currentUser){
+        when (currentUser) {
             null -> onLoginPage()
             else -> onTaskListPage(currentUser)
         }
     }
 
-    private fun onSingUpPage() {
-        val intent: Intent = Intent(this, SingUpActivity::class.java)
-        startActivity(intent)
-    }
-
     private fun onLoginPage() {
+        Log.d(TAG, "Переход на страницу авторизации")
         val intent: Intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
     }
 
-    private fun onTaskListPage(currentUser: FirebaseUser?){
+    private fun onTaskListPage(currentUser: FirebaseUser?) {
+        Log.d(TAG, "Переход на страницу со списком задач")
         val intent: Intent = Intent(this, TaskListActivity::class.java)
         intent.putExtra("currentUser", currentUser)
         startActivity(intent)

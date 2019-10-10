@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import ru.skillbranch.todolist.R
 
-class SingUpActivity : AppCompatActivity() {
+class SingUpActivity : AppCompatActivity(), SingUpView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
