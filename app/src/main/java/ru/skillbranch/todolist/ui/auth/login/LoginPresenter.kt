@@ -9,7 +9,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
 
 
-class LoginPresenter(val _view: LoginView) : ILoginPresenter<LoginView>() {
+class LoginPresenter(private val _view: LoginView) : ILoginPresenter<LoginView>() {
 
     private val TAG: String = "LoginPresenter"
     private var db:DataBase = FirebaseDB()

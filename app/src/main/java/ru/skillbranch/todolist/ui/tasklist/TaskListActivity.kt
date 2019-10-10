@@ -12,7 +12,7 @@ class TaskListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
-        currentUser = intent.getParcelableExtra("currentUser")!! // <- вот тут мне кажется чепуха
+        currentUser = intent.getParcelableExtra("user")!! // <- вот тут мне кажется чепуха
     }
 
 

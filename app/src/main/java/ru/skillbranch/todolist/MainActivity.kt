@@ -37,12 +37,14 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "Переход на страницу авторизации")
         val intent: Intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     private fun onTaskListPage(currentUser: FirebaseUser?) {
         Log.d(TAG, "Переход на страницу со списком задач")
         val intent: Intent = Intent(this, TaskListActivity::class.java)
-        intent.putExtra("currentUser", currentUser)
+        intent.putExtra("user", currentUser)
         startActivity(intent)
+        finish()
     }
 }

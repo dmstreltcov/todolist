@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import com.google.firebase.auth.FirebaseUser
@@ -24,6 +25,9 @@ class LoginActivity : AppCompatActivity(), LoginView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         init()
+        loginBtn.setOnClickListener{
+            presenter.onLoginButton(email.text.toString(), password.text.toString())
+        }
     }
 
     private fun init() {
@@ -33,7 +37,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
     }
 
     override fun login() {
-        presenter.onLoginButton(email.text.toString(), password.text.toString())
+
     }
 
     override fun updateUI(user: FirebaseUser){
@@ -42,8 +46,6 @@ class LoginActivity : AppCompatActivity(), LoginView {
         startActivity(intent)
         finish()
     }
-
-
 
     override fun getContext(): Context = this
 
