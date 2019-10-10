@@ -15,15 +15,30 @@ class LoginPresenter(private val _view: LoginView) : ILoginPresenter<LoginView>(
     private var db:DataBase = FirebaseDB()
 
     override fun onLoginButton(email:String, password:String) {
-        db.login(email, password).addOnCompleteListener{task ->
-            if (task.isSuccessful){
-                Log.d(TAG, "Login with email: success")
-                _view.updateUI(db.currentUser() as FirebaseUser)
+        if (validate(email,password)){
+            db.login(email, password).addOnCompleteListener{task ->
+                if (task.isSuccessful){
+                    Log.d(TAG, "Login with email: success")
+                    _view.updateUI(db.currentUser() as FirebaseUser)
+                }
+                else{
+                    Log.d(TAG, "Login with email: failed")
+                    Toast.makeText(_view.getContext(),"Something goes wrong",Toast.LENGTH_SHORT).show()
+                }
             }
-            else{
-                Log.d(TAG, "Login with email: failed")
-                Toast.makeText(_view.getContext(),"Something goes wrong",Toast.LENGTH_SHORT).show()
-            }
+        }
+    }
+
+    fun validate(email: String, password: String) : Boolean{
+        if(email.isNullOrEmpty()){
+            Toast.makeText(_view.getContext(), "Введите Email", Toast.LENGTH_SHORT).show()
+            return false
+        }
+        else if (password.isNullOrEmpty()){
+            Toast.makeText(_view.getContext(), "Введите пароль", Toast.LENGTH_SHORT).show()
+            return false
+        }else{
+            return true
         }
     }
 
