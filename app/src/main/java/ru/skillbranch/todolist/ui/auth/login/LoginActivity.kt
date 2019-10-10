@@ -25,7 +25,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         init()
-        loginBtn.setOnClickListener{
+        loginBtn.setOnClickListener {
             presenter.onLoginButton(email.text.toString(), password.text.toString())
         }
     }
@@ -40,7 +40,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
 
     }
 
-    override fun updateUI(user: FirebaseUser){
+    override fun updateUI(user: FirebaseUser) {
         val intent: Intent = Intent(this, TaskListActivity::class.java)
         intent.putExtra("user", user)
         startActivity(intent)

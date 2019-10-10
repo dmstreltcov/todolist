@@ -12,32 +12,31 @@ import com.google.firebase.auth.FirebaseUser
 class LoginPresenter(private val _view: LoginView) : ILoginPresenter<LoginView>() {
 
     private val TAG: String = "LoginPresenter"
-    private var db:DataBase = FirebaseDB()
+    private var db: DataBase = FirebaseDB()
 
-    override fun onLoginButton(email:String, password:String) {
-        if (validate(email,password)){
-            db.login(email, password).addOnCompleteListener{task ->
-                if (task.isSuccessful){
+    override fun onLoginButton(email: String, password: String) {
+        if (validate(email, password)) {
+            db.login(email, password).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
                     Log.d(TAG, "Login with email: success")
                     _view.updateUI(db.currentUser() as FirebaseUser)
-                }
-                else{
+                } else {
                     Log.d(TAG, "Login with email: failed")
-                    Toast.makeText(_view.getContext(),"Something goes wrong",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(_view.getContext(), "Something goes wrong", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
     }
 
-    fun validate(email: String, password: String) : Boolean{
-        if(email.isEmpty()){
+    fun validate(email: String, password: String): Boolean {
+        if (email.isEmpty()) {
             Toast.makeText(_view.getContext(), "Введите Email", Toast.LENGTH_SHORT).show()
             return false
-        }
-        else if (password.isEmpty()){
+        } else if (password.isEmpty()) {
             Toast.makeText(_view.getContext(), "Введите пароль", Toast.LENGTH_SHORT).show()
             return false
-        }else{
+        } else {
             return true
         }
     }
