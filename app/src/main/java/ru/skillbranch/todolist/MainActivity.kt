@@ -1,4 +1,4 @@
-package ru.skillbranch.todolist.ui
+package ru.skillbranch.todolist
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import ru.skillbranch.todolist.R
 import ru.skillbranch.todolist.ui.auth.login.LoginActivity
 import ru.skillbranch.todolist.ui.tasklist.TaskListActivity
 

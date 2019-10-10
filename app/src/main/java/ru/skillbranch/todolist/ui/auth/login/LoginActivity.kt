@@ -1,11 +1,14 @@
 package ru.skillbranch.todolist.ui.auth.login
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import com.google.firebase.auth.FirebaseUser
 import ru.skillbranch.todolist.R
+import ru.skillbranch.todolist.ui.tasklist.TaskListActivity
 
 class LoginActivity : AppCompatActivity(), LoginView {
 
@@ -33,9 +36,14 @@ class LoginActivity : AppCompatActivity(), LoginView {
         presenter.onLoginButton(email.text.toString(), password.text.toString())
     }
 
-    override fun updateUI(){
-
+    override fun updateUI(user: FirebaseUser){
+        val intent: Intent = Intent(this, TaskListActivity::class.java)
+        intent.putExtra("user", user)
+        startActivity(intent)
+        finish()
     }
+
+
 
     override fun getContext(): Context = this
 

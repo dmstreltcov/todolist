@@ -13,7 +13,7 @@
         <activity android:name=".ui.auth.login.LoginActivity" />
         <activity android:name=".ui.auth.LoginActivity" />
         <activity android:name=".ui.tasklist.TaskListActivity" />
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
