@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseUser
 import ru.skillbranch.todolist.R
 import ru.skillbranch.todolist.ui.auth.login.LoginActivity
 import ru.skillbranch.todolist.ui.auth.singup.SingUpActivity
+import ru.skillbranch.todolist.ui.tasklist.TaskListActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,8 +29,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateUI(currentUser: FirebaseUser?) {
         when(currentUser){
-            null -> onSingUpPage()
-            else -> onLoginPage(currentUser)
+            null -> onLoginPage()
+            else -> onTaskListPage(currentUser)
         }
     }
 
@@ -38,8 +39,14 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun onLoginPage(currentUser: FirebaseUser?) {
+    private fun onLoginPage() {
         val intent: Intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun onTaskListPage(currentUser: FirebaseUser?){
+        val intent: Intent = Intent(this, TaskListActivity::class.java)
+        intent.putExtra("currentUser", currentUser)
         startActivity(intent)
     }
 }
