@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.auth.singup.SingUpActivity"></activity>
+        <activity android:name=".ui.task.TaskActivity"></activity>
+        <activity android:name=".ui.auth.singup.SignUpActivity" />
         <activity android:name=".ui.auth.login.LoginActivity" />
         <activity android:name=".ui.auth.LoginActivity" />
         <activity android:name=".ui.tasklist.TaskListActivity" />

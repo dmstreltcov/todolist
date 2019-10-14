@@ -1,4 +1,6 @@
 package ru.skillbranch.todolist.ui.task
 
-interface TaskView {
+import ru.skillbranch.todolist.base.BaseView
+
+interface TaskView : BaseView{
 }

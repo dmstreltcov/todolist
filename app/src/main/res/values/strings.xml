@@ -3,13 +3,13 @@
 
 
     <!--Titles-->
-    <string name="login_title">Login</string>
+    <string name="log_in_title">Login</string>
     <string name="sing_up_title">Sing up</string>
     <string name="task_list_title">Task list</string>
 
 
     <!--Buttons-->
-    <string name="login_btn">Login</string>
+    <string name="log_in_btn">Login</string>
     <string name="sing_up_btn">Singup</string>
 
     <string name="sing_up_google">Google</string>

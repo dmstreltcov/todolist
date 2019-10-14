@@ -5,4 +5,5 @@ import ru.skillbranch.todolist.base.BaseView
 
 interface LoginView : BaseView{
     fun updateUI(user: FirebaseUser)
+    fun signUp()
 }

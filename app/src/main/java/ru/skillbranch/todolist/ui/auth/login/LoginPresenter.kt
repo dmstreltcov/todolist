@@ -2,10 +2,8 @@ package ru.skillbranch.todolist.ui.auth.login
 
 import android.util.Log
 import android.widget.Toast
-import com.google.android.gms.tasks.OnCompleteListener
 import ru.skillbranch.todolist.data.DataBase
 import ru.skillbranch.todolist.data.FirebaseDB
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
 import ru.skillbranch.todolist.base.BasePresenter
 
@@ -30,15 +28,21 @@ class LoginPresenter<T> : BasePresenter<LoginView>() {
         }
     }
 
+    fun onSignupButton(){
+        view?.signUp()
+    }
+
     private fun validate(email: String, password: String): Boolean {
-        if (email.isEmpty()) {
-            Toast.makeText(view?.getContext(), "Введите Email", Toast.LENGTH_SHORT).show()
-            return false
-        } else if (password.isEmpty()) {
-            Toast.makeText(view?.getContext(), "Введите пароль", Toast.LENGTH_SHORT).show()
-            return false
-        } else {
-            return true
+        return when {
+            email.isEmpty() -> {
+                Toast.makeText(view?.getContext(), "Введите Email", Toast.LENGTH_SHORT).show()
+                false
+            }
+            password.isEmpty() -> {
+                Toast.makeText(view?.getContext(), "Введите пароль", Toast.LENGTH_SHORT).show()
+                false
+            }
+            else -> true
         }
     }
 }

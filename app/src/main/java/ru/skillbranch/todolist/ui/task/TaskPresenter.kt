@@ -1,4 +1,6 @@
 package ru.skillbranch.todolist.ui.task
 
-class TaskPresenter : ITaskPresenter{
+import ru.skillbranch.todolist.base.BasePresenter
+
+class TaskPresenter : BasePresenter<TaskView>(){
 }

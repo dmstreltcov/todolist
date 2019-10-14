@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/login_title"
-        android:text="@string/login_title"
+        android:text="@string/log_in_title"
         android:textSize="28sp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"/>
@@ -35,9 +35,16 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/login_btn"
-        android:text="@string/login_btn"
+        android:id="@+id/log_in_btn"
+        android:text="@string/log_in_btn"
         android:layout_below="@+id/password_input"
+        android:layout_centerHorizontal="true"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sing_up_btn"
+        android:text="@string/sing_up_btn"
+        android:layout_below="@id/log_in_btn"
         android:layout_centerHorizontal="true"/>
 
 
