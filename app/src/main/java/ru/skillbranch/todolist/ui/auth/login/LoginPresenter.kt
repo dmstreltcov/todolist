@@ -7,47 +7,38 @@ import ru.skillbranch.todolist.data.DataBase
 import ru.skillbranch.todolist.data.FirebaseDB
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
+import ru.skillbranch.todolist.base.BasePresenter
 
 
-class LoginPresenter(private val _view: LoginView) : ILoginPresenter<LoginView>() {
+class LoginPresenter<T> : BasePresenter<LoginView>() {
 
     private val TAG: String = "LoginPresenter"
     private var db: DataBase = FirebaseDB()
 
-    override fun onLoginButton(email: String, password: String) {
+     fun onLoginButton(email: String, password: String) {
         if (validate(email, password)) {
             db.login(email, password).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "Login with email: success")
-                    _view.updateUI(db.currentUser() as FirebaseUser)
+                    view?.updateUI(db.currentUser() as FirebaseUser)
                 } else {
                     Log.d(TAG, "Login with email: failed")
-                    Toast.makeText(_view.getContext(), "Something goes wrong", Toast.LENGTH_SHORT)
+                    Toast.makeText(view?.getContext(), "Something goes wrong", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
         }
     }
 
-    fun validate(email: String, password: String): Boolean {
+    private fun validate(email: String, password: String): Boolean {
         if (email.isEmpty()) {
-            Toast.makeText(_view.getContext(), "Введите Email", Toast.LENGTH_SHORT).show()
+            Toast.makeText(view?.getContext(), "Введите Email", Toast.LENGTH_SHORT).show()
             return false
         } else if (password.isEmpty()) {
-            Toast.makeText(_view.getContext(), "Введите пароль", Toast.LENGTH_SHORT).show()
+            Toast.makeText(view?.getContext(), "Введите пароль", Toast.LENGTH_SHORT).show()
             return false
         } else {
             return true
         }
     }
-
-    override fun onSingupButton() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onRestorePassword() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-
 }

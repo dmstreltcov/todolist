@@ -15,7 +15,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
 
 
     private val TAG: String = "LoginActivity"
-    private val presenter: ILoginPresenter<LoginView> by lazy { LoginPresenter(this) }
+    private val presenter: LoginPresenter<LoginView> by lazy { LoginPresenter<LoginView>() }
 
     private lateinit var email: EditText
     private lateinit var password: EditText
@@ -24,7 +24,9 @@ class LoginActivity : AppCompatActivity(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        presenter.attach(this)
         init()
+
         loginBtn.setOnClickListener {
             presenter.onLoginButton(email.text.toString(), password.text.toString())
         }
@@ -36,10 +38,6 @@ class LoginActivity : AppCompatActivity(), LoginView {
         loginBtn = findViewById(R.id.login_btn)
     }
 
-    override fun login() {
-
-    }
-
     override fun updateUI(user: FirebaseUser) {
         val intent: Intent = Intent(this, TaskListActivity::class.java)
         intent.putExtra("user", user)
@@ -49,5 +47,8 @@ class LoginActivity : AppCompatActivity(), LoginView {
 
     override fun getContext(): Context = this
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detach()
+    }
 }
