@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,8 +7,48 @@
     tools:context=".ui.auth.singup.SignUpActivity">
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Signup" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:id="@+id/sign_up_title"
+        android:text="@string/sing_up_title"
+        android:textSize="@dimen/title_size"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/email_input"
+        android:layout_below="@+id/sign_up_title"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/email_input_hint"
+        android:inputType="textEmailAddress"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/password_input"
+        android:hint="@string/password_input_hint"
+        android:layout_below="@+id/email_input"
+        android:layout_centerHorizontal="true"
+        android:inputType="textPassword"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sign_up_btn"
+        android:text="@string/sign_up_btn"
+        android:layout_below="@+id/password_input"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/google_sign_up_btn"
+        android:text="@string/sign_up_google"
+        android:layout_below="@+id/sign_up_btn"
+        android:layout_centerHorizontal="true"/>
+
+
+
+</RelativeLayout>

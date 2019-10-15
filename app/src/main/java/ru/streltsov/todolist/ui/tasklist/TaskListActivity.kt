@@ -10,7 +10,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
 
     private lateinit var currentUser: FirebaseUser
     private val TAG: String = "TaskListActivity"
-    private val presenter: ITaskListPresenter<TaskListView> by lazy { TaskListPresenter(this) }
+    private val presenter: TaskListPresenter<TaskListView> by lazy { TaskListPresenter<TaskListView>() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

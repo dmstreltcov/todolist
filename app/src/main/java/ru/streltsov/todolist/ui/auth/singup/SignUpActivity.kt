@@ -21,4 +21,9 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
     }
 
     override fun getContext(): Context = this
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detach()
+    }
 }

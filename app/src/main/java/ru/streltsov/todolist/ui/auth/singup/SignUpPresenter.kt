@@ -4,4 +4,6 @@ import ru.streltsov.todolist.base.BasePresenter
 
 class SignUpPresenter<T> : BasePresenter<SignUpView>() {
 
+
+
 }
