@@ -30,11 +30,6 @@ class SignUpPresenter<T> : BasePresenter<SignUpView>() {
     }
 
     fun onGoogleSignUp() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-
-        val googleSignInClient = GoogleSignIn.getClient(view!!.getContext(),gso)
 
 
     }

@@ -11,15 +11,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.SignInButton
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
-import kotlinx.android.synthetic.main.activity_login.*
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.tasklist.TaskListActivity
 import com.google.android.gms.common.api.ApiException
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 
 
 
@@ -47,7 +44,7 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
             presenter.onSignUp(emailInput.text.toString(), passwordInput.text.toString())
         }
         googleSingUp.setOnClickListener {
-            presenter.onGoogleSignUp()
+            signIn()
         }
     }
 
@@ -96,7 +93,11 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
     }
 
     private fun updateUI(googleSignInAccount: GoogleSignInAccount?){
-
+        Log.d(TAG, "Update UI")
+        val intent: Intent = Intent(this, TaskListActivity::class.java)
+        intent.putExtra("account", googleSignInAccount)
+        startActivity(intent)
+        finish()
     }
 
     override fun getContext(): Context = this
