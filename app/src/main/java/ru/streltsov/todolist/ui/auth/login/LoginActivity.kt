@@ -40,7 +40,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
         email = findViewById(R.id.email_input)
         password = findViewById(R.id.password_input)
         loginBtn = findViewById(R.id.log_in_btn)
-        signUpBtn = findViewById(R.id.sing_up_btn)
+        signUpBtn = findViewById(R.id.sign_up_btn)
     }
 
     override fun signUp(){

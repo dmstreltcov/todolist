@@ -17,4 +17,12 @@ class FirebaseDB : DataBase {
 
     override fun login(email:String, password:String) =
         mAuth.signInWithEmailAndPassword(email, password)
+
+    override fun signUp(email:String, password:String) =
+        mAuth.createUserWithEmailAndPassword(email, password)
+
+
+    fun googleSignUp(){
+
+    }
 }

@@ -42,7 +42,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/sing_up_btn"
+        android:id="@+id/sign_up_btn"
         android:text="@string/sign_up_btn"
         android:layout_below="@id/log_in_btn"
         android:layout_centerHorizontal="true"/>

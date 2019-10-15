@@ -7,4 +7,5 @@ import com.google.firebase.auth.AuthResult
 interface DataBase {
     fun login(email: String, password: String): Task<AuthResult>  //<- вот это мне не совсем нравится, какой-то костыль
     fun currentUser():Parcelable
+    fun signUp(email: String, password: String): Task<AuthResult>
 }
