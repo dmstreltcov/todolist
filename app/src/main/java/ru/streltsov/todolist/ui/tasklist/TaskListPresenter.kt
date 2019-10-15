@@ -8,10 +8,5 @@ import ru.streltsov.todolist.data.FirebaseDB
 
 class TaskListPresenter<T> : BasePresenter<TaskListView>() {
 
-    private val TAG: String = "TaskListPresenter"
-    private var db: DataBase = FirebaseDB()
 
-    fun onLoadData(currentUser: Parcelable) {
-
-    }
 }

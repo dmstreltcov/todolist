@@ -1,11 +1,15 @@
 package ru.streltsov.todolist.ui.auth.singup
 
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.base.BasePresenter
 import ru.streltsov.todolist.data.DataBase
 import ru.streltsov.todolist.data.FirebaseDB
+import kotlin.math.sign
 
 class SignUpPresenter<T> : BasePresenter<SignUpView>() {
 
@@ -26,6 +30,12 @@ class SignUpPresenter<T> : BasePresenter<SignUpView>() {
     }
 
     fun onGoogleSignUp() {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+
+        val googleSignInClient = GoogleSignIn.getClient(view!!.getContext(),gso)
+
 
     }
 

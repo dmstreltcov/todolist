@@ -7,10 +7,21 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.tasklist.TaskListActivity
+import com.google.android.gms.common.api.ApiException
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
 
 class SignUpActivity : AppCompatActivity(), SignUpView {
 
@@ -21,17 +32,46 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
     private lateinit var emailInput: EditText
     private lateinit var passwordInput: EditText
 
+    private lateinit var gso: GoogleSignInOptions
+    private lateinit var googleSignInClient:GoogleSignInClient
+    private val RC_SIGN_IN = 9001
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
         presenter.attach(this)
         init()
+
         signUp.setOnClickListener {
             presenter.onSignUp(emailInput.text.toString(), passwordInput.text.toString())
         }
-
         googleSingUp.setOnClickListener {
+            presenter.onGoogleSignUp()
+        }
+    }
 
+    private fun signIn(){
+        val signIntIntent: Intent = googleSignInClient.signInIntent
+        startActivityForResult(signIntIntent, RC_SIGN_IN )
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN){
+            val task:Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleSignInResult(task)
+        }
+    }
+
+    private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            updateUI(account)
+        } catch (e: ApiException) {
+            Log.w(TAG, "signInResult:failed code=" + e.statusCode)
+            updateUI(null)
         }
 
     }
@@ -41,6 +81,10 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
         googleSingUp = findViewById(R.id.google_sign_up_btn)
         emailInput = findViewById(R.id.email_input)
         passwordInput = findViewById(R.id.password_input)
+        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this,gso)
     }
 
     override fun updateUI(user: FirebaseUser) {
@@ -49,6 +93,10 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
         intent.putExtra("user", user)
         startActivity(intent)
         finish()
+    }
+
+    private fun updateUI(googleSignInAccount: GoogleSignInAccount?){
+
     }
 
     override fun getContext(): Context = this

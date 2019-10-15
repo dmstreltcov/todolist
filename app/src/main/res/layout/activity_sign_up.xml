@@ -41,7 +41,7 @@
         android:layout_below="@+id/password_input"
         android:layout_centerHorizontal="true"/>
 
-    <Button
+    <com.google.android.gms.common.SignInButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/google_sign_up_btn"

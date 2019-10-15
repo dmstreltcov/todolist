@@ -1,14 +1,18 @@
 package ru.streltsov.todolist.data
 
 import android.os.Parcelable
+import android.util.Log
 import android.widget.NumberPicker
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 
 class FirebaseDB : DataBase {
 
+    private val TAG:String = "Firebase DataBase"
     private val mAuth:FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun currentUser(): Parcelable {
@@ -22,7 +26,9 @@ class FirebaseDB : DataBase {
         mAuth.createUserWithEmailAndPassword(email, password)
 
 
-    fun googleSignUp(){
-
+    override fun googleSignUp(acct:GoogleSignInAccount) : Task<AuthResult>{
+        Log.d(TAG, "Firebase Auth With Google: " + acct.id)
+        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+        return mAuth.signInWithCredential(credential)
     }
 }

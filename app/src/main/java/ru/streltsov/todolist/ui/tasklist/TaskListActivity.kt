@@ -8,14 +8,16 @@ import ru.streltsov.todolist.R
 
 class TaskListActivity : AppCompatActivity(), TaskListView {
 
-    private lateinit var currentUser: FirebaseUser
+    private var currentUser: FirebaseUser? = null
+
     private val TAG: String = "TaskListActivity"
     private val presenter: TaskListPresenter<TaskListView> by lazy { TaskListPresenter<TaskListView>() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
-        currentUser = intent.getParcelableExtra("user")!! // <- вот тут мне кажется чепуха
+        currentUser = intent?.getParcelableExtra("user") // <- вот тут мне кажется чепуха
+
 
 
     }
