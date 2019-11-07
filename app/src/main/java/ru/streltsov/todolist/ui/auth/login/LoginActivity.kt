@@ -7,15 +7,17 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseUser
+import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.auth.singup.SignUpActivity
 import ru.streltsov.todolist.ui.tasklist.TaskListActivity
 
 class LoginActivity : AppCompatActivity(), LoginView {
 
-    private val TAG: String = "LoginActivity"
-    private val presenter: LoginPresenter<LoginView> by lazy { LoginPresenter<LoginView>() }
+    private val TAG: String = "TAG_LoginActivity"
+    private val presenter: LoginPresenter by lazy { LoginPresenter() }
 
     private lateinit var email: EditText
     private lateinit var password: EditText
@@ -27,6 +29,13 @@ class LoginActivity : AppCompatActivity(), LoginView {
         setContentView(R.layout.activity_login)
         presenter.attach(this)
         init()
+    }
+
+    private fun init() {
+        email = findViewById(R.id.email_input)
+        password = findViewById(R.id.password_input)
+        loginBtn = findViewById(R.id.log_in_btn)
+        signUpBtn = findViewById(R.id.sign_up_btn)
 
         loginBtn.setOnClickListener {
             presenter.onLoginButton(email.text.toString(), password.text.toString())
@@ -36,13 +45,6 @@ class LoginActivity : AppCompatActivity(), LoginView {
         }
     }
 
-    private fun init() {
-        email = findViewById(R.id.email_input)
-        password = findViewById(R.id.password_input)
-        loginBtn = findViewById(R.id.log_in_btn)
-        signUpBtn = findViewById(R.id.sign_up_btn)
-    }
-
     override fun signUp(){
         val intent: Intent = Intent(this, SignUpActivity::class.java)
         startActivity(intent)
@@ -50,10 +52,13 @@ class LoginActivity : AppCompatActivity(), LoginView {
 
     override fun updateUI(user: FirebaseUser) {
         Log.d(TAG, "Update UI")
-        val intent: Intent = Intent(this, TaskListActivity::class.java)
-        intent.putExtra("user", user)
+        val intent: Intent = MainActivity.createTaskListIntent(this,user) // Не уверен насчет такого решения, но так сделал
         startActivity(intent)
         finish()
+    }
+
+    override fun showError(message:String){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun getContext(): Context = this

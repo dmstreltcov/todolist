@@ -23,15 +23,12 @@ import com.google.android.gms.common.api.ApiException
 class SignUpActivity : AppCompatActivity(), SignUpView {
 
     private val TAG: String = "SignUpActivity"
-    private val presenter: SignUpPresenter<SignUpView> by lazy { SignUpPresenter<SignUpView>() }
+    private val presenter: SignUpPresenter by lazy { SignUpPresenter() }
     private lateinit var signUp: Button
     private lateinit var googleSingUp: Button
     private lateinit var emailInput: EditText
     private lateinit var passwordInput: EditText
 
-    private lateinit var gso: GoogleSignInOptions
-    private lateinit var googleSignInClient:GoogleSignInClient
-    private val RC_SIGN_IN = 9001
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,17 +46,6 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
     }
 
     private fun signIn(){
-        val signIntIntent: Intent = googleSignInClient.signInIntent
-        startActivityForResult(signIntIntent, RC_SIGN_IN )
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN){
-            val task:Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
-            handleSignInResult(task)
-        }
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
@@ -78,10 +64,6 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
         googleSingUp = findViewById(R.id.google_sign_up_btn)
         emailInput = findViewById(R.id.email_input)
         passwordInput = findViewById(R.id.password_input)
-        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .build()
-        googleSignInClient = GoogleSignIn.getClient(this,gso)
     }
 
     override fun updateUI(user: FirebaseUser) {

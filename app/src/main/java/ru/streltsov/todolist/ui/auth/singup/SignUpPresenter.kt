@@ -11,7 +11,7 @@ import ru.streltsov.todolist.data.DataBase
 import ru.streltsov.todolist.data.FirebaseDB
 import kotlin.math.sign
 
-class SignUpPresenter<T> : BasePresenter<SignUpView>() {
+class SignUpPresenter : BasePresenter<SignUpView>() {
 
     private val TAG: String = "SignUpPresenter"
     private var db: DataBase = FirebaseDB()

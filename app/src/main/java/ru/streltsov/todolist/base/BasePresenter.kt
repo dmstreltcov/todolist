@@ -1,8 +1,8 @@
 package ru.streltsov.todolist.base
 
-open class BasePresenter<V:BaseView> {
+open class BasePresenter<V : BaseView> {
 
-    protected var view:V? = null
+    protected var view: V? = null
         private set
 
     var isAttached = view != null
