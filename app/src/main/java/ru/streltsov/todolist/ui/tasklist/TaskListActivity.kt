@@ -10,6 +10,7 @@ import ru.streltsov.todolist.R
 
 class TaskListActivity : AppCompatActivity(), TaskListView {
 
+
     private var currentUser: FirebaseUser? = null
 
     private val TAG: String = "TaskListActivity"
@@ -20,6 +21,10 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
         Log.d(TAG, "OnCreate()")
         setContentView(R.layout.activity_task_list)
         currentUser = intent?.getParcelableExtra("user") // <- вот тут мне кажется чепуха
+    }
+
+    override fun loadData() {
+        presenter.onLoadData()
     }
 
     override fun showError(message: String) {

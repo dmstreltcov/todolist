@@ -17,12 +17,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d(TAG, "OnCreate()")
         setContentView(R.layout.activity_main)
         mAuth = FirebaseAuth.getInstance()
-    }
-
-    override fun onStart() {
-        super.onStart()
         val currentUser: FirebaseUser? = mAuth.currentUser
         updateUI(currentUser)
     }

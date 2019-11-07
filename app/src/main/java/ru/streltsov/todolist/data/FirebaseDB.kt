@@ -9,11 +9,15 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 class FirebaseDB : DataBase {
 
     private val TAG:String = "Firebase DataBase"
     private val mAuth:FirebaseAuth = FirebaseAuth.getInstance()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun currentUser(): Parcelable {
         return mAuth.currentUser!!
@@ -24,5 +28,10 @@ class FirebaseDB : DataBase {
 
     override fun signUp(email:String, password:String) =
         mAuth.createUserWithEmailAndPassword(email, password)
+
+    override fun getData() : Query{
+        val dataRef:CollectionReference = db.collection("task")
+        return dataRef.orderBy("id")
+    }
 
 }
