@@ -9,5 +9,4 @@ interface DataBase {
     fun login(email: String, password: String): Task<AuthResult>  //<- вот это мне не совсем нравится, какой-то костыль
     fun currentUser():Parcelable
     fun signUp(email: String, password: String): Task<AuthResult>
-    fun googleSignUp(acct: GoogleSignInAccount): Task<AuthResult>    //<- Считаю, что это не правильно потому что в локальной бд возможно не будет авторизации через google
 }

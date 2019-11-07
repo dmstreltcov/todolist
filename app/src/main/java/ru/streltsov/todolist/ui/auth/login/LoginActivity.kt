@@ -12,7 +12,6 @@ import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.auth.singup.SignUpActivity
-import ru.streltsov.todolist.ui.tasklist.TaskListActivity
 
 class LoginActivity : AppCompatActivity(), LoginView {
 
@@ -41,7 +40,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
             presenter.onLoginButton(email.text.toString(), password.text.toString())
         }
         signUpBtn.setOnClickListener {
-            presenter.onSignupButton()
+            presenter.onSignUpButton()
         }
     }
 

@@ -6,9 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".ui.tasklist.TaskListActivity">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/tasklist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Task List Activity" />
+        />
+
+
 
 </LinearLayout>

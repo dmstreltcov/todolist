@@ -27,7 +27,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
         }
     }
 
-    fun onSignupButton() {
+    fun onSignUpButton() {
         view?.signUp()
     }
 

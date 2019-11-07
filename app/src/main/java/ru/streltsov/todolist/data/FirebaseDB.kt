@@ -17,7 +17,7 @@ class FirebaseDB : DataBase {
 
     override fun currentUser(): Parcelable {
         return mAuth.currentUser!!
-    }
+    } //Почему-то не нравится вот это
 
     override fun login(email:String, password:String) =
         mAuth.signInWithEmailAndPassword(email, password)
@@ -25,10 +25,4 @@ class FirebaseDB : DataBase {
     override fun signUp(email:String, password:String) =
         mAuth.createUserWithEmailAndPassword(email, password)
 
-
-    override fun googleSignUp(acct:GoogleSignInAccount) : Task<AuthResult>{
-        Log.d(TAG, "Firebase Auth With Google: " + acct.id)
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
-        return mAuth.signInWithCredential(credential)
-    }
 }

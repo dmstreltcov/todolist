@@ -6,7 +6,7 @@ import ru.streltsov.todolist.base.BasePresenter
 import ru.streltsov.todolist.data.DataBase
 import ru.streltsov.todolist.data.FirebaseDB
 
-class TaskListPresenter<T> : BasePresenter<TaskListView>() {
+class TaskListPresenter : BasePresenter<TaskListView>() {
 
 
 }

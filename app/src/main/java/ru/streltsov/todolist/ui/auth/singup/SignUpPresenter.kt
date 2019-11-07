@@ -17,21 +17,30 @@ class SignUpPresenter : BasePresenter<SignUpView>() {
     private var db: DataBase = FirebaseDB()
 
     fun onSignUp(email: String, password: String) {
-        db.signUp(email, password).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d(TAG, "Signup with email: success")
-                view?.updateUI(db.currentUser() as FirebaseUser)
-            } else {
-                Log.d(TAG, "Signup with email: failed")
-                Toast.makeText(view?.getContext(), "Something goes wrong", Toast.LENGTH_SHORT)
-                    .show()
+        if (validate(email, password)) {
+            db.signUp(email, password).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "SignUp with email: success")
+                    view?.updateUI(db.currentUser() as FirebaseUser)
+                } else {
+                    Log.d(TAG, "Signup with email: failed")
+                    view?.showError("Не удалось зарегистрироваться")
+                }
             }
         }
     }
 
-    fun onGoogleSignUp() {
-
-
-    }
-
+    private fun validate(email: String, password: String): Boolean {
+        return when {
+            email.isEmpty() -> {
+                view?.showError("Введите email")
+                false
+            }
+            password.isEmpty() -> {
+                view?.showError("Введите пароль")
+                false
+            }
+            else -> true
+        }
+    } //Не выполняется принцип DRY. Решение, которое я могу предложить: Создать абстрактный класс, например AuthPresenter : BasePresenter<V: BaseView> и в нем метод на валидацию
 }
