@@ -13,8 +13,6 @@ class TaskListPresenter : BasePresenter<TaskListView>() {
 
     private var db: DataBase = FirebaseDB()
 
-    var options:FirestoreRecyclerOptions<Task> = FirestoreRecyclerOptions.Builder<Task>().setQuery(db.getData(), Task::class.java).build()
-
     fun onLoadData() : Query{
         return db.getData()
     }

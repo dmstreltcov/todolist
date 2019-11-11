@@ -31,7 +31,7 @@ class FirebaseDB : DataBase {
         mAuth.createUserWithEmailAndPassword(email, password)
 
     override fun getData(): Query {
-        return db.collection("tasks")
+        return db.collection("tasks").orderBy("id")
     }
 
 }
