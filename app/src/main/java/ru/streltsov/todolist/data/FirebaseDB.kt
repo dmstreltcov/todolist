@@ -1,18 +1,12 @@
 package ru.streltsov.todolist.data
 
 import android.os.Parcelable
-import android.util.Log
-import android.widget.NumberPicker
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 
 class FirebaseDB : DataBase {
 
@@ -32,6 +26,14 @@ class FirebaseDB : DataBase {
 
     override fun getData(): Query {
         return db.collection("tasks").orderBy("id")
+    }
+
+    override fun deleteTask(id: Long){
+        db.collection("tasks").whereEqualTo("id", id).get().addOnCompleteListener {
+            for (document:QueryDocumentSnapshot in it.result!!){
+                document.reference.delete()
+            }
+        }
     }
 
 }

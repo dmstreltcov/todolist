@@ -19,6 +19,8 @@
     <!--Hints-->
     <string name="email_input_hint">Email</string>
     <string name="password_input_hint">Password</string>
+    <string name="edit_task">Edit</string>
+    <string name="delete_task_btn">Delete</string>
 
 
 </resources>

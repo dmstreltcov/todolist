@@ -57,10 +57,6 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun openTask(){
-
-    }
-
     override fun getContext(): Context = this
 
     override fun onResume() {
