@@ -28,7 +28,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
     private lateinit var recyclerView: RecyclerView
     lateinit var linearLayout: LinearLayoutManager
     private lateinit var adapter: TaskListAdapter
-
+    private lateinit var query: Query
+    private lateinit var options: FirestoreRecyclerOptions<Task>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,22 +43,22 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
         loadData()
     }
 
-
     override fun loadData() {
-        val query: Query = presenter.onLoadData()
-        val options = FirestoreRecyclerOptions.Builder<Task>()
+        query = presenter.onLoadData()
+        options = FirestoreRecyclerOptions.Builder<Task>()
             .setQuery(query, Task::class.java)
             .build()  //хм
-
         adapter = TaskListAdapter(options)
-
         recyclerView.adapter = adapter
 
     }
 
-
     override fun showError(message: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun openTask(){
+
     }
 
     override fun getContext(): Context = this
