@@ -1,5 +1,7 @@
 package ru.streltsov.todolist.ui.task
 
+import android.util.Log
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QueryDocumentSnapshot
@@ -15,8 +17,13 @@ class TaskPresenter : BasePresenter<TaskView>(){
 
     }
 
-    fun deleteTask(task: Task?){
-        db.deleteTask(task!!.id)
+    fun onSaveTask(task:Task){
+        db.addTask(task)
+    }
+
+    fun deleteTask(createDate: Timestamp?){
+        db.deleteTask(createDate)
+        Log.d("Task Presenter", "$createDate")
     }
 
 }

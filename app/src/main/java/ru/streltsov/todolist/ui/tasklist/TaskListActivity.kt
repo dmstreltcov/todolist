@@ -1,6 +1,7 @@
 package ru.streltsov.todolist.ui.tasklist
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,9 +15,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import ru.streltsov.todolist.R
+import ru.streltsov.todolist.ui.task.TaskActivity
 
 
 class TaskListActivity : AppCompatActivity(), TaskListView {
@@ -30,6 +33,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
     private lateinit var adapter: TaskListAdapter
     private lateinit var query: Query
     private lateinit var options: FirestoreRecyclerOptions<Task>
+    private lateinit var addTaskBtn:FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,10 +41,20 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
         setContentView(R.layout.activity_task_list)
         currentUser = intent?.getParcelableExtra("user") // <- вот тут мне кажется чепуха
 
+        init()
+        loadData()
+
+
+    }
+
+    private fun init(){
         recyclerView = findViewById(R.id.tasklist)
+        addTaskBtn = findViewById(R.id.add_task)
         linearLayout = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = linearLayout
-        loadData()
+        addTaskBtn.setOnClickListener {
+            addNewTask()
+        }
     }
 
     override fun loadData() {
@@ -51,6 +65,10 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
         adapter = TaskListAdapter(options)
         recyclerView.adapter = adapter
 
+    }
+
+    private fun addNewTask(){
+        startActivity(Intent(this, TaskActivity::class.java))
     }
 
     override fun showError(message: String) {

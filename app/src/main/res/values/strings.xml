@@ -21,6 +21,7 @@
     <string name="password_input_hint">Password</string>
     <string name="edit_task">Edit</string>
     <string name="delete_task_btn">Delete</string>
+    <string name="save_task_btn">Save</string>
 
 
 </resources>

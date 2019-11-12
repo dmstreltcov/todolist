@@ -1,14 +1,14 @@
 package ru.streltsov.todolist.data
 
 import android.os.Parcelable
+import android.util.Log
 import com.google.android.gms.tasks.Task
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
 
 class FirebaseDB : DataBase {
+
 
     private val TAG: String = "Firebase DataBase"
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -25,15 +25,28 @@ class FirebaseDB : DataBase {
         mAuth.createUserWithEmailAndPassword(email, password)
 
     override fun getData(): Query {
-        return db.collection("tasks").orderBy("id")
+        return db.collection("tasks").orderBy("timestamp")
     }
 
-    override fun deleteTask(id: Long){
-        db.collection("tasks").whereEqualTo("id", id).get().addOnCompleteListener {
+    override fun deleteTask(createDate: Timestamp?){
+        db.collection("tasks").whereEqualTo("timestamp", createDate).get().addOnCompleteListener {
             for (document:QueryDocumentSnapshot in it.result!!){
                 document.reference.delete()
             }
         }
     }
 
+    override fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
+        val data = hashMapOf(
+            "title" to task.title,
+            "description" to task.description,
+            "timestamp" to task.createDate,
+            "status" to task.status
+        )
+        db.collection("tasks").add(data).addOnSuccessListener {
+            Log.d(TAG, "Document written with ID: ${it.id}")
+        }.addOnFailureListener{
+            Log.w(TAG, "Error adding document", it)
+        }
+    }
 }

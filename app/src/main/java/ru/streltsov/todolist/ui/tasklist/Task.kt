@@ -3,29 +3,44 @@ package ru.streltsov.todolist.ui.tasklist
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.Timestamp
-import java.util.*
 
 data class Task(
-    var id: Long = 0,
-    var title: String? = "",
-    var description: String? = "",
-    var timestamp: Timestamp? = Timestamp(
-        Date()
-    )
-):Parcelable {
+    var title: String? = null,
+    var description: String? = null,
+    var createDate: Timestamp? = Timestamp.now(),
+    var status: String? = null,
+    var tag: String? = null,
+    var remind: Long? = null,
+    var remindDate: Long? = null,
+    var priority: Long? = null,
+    var dateStart: Timestamp? = null,
+    var dateEnd: Timestamp? = null
+    ) : Parcelable {
     constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readParcelable(Timestamp::class.java.classLoader),
+        parcel.readString(),
+        parcel.readString(),
         parcel.readLong(),
-        parcel.readString(),
-        parcel.readString(),
+        parcel.readLong(),
+        parcel.readLong(),
+        parcel.readParcelable(Timestamp::class.java.classLoader),
         parcel.readParcelable(Timestamp::class.java.classLoader)
     ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeLong(id)
         parcel.writeString(title)
         parcel.writeString(description)
-        parcel.writeParcelable(timestamp, flags)
+        parcel.writeParcelable(createDate, flags)
+        parcel.writeString(status)
+        parcel.writeString(tag)
+        remind?.let { parcel.writeLong(it) }
+        remindDate?.let { parcel.writeLong(it) }
+        priority?.let { parcel.writeLong(it) }
+        parcel.writeParcelable(dateStart, flags)
+        parcel.writeParcelable(dateEnd, flags)
     }
 
     override fun describeContents(): Int {

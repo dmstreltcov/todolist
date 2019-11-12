@@ -3,13 +3,18 @@ package ru.streltsov.todolist.data
 import android.os.Parcelable
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.tasks.Task
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 
 class LocalStorage : DataBase {
-    override fun deleteTask(id: Long) {
+    override fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun deleteTask(createDate: Timestamp?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
