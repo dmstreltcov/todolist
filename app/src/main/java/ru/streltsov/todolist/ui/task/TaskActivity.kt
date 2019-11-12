@@ -32,6 +32,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
+        presenter.attach(this)
         init()
         val task = intent.getParcelableExtra<Task>("task")
         Log.d(TAG, "$task")
@@ -52,9 +53,11 @@ class TaskActivity : AppCompatActivity(), TaskView {
         }else{
             deleteTaskButton.visibility = View.GONE
             saveTaskButton.setOnClickListener {
-                presenter.onSaveTask(getTaskData())
-                setResult(Activity.RESULT_OK)
-                finish()
+                if (presenter.onSaveTask(getTaskData())){
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
+
             }
         }
     }
@@ -90,5 +93,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
     override fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detach()
     }
 }

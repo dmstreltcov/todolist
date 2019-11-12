@@ -42,6 +42,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "TODO _OnCreate()")
         setContentView(R.layout.activity_task_list)
+        presenter.attach(this)
 
         currentUser = intent?.getParcelableExtra("user") // <- вот тут мне кажется чепуха
         init()
@@ -94,5 +95,10 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
         when(requestCode){
             1001 -> if (resultCode == Activity.RESULT_OK) Toast.makeText(this, "Задача создана", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detach()
     }
 }
