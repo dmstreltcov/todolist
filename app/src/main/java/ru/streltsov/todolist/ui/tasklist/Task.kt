@@ -3,24 +3,25 @@ package ru.streltsov.todolist.ui.tasklist
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.firebase.Timestamp
+import java.util.*
 
 data class Task(
-    var title: String? = null,
-    var description: String? = null,
-    var createDate: Timestamp? = Timestamp.now(),
-    var status: String? = null,
-    var tag: String? = null,
-    var remind: Long? = null,
-    var remindDate: Long? = null,
-    var priority: Long? = null,
-    var dateStart: Timestamp? = null,
-    var dateEnd: Timestamp? = null
+    val title: String? = null,
+    val description: String? = null,
+    val createDate: Timestamp? = null,
+    val status: Long? = 0,
+    val tag: String? = null,
+    val remind: Long? = null,
+    val remindDate: Long? = null,
+    val priority: Long? = null,
+    val dateStart: Timestamp? = null,
+    val dateEnd: Timestamp? = null
     ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
         parcel.readParcelable(Timestamp::class.java.classLoader),
-        parcel.readString(),
+        parcel.readLong(),
         parcel.readString(),
         parcel.readLong(),
         parcel.readLong(),
@@ -34,7 +35,7 @@ data class Task(
         parcel.writeString(title)
         parcel.writeString(description)
         parcel.writeParcelable(createDate, flags)
-        parcel.writeString(status)
+        status?.let { parcel.writeLong(it) }
         parcel.writeString(tag)
         remind?.let { parcel.writeLong(it) }
         remindDate?.let { parcel.writeLong(it) }

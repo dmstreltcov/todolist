@@ -13,10 +13,6 @@ import ru.streltsov.todolist.ui.tasklist.Task
 class TaskPresenter : BasePresenter<TaskView>(){
     private var db: DataBase = FirebaseDB()
 
-    fun editTask(){
-
-    }
-
     fun onSaveTask(task:Task){
         db.addTask(task)
     }

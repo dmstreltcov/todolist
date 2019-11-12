@@ -16,7 +16,7 @@ import ru.streltsov.todolist.ui.task.TaskActivity
 class TaskListAdapter(private val options: FirestoreRecyclerOptions<Task>) :
     FirestoreRecyclerAdapter<Task, TaskListAdapter.TaskViewHolder>(options) {
 
-    private val TAG: String = "TaskListAdapter"
+    private val TAG: String = "TODO _TaskListAdapter"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view: View = LayoutInflater.from(parent.context)
@@ -40,9 +40,9 @@ class TaskListAdapter(private val options: FirestoreRecyclerOptions<Task>) :
             }
         }
 
-        private fun openTask(task:Task) {
-            val intent:Intent = Intent(itemView.context,TaskActivity::class.java)
-            intent.putExtra("task",task)
+        private fun openTask(task: Task) {
+            val intent: Intent = Intent(itemView.context, TaskActivity::class.java)
+            intent.putExtra("task", task)
             itemView.context.startActivity(intent)
         }
     }

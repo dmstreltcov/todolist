@@ -12,15 +12,16 @@ import ru.streltsov.todolist.ui.tasklist.TaskListActivity
 
 class MainActivity : AppCompatActivity() {
 
-    private val TAG: String = "TAG_MainActivity"
+    private val TAG: String = "TODO _MainActivity"
     private lateinit var mAuth: FirebaseAuth
+    private var currentUser: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "OnCreate()")
+        Log.d(TAG, "TODO _OnCreate()")
         setContentView(R.layout.activity_main)
         mAuth = FirebaseAuth.getInstance()
-        val currentUser: FirebaseUser? = mAuth.currentUser
+        currentUser = mAuth.currentUser
         updateUI(currentUser)
     }
 
@@ -32,14 +33,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onLoginPage() {
-        Log.d(TAG, "Переход на страницу авторизации")
+        Log.d(TAG, "TODO _Переход на страницу авторизации")
         val intent: Intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }
 
-    private fun onTaskListPage(currentUser: FirebaseUser?) {
-        Log.d(TAG, "Переход на страницу со списком задач")
+    private fun onTaskListPage(currentUser: FirebaseUser) {
+        Log.d(TAG, "TODO _Переход на страницу со списком задач")
         val intent: Intent = createTaskListIntent(this, currentUser)
         startActivity(intent)
         finish()
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         fun createTaskListIntent(
             context: Context,
-            user: FirebaseUser?
+            user: FirebaseUser
         ): Intent {
             return Intent(context, TaskListActivity::class.java).putExtra("user", user)
         }

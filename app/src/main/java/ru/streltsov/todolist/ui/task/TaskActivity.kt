@@ -1,9 +1,12 @@
 package ru.streltsov.todolist.ui.task
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -18,77 +21,74 @@ import java.text.SimpleDateFormat
 
 class TaskActivity : AppCompatActivity(), TaskView {
 
-    private val TAG: String = "TaskActivity"
+    private val TAG: String = "TODO _TaskActivity"
     private lateinit var taskTitle: EditText
     private lateinit var taskDescription: EditText
     private lateinit var taskTimestamp: TextView
-    private lateinit var editTaskButton: Button
     private lateinit var deleteTaskButton: Button
     private lateinit var saveTaskButton: Button
     private val presenter: TaskPresenter by lazy { TaskPresenter() }
-
-    private var task: Task? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
         init()
-        task = intent.getParcelableExtra<Task>("task") as Task
-        Log.d(TAG, task!!.createDate.toString())
-        taskTitle.setText(task?.title)
-        taskDescription.setText(task?.description)
-        taskTimestamp.text = formatDate(task?.createDate)
+        val task = intent.getParcelableExtra<Task>("task")
+        Log.d(TAG, "$task")
 
-        editTaskButton.setOnClickListener {
-            presenter.editTask()
-            showMessage("Задача изменена")
-        }
 
-        deleteTaskButton.setOnClickListener {
-            presenter.deleteTask(task!!.createDate)
-            showMessage("Задача удалена")
-            finish()
-        }
-        saveTaskButton.setOnClickListener {
-            presenter.onSaveTask(getTask())
-            Log.d(TAG, "SAVE CLICKED")
+
+        if (task != null) {
+            taskTitle.setText(task.title)
+            taskDescription.setText(task.description)
+            taskTimestamp.text = formatDate(task.createDate)
+
+            saveTaskButton.visibility = View.GONE
+            deleteTaskButton.setOnClickListener {
+                presenter.deleteTask(task.createDate)
+                showMessage("Задача удалена")
+                finish()
+            }
+        }else{
+            deleteTaskButton.visibility = View.GONE
+            saveTaskButton.setOnClickListener {
+                presenter.onSaveTask(getTaskData())
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
         }
     }
 
-    private fun getTask():Task{
+    private fun getTaskData(): Task {
         return Task(
             taskTitle.text.toString(),
-            taskDescription.text.toString()
+            taskDescription.text.toString(),
+            createDate = Timestamp.now()
         )
     }
 
     private fun init() {
         taskTitle = task_title
         taskDescription = task_description
-        taskTimestamp = task_timestamp
-        editTaskButton = edit_task_btn
+        taskTimestamp = task_create_date
         deleteTaskButton = delete_task_btn
         saveTaskButton = save_task_btn
     }
 
-    private fun formatDate(timestamp:Timestamp?) : String{
-        try{
-            val format = SimpleDateFormat("dd/MM/yyyy")
-            val date = Date(timestamp!!.seconds*1000)
+    private fun formatDate(createDate: Timestamp?): String {
+        try {
+            val format = SimpleDateFormat("dd/MM/yyyy HH:mm")
+            val date = Date(createDate!!.seconds * 1000)
             println("date is $date")
             return format.format(date)
-        }catch (e:Exception){
-           return e.toString()
+        } catch (e: Exception) {
+            return e.toString()
         }
     }
 
     override fun getContext(): Context = this
 
-    override fun showError(message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    private fun showMessage(message: String) {
+    override fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

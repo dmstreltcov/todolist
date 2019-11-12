@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
@@ -16,6 +17,8 @@ import ru.streltsov.todolist.ui.auth.singup.SignUpActivity
 class LoginActivity : AppCompatActivity(), LoginView {
 
     private val TAG: String = "TAG_LoginActivity"
+    private lateinit var mAuth: FirebaseAuth
+
     private val presenter: LoginPresenter by lazy { LoginPresenter() }
 
     private lateinit var email: EditText
@@ -28,6 +31,8 @@ class LoginActivity : AppCompatActivity(), LoginView {
         setContentView(R.layout.activity_login)
         presenter.attach(this)
         init()
+        mAuth = FirebaseAuth.getInstance()
+        Log.d(TAG, "${mAuth.currentUser}")
     }
 
     private fun init() {
@@ -44,19 +49,22 @@ class LoginActivity : AppCompatActivity(), LoginView {
         }
     }
 
-    override fun signUp(){
+    override fun signUp() {
         val intent: Intent = Intent(this, SignUpActivity::class.java)
         startActivity(intent)
     }
 
     override fun updateUI(user: FirebaseUser) {
-        Log.d(TAG, "Update UI")
-        val intent: Intent = MainActivity.createTaskListIntent(this,user) // Не уверен насчет такого решения, но так сделал
+        Log.d(TAG, "TODO _Update UI")
+        val intent: Intent = MainActivity.createTaskListIntent(
+            this,
+            user
+        ) // Не уверен насчет такого решения, но так сделал
         startActivity(intent)
         finish()
     }
 
-    override fun showError(message:String){
+    override fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
@@ -64,7 +72,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "onDestroy()")
+        Log.d(TAG, "TODO _onDestroy()")
         presenter.detach()
     }
 }

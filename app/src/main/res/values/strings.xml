@@ -22,6 +22,8 @@
     <string name="edit_task">Edit</string>
     <string name="delete_task_btn">Delete</string>
     <string name="save_task_btn">Save</string>
+    <string name="title_hint">Введите заголовок</string>
+    <string name="description_hint">Введите описание</string>
 
 
 </resources>

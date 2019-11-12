@@ -10,7 +10,7 @@ import com.google.firebase.firestore.*
 class FirebaseDB : DataBase {
 
 
-    private val TAG: String = "Firebase DataBase"
+    private val TAG: String = "TODO _Firebase DataBase"
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
@@ -25,11 +25,11 @@ class FirebaseDB : DataBase {
         mAuth.createUserWithEmailAndPassword(email, password)
 
     override fun getData(): Query {
-        return db.collection("tasks").orderBy("timestamp")
+        return db.collection("tasks").orderBy("createDate")
     }
 
     override fun deleteTask(createDate: Timestamp?){
-        db.collection("tasks").whereEqualTo("timestamp", createDate).get().addOnCompleteListener {
+        db.collection("tasks").whereEqualTo("createDate", createDate).get().addOnCompleteListener {
             for (document:QueryDocumentSnapshot in it.result!!){
                 document.reference.delete()
             }
@@ -40,13 +40,13 @@ class FirebaseDB : DataBase {
         val data = hashMapOf(
             "title" to task.title,
             "description" to task.description,
-            "timestamp" to task.createDate,
+            "createDate" to task.createDate,
             "status" to task.status
         )
         db.collection("tasks").add(data).addOnSuccessListener {
-            Log.d(TAG, "Document written with ID: ${it.id}")
+            Log.d(TAG, "TODO _Document written with ID: ${it.id}")
         }.addOnFailureListener{
-            Log.w(TAG, "Error adding document", it)
+            Log.w(TAG, "TODO _Error adding document", it)
         }
     }
 }

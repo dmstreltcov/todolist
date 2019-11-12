@@ -1,5 +1,6 @@
 package ru.streltsov.todolist.ui.tasklist
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
@@ -26,35 +28,35 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
 
     private var currentUser: FirebaseUser? = null
 
-    private val TAG: String = "TaskListActivity"
+    private val REQUEST_CODE = 1001
+    private val TAG: String = "TODO _TaskListActivity"
     private val presenter: TaskListPresenter by lazy { TaskListPresenter() }
     private lateinit var recyclerView: RecyclerView
     lateinit var linearLayout: LinearLayoutManager
     private lateinit var adapter: TaskListAdapter
     private lateinit var query: Query
     private lateinit var options: FirestoreRecyclerOptions<Task>
-    private lateinit var addTaskBtn:FloatingActionButton
+    private lateinit var addTaskBtn: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "OnCreate()")
+        Log.d(TAG, "TODO _OnCreate()")
         setContentView(R.layout.activity_task_list)
-        currentUser = intent?.getParcelableExtra("user") // <- вот тут мне кажется чепуха
 
+        currentUser = intent?.getParcelableExtra("user") // <- вот тут мне кажется чепуха
         init()
         loadData()
 
-
+        addTaskBtn.setOnClickListener {
+            addNewTask()
+        }
     }
 
-    private fun init(){
+    private fun init() {
         recyclerView = findViewById(R.id.tasklist)
         addTaskBtn = findViewById(R.id.add_task)
         linearLayout = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = linearLayout
-        addTaskBtn.setOnClickListener {
-            addNewTask()
-        }
     }
 
     override fun loadData() {
@@ -67,19 +69,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
 
     }
 
-    private fun addNewTask(){
-        startActivity(Intent(this, TaskActivity::class.java))
-    }
-
-    override fun showError(message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun getContext(): Context = this
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "OnResume()")
+    private fun addNewTask() {
+        startActivityForResult(Intent(this, TaskActivity::class.java),REQUEST_CODE)
     }
 
     override fun onStart() {
@@ -90,5 +81,18 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
     override fun onStop() {
         super.onStop()
         adapter.stopListening()
+    }
+
+    override fun showMessage(message: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun getContext(): Context = this
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            1001 -> if (resultCode == Activity.RESULT_OK) Toast.makeText(this, "Задача создана", Toast.LENGTH_SHORT).show()
+        }
     }
 }
