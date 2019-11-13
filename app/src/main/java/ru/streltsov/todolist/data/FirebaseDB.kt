@@ -28,12 +28,8 @@ class FirebaseDB : DataBase {
         return db.collection("tasks").orderBy("createDate")
     }
 
-    override fun deleteTask(createDate: Timestamp?){
-        db.collection("tasks").whereEqualTo("createDate", createDate).get().addOnCompleteListener {
-            for (document:QueryDocumentSnapshot in it.result!!){
-                document.reference.delete()
-            }
-        }
+    override fun deleteTask(id:String?){
+        db.collection("tasks").document(id.toString()).delete()
     }
 
     override fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task) {

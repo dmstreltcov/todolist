@@ -14,7 +14,7 @@ class LocalStorage : DataBase {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun deleteTask(createDate: Timestamp?) {
+    override fun deleteTask(id:String?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

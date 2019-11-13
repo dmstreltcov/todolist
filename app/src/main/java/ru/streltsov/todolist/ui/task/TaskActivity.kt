@@ -46,7 +46,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
             saveTaskButton.visibility = View.GONE
             deleteTaskButton.setOnClickListener {
-                presenter.deleteTask(task.createDate)
+                presenter.deleteTask(task.id)
                 showMessage("Задача удалена")
                 finish()
             }
@@ -64,9 +64,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
     private fun getTaskData(): Task {
         return Task(
-            taskTitle.text.toString(),
-            taskDescription.text.toString(),
+            title = taskTitle.text.toString(),
+            description = taskDescription.text.toString(),
             createDate = Timestamp.now()
+
         )
     }
 

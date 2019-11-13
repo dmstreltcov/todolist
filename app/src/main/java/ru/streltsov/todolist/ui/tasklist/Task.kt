@@ -6,6 +6,7 @@ import com.google.firebase.Timestamp
 import java.util.*
 
 data class Task(
+    var id: String? = null,
     val title: String? = null,
     val description: String? = null,
     val createDate: Timestamp? = null,
@@ -20,6 +21,7 @@ data class Task(
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
+        parcel.readString(),
         parcel.readParcelable(Timestamp::class.java.classLoader),
         parcel.readLong(),
         parcel.readString(),
@@ -32,6 +34,7 @@ data class Task(
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
         parcel.writeString(title)
         parcel.writeString(description)
         parcel.writeParcelable(createDate, flags)

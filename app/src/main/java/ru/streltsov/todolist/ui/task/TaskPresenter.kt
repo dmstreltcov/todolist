@@ -21,12 +21,13 @@ class TaskPresenter : BasePresenter<TaskView>() {
         return false
     }
 
-    fun deleteTask(createDate: Timestamp?) {
-        db.deleteTask(createDate)
-        Log.d("Task Presenter", "$createDate")
+    fun deleteTask(id:String?) {
+        db.deleteTask(id)
+        Log.d("Task Presenter", "$id")
     }
 
     private fun validate(task: Task): Boolean {
+
         return when {
             task.title.isNullOrEmpty() -> {
                 view?.showMessage("Заполните заголовок")

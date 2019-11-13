@@ -25,6 +25,7 @@ class TaskListAdapter(private val options: FirestoreRecyclerOptions<Task>) :
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int, task: Task) {
+        task.id = snapshots.getSnapshot(position).id
         holder.setData(task)
         Log.d(TAG, "$task")
     }

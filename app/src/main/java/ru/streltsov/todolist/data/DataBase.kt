@@ -16,6 +16,6 @@ interface DataBase {
     fun currentUser(): Parcelable
     fun signUp(email: String, password: String): Task<AuthResult>
     fun getData(): Query
-    fun deleteTask(createDate: Timestamp?)
+    fun deleteTask(id:String?)
     fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task)
 }
