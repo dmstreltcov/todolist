@@ -12,7 +12,6 @@ data class Task(
     val createDate: Timestamp? = null,
     val status: Long? = 0,
     val tag: String? = null,
-    val remind: Long? = null,
     val remindDate: Long? = null,
     val priority: Long? = null,
     val dateStart: Timestamp? = null,
@@ -27,7 +26,6 @@ data class Task(
         parcel.readString(),
         parcel.readLong(),
         parcel.readLong(),
-        parcel.readLong(),
         parcel.readParcelable(Timestamp::class.java.classLoader),
         parcel.readParcelable(Timestamp::class.java.classLoader)
     ) {
@@ -40,7 +38,6 @@ data class Task(
         parcel.writeParcelable(createDate, flags)
         status?.let { parcel.writeLong(it) }
         parcel.writeString(tag)
-        remind?.let { parcel.writeLong(it) }
         remindDate?.let { parcel.writeLong(it) }
         priority?.let { parcel.writeLong(it) }
         parcel.writeParcelable(dateStart, flags)

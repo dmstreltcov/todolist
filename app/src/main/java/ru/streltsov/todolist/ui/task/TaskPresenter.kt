@@ -21,8 +21,13 @@ class TaskPresenter : BasePresenter<TaskView>() {
         return false
     }
 
-    fun deleteTask(id:String?) {
-        db.deleteTask(id)
+    fun deleteTask(id:String?){
+        try {
+            db.deleteTask(id)
+        }catch (e:NullPointerException){
+            view?.showMessage("Не удалось удалить задачу")
+            e.printStackTrace()
+        }
         Log.d("Task Presenter", "$id")
     }
 

@@ -28,7 +28,10 @@ class FirebaseDB : DataBase {
         return db.collection("tasks").orderBy("createDate")
     }
 
-    override fun deleteTask(id:String?){
+    override fun deleteTask(id: String?) {
+        if (id == null) {
+            throw NullPointerException("id is null")
+        }
         db.collection("tasks").document(id.toString()).delete()
     }
 
@@ -41,7 +44,7 @@ class FirebaseDB : DataBase {
         )
         db.collection("tasks").add(data).addOnSuccessListener {
             Log.d(TAG, "TODO _Document written with ID: ${it.id}")
-        }.addOnFailureListener{
+        }.addOnFailureListener {
             Log.w(TAG, "TODO _Error adding document", it)
         }
     }
