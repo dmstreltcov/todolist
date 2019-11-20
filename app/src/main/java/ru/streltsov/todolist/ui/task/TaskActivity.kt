@@ -72,6 +72,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
             description = taskDescription.text.toString(),
             createDate = Timestamp.now(),
             remind = if (remind_check_box.isChecked) 0L else 1L
+
         )
     }
 
