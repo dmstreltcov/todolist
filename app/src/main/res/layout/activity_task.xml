@@ -6,139 +6,104 @@
     android:layout_height="match_parent"
     tools:context=".ui.task.TaskActivity">
 
-    <EditText
-        android:id="@+id/task_title"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/title_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/task_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title_hint"
+            android:inputType="text"
+            android:textSize="30sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/start_date_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_layout"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/start_date_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/start_date"
+            android:maxLength="17"
+            android:text="20:00, 20.11.2019"
+            android:textSize="16sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/end_date_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title_layout"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/end_date_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/end_date"
+            android:maxLength="17"
+            android:text="20:00, 20.11.2019"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <CheckBox
+        android:id="@+id/remind_check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/start_date_layout"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@android:color/transparent"
-        android:hint="@string/title_hint"
-        android:inputType="text"
-        android:textSize="30sp" />
-
-
-    <TextView
-        android:id="@+id/start_date_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/task_title"
-        android:layout_marginStart="30dp"
         android:layout_marginTop="10dp"
-        android:text="@string/start_date"
-        android:textSize="18sp"
+        android:text="@string/remind_question" />
 
-        />
-
-    <TextView
-        android:id="@+id/start_date_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/task_title"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="end"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="30dp"
-        android:textSize="18sp"
-        tools:text="вт, 19 нояб. 13:00" />
-
-
-    <TextView
-        android:id="@+id/end_date_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/start_date_label"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/end_date"
-        android:textSize="18sp" />
-
-    <TextView
-        android:id="@+id/end_date_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/start_date_time"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="end"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="30dp"
-        android:textSize="18sp"
-        tools:text="вт, 19 нояб. 13:00" />
-
-    <ImageView
-        android:id="@+id/remind_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/end_date_label"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/ic_notification" />
-
-    <Spinner
-        android:id="@+id/remind_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/end_date_label"
-        android:layout_marginTop="20dp"
-        android:layout_toEndOf="@+id/remind_type" />
-
-    <ImageView
-        android:id="@+id/repeat_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_repeat"
-        android:layout_below="@id/remind_type"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
-        />
-
-    <TextView
-        android:id="@+id/repeat_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/repeat_type"
-        android:layout_below="@id/remind_type"
-        android:text ="Повторить"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="10dp"
-        android:textSize="18sp"/>
-
-
-    <EditText
-        android:id="@+id/task_description"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/description_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/repeat_type"
-        android:layout_margin="20dp"
-        android:background="@android:color/transparent"
-        android:hint="@string/description_hint"
-        android:inputType="textImeMultiLine"
-        android:lines="3"
-        android:minLines="3" />
+        android:layout_below="@+id/remind_check_box"
+        android:layout_margin="10dp">
 
-    <TextView
-        android:id="@+id/task_create_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/task_description" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/task_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/description_hint"
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:minLines="3" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/delete_task_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/description_layout"
 
-        android:layout_below="@+id/task_create_date"
+        android:layout_centerHorizontal="true"
         android:text="@string/delete_task_btn" />
 
     <Button
         android:id="@+id/save_task_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/task_create_date"
+        android:layout_below="@+id/description_layout"
         android:layout_centerHorizontal="true"
         android:text="@string/save_task_btn" />
 

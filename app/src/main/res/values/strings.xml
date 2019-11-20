@@ -26,6 +26,7 @@
     <string name="description_hint">Описание</string>
     <string name="start_date">Начало</string>
     <string name="end_date">Конец</string>
+    <string name="remind_question">Напомнить?</string>
 
     <string-array name="remind_type">
         <item>Нет</item>

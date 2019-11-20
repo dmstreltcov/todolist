@@ -2,15 +2,12 @@ package ru.streltsov.todolist.ui.task
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.activity_task.*
 import ru.streltsov.todolist.R
@@ -24,8 +21,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private val TAG: String = "TODO _TaskActivity"
     private lateinit var taskTitle: EditText
     private lateinit var taskDescription: EditText
-    private lateinit var taskTimestamp: TextView
     private lateinit var deleteTaskButton: Button
+    private lateinit var dateStart: TextInputEditText
+    private lateinit var dateEnd: TextInputEditText
+    private lateinit var remind: CheckBox
     private lateinit var saveTaskButton: Button
     private val presenter: TaskPresenter by lazy { TaskPresenter() }
 
@@ -42,7 +41,12 @@ class TaskActivity : AppCompatActivity(), TaskView {
         if (task != null) {
             taskTitle.setText(task.title)
             taskDescription.setText(task.description)
-            taskTimestamp.text = formatDate(task.createDate)
+            when (task.remind) {
+                0L -> remind.isChecked = false
+                1L -> remind.isChecked = true
+            }
+            dateStart.setText(formatDate(task.createDate))
+            dateEnd.setText(formatDate(task.dateEnd))
 
             saveTaskButton.visibility = View.GONE
             deleteTaskButton.setOnClickListener {
@@ -50,10 +54,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
                 showMessage("Задача удалена")
                 finish()
             }
-        }else{
+        } else {
             deleteTaskButton.visibility = View.GONE
             saveTaskButton.setOnClickListener {
-                if (presenter.onSaveTask(getTaskData())){
+                if (presenter.onSaveTask(getTaskData())) {
                     setResult(Activity.RESULT_OK)
                     finish()
                 }
@@ -66,24 +70,25 @@ class TaskActivity : AppCompatActivity(), TaskView {
         return Task(
             title = taskTitle.text.toString(),
             description = taskDescription.text.toString(),
-            createDate = Timestamp.now()
-
+            createDate = Timestamp.now(),
+            remind = if (remind_check_box.isChecked) 0L else 1L
         )
     }
 
     private fun init() {
         taskTitle = task_title
         taskDescription = task_description
-        taskTimestamp = task_create_date
         deleteTaskButton = delete_task_btn
         saveTaskButton = save_task_btn
+        dateStart = start_date_input
+        dateEnd = end_date_input
+        remind = remind_check_box
     }
 
     private fun formatDate(createDate: Timestamp?): String {
         try {
-            val format = SimpleDateFormat("dd/MM/yyyy HH:mm")
+            val format = SimpleDateFormat("HH:mm, dd.MM.yyyy")
             val date = Date(createDate!!.seconds * 1000)
-            println("date is $date")
             return format.format(date)
         } catch (e: Exception) {
             return e.toString()
