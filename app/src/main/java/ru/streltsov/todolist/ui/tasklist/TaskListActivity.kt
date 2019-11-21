@@ -11,15 +11,14 @@ import com.google.firebase.auth.FirebaseUser
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.android.synthetic.main.tasklist_item_2.*
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.task.TaskActivity
 
@@ -32,11 +31,12 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
     private val TAG: String = "TODO _TaskListActivity"
     private val presenter: TaskListPresenter by lazy { TaskListPresenter() }
     private lateinit var recyclerView: RecyclerView
-    lateinit var linearLayout: LinearLayoutManager
+    private lateinit var linearLayout: LinearLayoutManager
     private lateinit var adapter: TaskListAdapter
     private lateinit var query: Query
     private lateinit var options: FirestoreRecyclerOptions<Task>
     private lateinit var addTaskBtn: FloatingActionButton
+    private lateinit var statusBox : CheckBox
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +58,11 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
         addTaskBtn = findViewById(R.id.add_task)
         linearLayout = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = linearLayout
+//        statusBox = findViewById(R.id.task_check_box_2)
+    }
+
+    fun changeStatus(id:String?, status:Long?){
+
     }
 
     override fun loadData() {

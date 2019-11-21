@@ -51,4 +51,8 @@ class FirebaseDB : DataBase {
             Log.w(TAG, "TODO _Error adding document", it)
         }
     }
+
+    override fun changeTaskStatus() {
+
+    }
 }

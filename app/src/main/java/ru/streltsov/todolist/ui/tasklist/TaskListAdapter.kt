@@ -1,10 +1,12 @@
 package ru.streltsov.todolist.ui.tasklist
 
 import android.content.Intent
+import android.graphics.Paint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
@@ -35,13 +37,26 @@ class TaskListAdapter(private val options: FirestoreRecyclerOptions<Task>) :
 
     class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        private val titleView: TextView = itemView.findViewById(R.id.list_item_title)
-        private val taskTime:TextView = itemView.findViewById(R.id.task_time)
+
+        private val titleView: TextView = itemView.findViewById(R.id.list_item_title_2)
+        private val taskTime:TextView = itemView.findViewById(R.id.task_time_2)
+        private val statusBox:CheckBox = itemView.findViewById(R.id.task_check_box_2)
 
         fun setData(task: Task) {
-
             titleView.text = task.title
             taskTime.text = formatDate(task.dateStart)
+//            statusBox.setOnCheckedChangeListener {
+//                    box, status ->
+//                if (status){
+//                    (itemView.context as TaskListActivity).changeStatus(task.id, 0)
+//                    statusBox.isChecked = false
+//
+//                }else{
+//                    (itemView.context as TaskListActivity).changeStatus(task.id, 1)
+//                    statusBox.isChecked = true
+//                    titleView.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
+//                }
+//            }
             itemView.setOnClickListener {
                 openTask(task)
             }
