@@ -24,8 +24,8 @@
     <string name="save_task_btn">Save</string>
     <string name="title_hint">Название</string>
     <string name="description_hint">Описание</string>
-    <string name="start_date">Начало</string>
-    <string name="end_date">Конец</string>
+    <string name="start_date">День</string>
+    <string name="end_date">Время</string>
     <string name="remind_question">Напомнить?</string>
 
     <string-array name="remind_type">

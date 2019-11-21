@@ -10,9 +10,7 @@ data class Task(
     val description: String? = null,
     val createDate: Timestamp? = null,
     val status: Long? = 0,
-    val remind: Long? = 0,
-    val dateStart: Timestamp? = null,
-    val dateEnd: Timestamp? = null
+    val dateStart: Timestamp? = null
     ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -20,8 +18,6 @@ data class Task(
         parcel.readString(),
         parcel.readParcelable(Timestamp::class.java.classLoader),
         parcel.readLong(),
-        parcel.readLong(),
-        parcel.readParcelable(Timestamp::class.java.classLoader),
         parcel.readParcelable(Timestamp::class.java.classLoader)
     ) {
     }
@@ -32,9 +28,7 @@ data class Task(
         parcel.writeString(description)
         parcel.writeParcelable(createDate, flags)
         status?.let { parcel.writeLong(it) }
-        remind?.let { parcel.writeLong(it) }
         parcel.writeParcelable(dateStart, flags)
-        parcel.writeParcelable(dateEnd, flags)
     }
 
     override fun describeContents(): Int {

@@ -42,7 +42,8 @@ class FirebaseDB : DataBase {
             "title" to task.title,
             "description" to task.description,
             "createDate" to task.createDate,
-            "status" to task.status
+            "status" to task.status,
+            "dateStart" to task.dateStart
         )
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").add(data).addOnSuccessListener {
             Log.d(TAG, "TODO _Document written with ID: ${it.id}")

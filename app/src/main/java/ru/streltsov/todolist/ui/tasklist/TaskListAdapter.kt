@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
@@ -54,10 +53,10 @@ class TaskListAdapter(private val options: FirestoreRecyclerOptions<Task>) :
             itemView.context.startActivity(intent)
         }
 
-        private fun formatDate(createDate: Timestamp?): String {
+        private fun formatDate(dateStart: Timestamp?): String {
             try {
-                val format = SimpleDateFormat("HH:mm")
-                val date = Date(createDate!!.seconds * 1000)
+                val format = SimpleDateFormat("HH:mm dd MMM")
+                val date = Date(dateStart!!.seconds * 1000)
                 return format.format(date)
             } catch (e: Exception) {
                 return e.toString()
