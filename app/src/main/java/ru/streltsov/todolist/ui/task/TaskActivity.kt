@@ -38,6 +38,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private lateinit var itemDelete: MenuItem
     private var flag: Int = 0
     private var taskId: String? = null
+    private lateinit var actionBarToolbar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +78,9 @@ class TaskActivity : AppCompatActivity(), TaskView {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_edit -> {
-
+                actionBarToolbar.menu.findItem(R.id.action_edit).isVisible = false
+                actionBarToolbar.menu.findItem(R.id.action_delete).isVisible = false
+                actionBarToolbar.menu.findItem(R.id.action_save).isVisible = true
             }
             R.id.action_save -> {
                 if (presenter.onSaveTask(getTaskData())) {
@@ -134,7 +137,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
         taskDescription = task_description
         dateStart = start_date_input
         timeStart = time_start_input
-        val actionBarToolbar: Toolbar = findViewById(R.id.toolbar_action_bar)
+        actionBarToolbar = findViewById(R.id.toolbar_action_bar)
         setSupportActionBar(actionBarToolbar)
         dateStartSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
             presenter.onDateStartSet(

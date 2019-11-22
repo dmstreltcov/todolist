@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.tasklist.TaskListActivity">
-
-    <include layout="@layout/toolbar" />
+<!--    <include layout="@layout/toolbar" />-->
+<!--Пока хз, нужен мне тут тулбар или нет. Поэтому констрейт в линеаре-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -33,7 +33,8 @@
             android:clickable="true"
             android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/ic_add"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
