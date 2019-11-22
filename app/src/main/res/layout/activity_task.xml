@@ -6,11 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.task.TaskActivity">
 
+    <include layout="@layout/toolbar"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/title_layout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_action_bar"
         android:layout_margin="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -86,23 +89,6 @@
             android:lines="8"
             android:minLines="3" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <Button
-        android:id="@+id/delete_task_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/description_layout"
-
-        android:layout_centerHorizontal="true"
-        android:text="@string/delete_task_btn" />
-
-    <Button
-        android:id="@+id/save_task_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/description_layout"
-        android:layout_centerHorizontal="true"
-        android:text="@string/save_task_btn" />
 
 
 </RelativeLayout>

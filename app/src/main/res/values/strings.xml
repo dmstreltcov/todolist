@@ -27,6 +27,9 @@
     <string name="start_date">День</string>
     <string name="end_date">Время</string>
     <string name="remind_question">Напомнить?</string>
+    <string name="action_edit_title">Редактировать</string>
+    <string name="action_delete_title">Удалить</string>
+    <string name="action_save_title">Сохранить</string>
 
     <string-array name="remind_type">
         <item>Нет</item>

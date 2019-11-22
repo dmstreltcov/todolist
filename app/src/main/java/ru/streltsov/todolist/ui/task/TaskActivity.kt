@@ -9,8 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.appcompat.widget.Toolbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.activity_task.*
@@ -23,15 +26,18 @@ import java.text.SimpleDateFormat
 class TaskActivity : AppCompatActivity(), TaskView {
 
     private val TAG: String = "TODO _TaskActivity"
+    private val TYPE_TASK: Int = 0
+    private val TYPE_EDIT: Int = 1
     private lateinit var taskTitle: EditText
     private lateinit var taskDescription: EditText
-    private lateinit var deleteTaskButton: Button
     private lateinit var dateStart: TextInputEditText
     private lateinit var timeStart: TextInputEditText
-    private lateinit var saveTaskButton: Button
     private val presenter: TaskPresenter by lazy { TaskPresenter() }
     private lateinit var dateStartSetListener: DatePickerDialog.OnDateSetListener
     private lateinit var timeStartSetListener: TimePickerDialog.OnTimeSetListener
+    private lateinit var itemDelete: MenuItem
+    private var flag: Int = 0
+    private var taskId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,31 +48,21 @@ class TaskActivity : AppCompatActivity(), TaskView {
         Log.d(TAG, "$task")
 
         if (task != null) {
+            flag = TYPE_TASK
+            taskId = task.id
             taskTitle.setText(task.title)
             taskDescription.setText(task.description)
             Log.d(TAG, "${task.dateStart}")
             val aa = formatDate(task.dateStart).split("|")
-            for (str:String in aa){
+            for (str: String in aa) {
                 print(str)
             }
 
             dateStart.setText(formatDate(task.dateStart).split("|")[1])
             timeStart.setText(formatDate(task.dateStart).split("|")[0])
 
-            saveTaskButton.visibility = View.GONE
-            deleteTaskButton.setOnClickListener {
-                presenter.deleteTask(task.id)
-                showMessage("Задача удалена")
-                finish()
-            }
         } else {
-            deleteTaskButton.visibility = View.GONE
-            saveTaskButton.setOnClickListener {
-                if (presenter.onSaveTask(getTaskData())) {
-                    setResult(Activity.RESULT_OK)
-                    finish()
-                }
-            }
+            flag = TYPE_EDIT
         }
 
         dateStart.setOnClickListener {
@@ -76,6 +72,27 @@ class TaskActivity : AppCompatActivity(), TaskView {
         timeStart.setOnClickListener {
             presenter.onTimeStartClicked()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_edit -> {
+
+            }
+            R.id.action_save -> {
+                if (presenter.onSaveTask(getTaskData())) {
+                    setResult(Activity.RESULT_OK)
+                    finish()
+                }
+
+            }
+            R.id.action_delete -> {
+                presenter.deleteTask(taskId)
+                showMessage("Задача удалена")
+                finish()
+            }
+        }
+        return true
     }
 
     private fun getTaskData(): Task {
@@ -90,13 +107,35 @@ class TaskActivity : AppCompatActivity(), TaskView {
         )
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_activiy_main, menu)
+        val action_delete = menu?.findItem(R.id.action_delete)
+        val action_save = menu?.findItem(R.id.action_save)
+        val action_edit = menu?.findItem(R.id.action_edit)
+        when (flag) {
+            TYPE_EDIT -> {
+                action_delete?.isVisible = false
+                action_edit?.isVisible = false
+                action_save?.isVisible = true
+            }
+            TYPE_TASK -> {
+                action_delete?.isVisible = true
+                action_edit?.isVisible = true
+                action_save?.isVisible = false
+            }
+        }
+
+        return true
+    }
+
+
     private fun init() {
         taskTitle = task_title
         taskDescription = task_description
-        deleteTaskButton = delete_task_btn
-        saveTaskButton = save_task_btn
         dateStart = start_date_input
         timeStart = time_start_input
+        val actionBarToolbar: Toolbar = findViewById(R.id.toolbar_action_bar)
+        setSupportActionBar(actionBarToolbar)
         dateStartSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
             presenter.onDateStartSet(
                 year,
