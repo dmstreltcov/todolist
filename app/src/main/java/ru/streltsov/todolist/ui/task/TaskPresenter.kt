@@ -12,10 +12,19 @@ class TaskPresenter : BasePresenter<TaskView>() {
     private var db: DataBase = FirebaseDB()
 
     fun onSaveTask(task: Task): Boolean {
+
         if (validate(task)) {
-            db.addTask(task)
-            return true
+            return if (task.id == null) {
+
+                Log.d("onSaveTask", "Created new task")
+                db.addTask(task)
+                true
+            } else {
+                db.updateTask(task)
+                true
+            }
         }
+
         return false
     }
 

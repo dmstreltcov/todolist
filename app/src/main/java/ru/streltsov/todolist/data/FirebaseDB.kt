@@ -36,6 +36,8 @@ class FirebaseDB : DataBase {
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id.toString()).delete()
     }
 
+
+
     override fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
         Log.d(TAG, mAuth.currentUser!!.uid)
         val data = hashMapOf(
@@ -50,6 +52,17 @@ class FirebaseDB : DataBase {
         }.addOnFailureListener {
             Log.w(TAG, "TODO _Error adding document", it)
         }
+    }
+
+    override fun updateTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
+        val data = mapOf(
+            "title" to task.title,
+            "description" to task.description,
+            "status" to task.status,
+            "dateStart" to task.dateStart
+        )
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(task.id.toString())
+            .update(data)
     }
 
     override fun changeTaskStatus() {

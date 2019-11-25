@@ -18,5 +18,6 @@ interface DataBase {
     fun getData(): Query
     fun deleteTask(id:String?)
     fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task)
+    fun updateTask(task: ru.streltsov.todolist.ui.tasklist.Task)
     fun changeTaskStatus()
 }

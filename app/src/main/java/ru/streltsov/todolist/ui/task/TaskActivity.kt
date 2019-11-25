@@ -100,6 +100,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
     private fun getTaskData(): Task {
         return Task(
+            id = taskId,
             title = taskTitle.text.toString(),
             description = taskDescription.text.toString(),
             createDate = Timestamp.now(),

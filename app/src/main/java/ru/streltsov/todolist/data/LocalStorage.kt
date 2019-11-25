@@ -14,6 +14,10 @@ class LocalStorage : DataBase {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun updateTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun changeTaskStatus() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
