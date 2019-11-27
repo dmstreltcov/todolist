@@ -12,10 +12,8 @@ class TaskPresenter : BasePresenter<TaskView>() {
     private var db: DataBase = FirebaseDB()
 
     fun onSaveTask(task: Task): Boolean {
-
         if (validate(task)) {
             return if (task.id == null) {
-
                 Log.d("onSaveTask", "Created new task")
                 db.addTask(task)
                 true
@@ -24,7 +22,6 @@ class TaskPresenter : BasePresenter<TaskView>() {
                 true
             }
         }
-
         return false
     }
 
@@ -74,7 +71,6 @@ class TaskPresenter : BasePresenter<TaskView>() {
     }
 
     private fun validate(task: Task): Boolean {
-
         return when {
             task.title.isNullOrEmpty() -> {
                 view?.showMessage("Заполните заголовок")
@@ -85,21 +81,3 @@ class TaskPresenter : BasePresenter<TaskView>() {
     }
 
 }
-
-//private void datePicker(){
-//    Calendar c = Calendar . getInstance ();
-//    mYear = c.get(Calendar.YEAR);
-//    mMonth = c.get(Calendar.MONTH); mDay = c.get(Calendar.DAY_OF_MONTH);
-//    DatePickerDialog datePickerDialog = new DatePickerDialog(this,new DatePickerDialog . OnDateSetListener () {
-//            @Override public void onDateSet(DatePicker view,int year,int monthOfYear,int dayOfMonth) {
-//                date_time = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
-//                tiemPicker();
-//            }
-//        }, mYear, mMonth, mDay
-//    ); datePickerDialog.show(); }
-//
-//private void tiemPicker(){
-//    final Calendar c = Calendar.getInstance();
-
-//
-

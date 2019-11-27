@@ -1,31 +1,30 @@
 package ru.streltsov.todolist.ui.task
 
-import android.app.Activity
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.app.*
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NotificationCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.activity_task.*
 import ru.streltsov.todolist.R
+import ru.streltsov.todolist.alarm.NotificationReceiver
 import ru.streltsov.todolist.ui.tasklist.Task
 import java.lang.Exception
-import java.sql.Date
 import java.text.SimpleDateFormat
+import java.util.*
 
 class TaskActivity : AppCompatActivity(), TaskView {
 
-    private val TAG: String = "TODO _TaskActivity"
+    private val TAG: String = "TaskActivity"
     private val TYPE_TASK: Int = 0
     private val TYPE_EDIT: Int = 1
     private lateinit var taskTitle: EditText
@@ -35,10 +34,14 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private val presenter: TaskPresenter by lazy { TaskPresenter() }
     private lateinit var dateStartSetListener: DatePickerDialog.OnDateSetListener
     private lateinit var timeStartSetListener: TimePickerDialog.OnTimeSetListener
-    private lateinit var itemDelete: MenuItem
-    private var flag: Int = 0
+    private lateinit var flag: TaskType
     private var taskId: String? = null
+    private var dateStartLong: Long? = null
     private lateinit var actionBarToolbar: Toolbar
+
+    private lateinit var nm:NotificationManager
+    private lateinit var am:AlarmManager
+    private lateinit var pIntent:PendingIntent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,24 +49,15 @@ class TaskActivity : AppCompatActivity(), TaskView {
         presenter.attach(this)
         init()
         val task = intent.getParcelableExtra<Task>("task")
-        Log.d(TAG, "$task")
-
         if (task != null) {
-            flag = TYPE_TASK
+            flag = TaskType.EDIT
             taskId = task.id
             taskTitle.setText(task.title)
             taskDescription.setText(task.description)
-            Log.d(TAG, "${task.dateStart}")
-            val aa = formatDate(task.dateStart).split("|")
-            for (str: String in aa) {
-                print(str)
-            }
-
             dateStart.setText(formatDate(task.dateStart).split("|")[1])
             timeStart.setText(formatDate(task.dateStart).split("|")[0])
-
         } else {
-            flag = TYPE_EDIT
+            flag = TaskType.NEW
         }
 
         dateStart.setOnClickListener {
@@ -85,9 +79,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
             R.id.action_save -> {
                 if (presenter.onSaveTask(getTaskData())) {
                     setResult(Activity.RESULT_OK)
+
+                    am.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis() + 5000, pIntent)
                     finish()
                 }
-
             }
             R.id.action_delete -> {
                 presenter.deleteTask(taskId)
@@ -113,25 +108,24 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_activiy_main, menu)
-        val action_delete = menu?.findItem(R.id.action_delete)
-        val action_save = menu?.findItem(R.id.action_save)
-        val action_edit = menu?.findItem(R.id.action_edit)
+        val actionDelete = menu?.findItem(R.id.action_delete)
+        val actionSave = menu?.findItem(R.id.action_save)
+        val actionEdit = menu?.findItem(R.id.action_edit)
+
         when (flag) {
-            TYPE_EDIT -> {
-                action_delete?.isVisible = false
-                action_edit?.isVisible = false
-                action_save?.isVisible = true
+            TaskType.NEW -> {
+                actionDelete?.isVisible = false
+                actionEdit?.isVisible = false
+                actionSave?.isVisible = true
             }
-            TYPE_TASK -> {
-                action_delete?.isVisible = true
-                action_edit?.isVisible = true
-                action_save?.isVisible = false
+            TaskType.EDIT -> {
+                actionDelete?.isVisible = true
+                actionEdit?.isVisible = true
+                actionSave?.isVisible = false
             }
         }
-
         return true
     }
-
 
     private fun init() {
         taskTitle = task_title
@@ -140,6 +134,11 @@ class TaskActivity : AppCompatActivity(), TaskView {
         timeStart = time_start_input
         actionBarToolbar = findViewById(R.id.toolbar_action_bar)
         setSupportActionBar(actionBarToolbar)
+        nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        am = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent: Intent = Intent(this, NotificationReceiver::class.java)
+        pIntent = PendingIntent.getBroadcast(this,0, intent, 0)
+
         dateStartSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
             presenter.onDateStartSet(
                 year,
@@ -168,9 +167,9 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
     private fun parseDate(time: String, date: String): Timestamp {
         val format = SimpleDateFormat("HH:mm dd.MM.yyyy")
-        val data = format.parse("$time $date")
-        val timestamp: Timestamp = Timestamp(data)
-        return timestamp
+        val data: Date = format.parse("$time $date")
+        dateStartLong = data.time //Костыль
+        return Timestamp(data)
 
 
     }

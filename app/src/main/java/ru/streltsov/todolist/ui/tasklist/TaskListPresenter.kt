@@ -16,8 +16,4 @@ class TaskListPresenter : BasePresenter<TaskListView>() {
     fun onLoadData() : Query{
         return db.getData()
     }
-
-    fun onChangeStatus(){
-
-    }
 }
