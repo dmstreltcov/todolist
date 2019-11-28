@@ -31,6 +31,8 @@
     <string name="action_delete_title">Удалить</string>
     <string name="action_save_title">Сохранить</string>
 
+    <string name="action_alarm">alarm</string>
+
     <string-array name="remind_type">
         <item>Нет</item>
         <item>За 5 минут</item>

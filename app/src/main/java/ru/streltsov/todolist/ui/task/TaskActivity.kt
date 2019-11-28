@@ -11,12 +11,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.activity_task.*
 import ru.streltsov.todolist.R
-import ru.streltsov.todolist.alarm.NotificationReceiver
+import ru.streltsov.todolist.alarm.AlarmReceiver
+import ru.streltsov.todolist.alarm.NotificationHelper
 import ru.streltsov.todolist.ui.tasklist.Task
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -25,8 +26,6 @@ import java.util.*
 class TaskActivity : AppCompatActivity(), TaskView {
 
     private val TAG: String = "TaskActivity"
-    private val TYPE_TASK: Int = 0
-    private val TYPE_EDIT: Int = 1
     private lateinit var taskTitle: EditText
     private lateinit var taskDescription: EditText
     private lateinit var dateStart: TextInputEditText
@@ -36,18 +35,20 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private lateinit var timeStartSetListener: TimePickerDialog.OnTimeSetListener
     private lateinit var flag: TaskType
     private var taskId: String? = null
-    private var dateStartLong: Long? = null
     private lateinit var actionBarToolbar: Toolbar
-
-    private lateinit var nm:NotificationManager
-    private lateinit var am:AlarmManager
-    private lateinit var pIntent:PendingIntent
+    private lateinit var  task: Task
+    private lateinit var alarmManager: AlarmManager
+    private var timeAlarm:Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
         presenter.attach(this)
         init()
+
+
+        alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
         val task = intent.getParcelableExtra<Task>("task")
         if (task != null) {
             flag = TaskType.EDIT
@@ -77,10 +78,12 @@ class TaskActivity : AppCompatActivity(), TaskView {
                 actionBarToolbar.menu.findItem(R.id.action_save).isVisible = true
             }
             R.id.action_save -> {
-                if (presenter.onSaveTask(getTaskData())) {
+                task = getTaskData()
+                if (presenter.onSaveTask(task)) {
                     setResult(Activity.RESULT_OK)
 
-                    am.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis() + 5000, pIntent)
+                    if(task.dateStart != null) setAlarm(task)
+
                     finish()
                 }
             }
@@ -90,7 +93,15 @@ class TaskActivity : AppCompatActivity(), TaskView {
                 finish()
             }
         }
+
         return true
+    }
+
+    private fun setAlarm(task:Task){
+        val intent = Intent(this, AlarmReceiver::class.java)
+        intent.putExtra("title", task.title)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAlarm, pendingIntent)
     }
 
     private fun getTaskData(): Task {
@@ -134,11 +145,6 @@ class TaskActivity : AppCompatActivity(), TaskView {
         timeStart = time_start_input
         actionBarToolbar = findViewById(R.id.toolbar_action_bar)
         setSupportActionBar(actionBarToolbar)
-        nm = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        am = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent: Intent = Intent(this, NotificationReceiver::class.java)
-        pIntent = PendingIntent.getBroadcast(this,0, intent, 0)
-
         dateStartSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
             presenter.onDateStartSet(
                 year,
@@ -168,7 +174,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private fun parseDate(time: String, date: String): Timestamp {
         val format = SimpleDateFormat("HH:mm dd.MM.yyyy")
         val data: Date = format.parse("$time $date")
-        dateStartLong = data.time //Костыль
+        timeAlarm = data.time
         return Timestamp(data)
 
 
