@@ -36,9 +36,9 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private lateinit var flag: TaskType
     private var taskId: String? = null
     private lateinit var actionBarToolbar: Toolbar
-    private lateinit var  task: Task
+    private lateinit var task: Task
     private lateinit var alarmManager: AlarmManager
-    private var timeAlarm:Long = 0
+    private var timeAlarm: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +82,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
                 if (presenter.onSaveTask(task)) {
                     setResult(Activity.RESULT_OK)
 
-                    if(task.dateStart != null) setAlarm(task)
+                    if (task.dateStart != null) setAlarm(task)
 
                     finish()
                 }
@@ -97,7 +97,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
         return true
     }
 
-    private fun setAlarm(task:Task){
+    private fun setAlarm(task: Task) {
         val intent = Intent(this, AlarmReceiver::class.java)
         intent.putExtra("title", task.title)
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)

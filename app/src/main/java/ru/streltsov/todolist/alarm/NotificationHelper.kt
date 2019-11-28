@@ -17,7 +17,7 @@ object NotificationHelper {
         importance: Int,
         showBadge: Boolean,
         name: String,
-        title:String?,
+        title: String?,
         description: String
     ) {
 
@@ -40,7 +40,7 @@ object NotificationHelper {
             priority = NotificationCompat.PRIORITY_DEFAULT
             setAutoCancel(true)
 
-            fun createSampleDataNotification(){
+            fun createSampleDataNotification() {
                 val intent = Intent(context, MainActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
@@ -48,7 +48,7 @@ object NotificationHelper {
             }
         }
         val notificationManager = NotificationManagerCompat.from(context)
-        notificationManager.notify(10001,notificationBuilder.build())
+        notificationManager.notify(10001, notificationBuilder.build())
 
     }
 }
