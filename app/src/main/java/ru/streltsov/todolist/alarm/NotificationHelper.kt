@@ -14,17 +14,15 @@ import ru.streltsov.todolist.R
 object NotificationHelper {
     fun createNotificationChannel(
         context: Context,
-        importance: Int,
         showBadge: Boolean,
-        name: String,
         title: String?,
         description: String
     ) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            val channelId = "${context.packageName}-$name"
-            val channel = NotificationChannel(channelId, name, importance)
+            val channelId = "${context.packageName}-todolist"
+            val channel = NotificationChannel(channelId, "todolist", NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = description
             channel.setShowBadge(showBadge)
 

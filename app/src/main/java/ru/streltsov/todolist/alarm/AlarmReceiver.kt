@@ -13,9 +13,7 @@ class AlarmReceiver : BroadcastReceiver() {
         Log.d("Alarm Reciever", "onReceive()")
         NotificationHelper.createNotificationChannel(
             context,
-            NotificationManagerCompat.IMPORTANCE_DEFAULT,
             false,
-            context.getString(R.string.app_name),
             title,
             "App notification channel."
         )

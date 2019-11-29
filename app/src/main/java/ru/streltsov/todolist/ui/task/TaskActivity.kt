@@ -1,8 +1,10 @@
 package ru.streltsov.todolist.ui.task
 
 import android.app.*
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,13 +13,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.NotificationManagerCompat
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.activity_task.*
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.alarm.AlarmReceiver
-import ru.streltsov.todolist.alarm.NotificationHelper
+import ru.streltsov.todolist.alarm.BootCompleteReceiver
 import ru.streltsov.todolist.ui.tasklist.Task
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -48,6 +49,12 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
 
         alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val receiver = ComponentName(applicationContext, BootCompleteReceiver::class.java)
+        applicationContext.packageManager?.setComponentEnabledSetting(
+            receiver,
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP
+        )
 
         val task = intent.getParcelableExtra<Task>("task")
         if (task != null) {
@@ -82,13 +89,16 @@ class TaskActivity : AppCompatActivity(), TaskView {
                 if (presenter.onSaveTask(task)) {
                     setResult(Activity.RESULT_OK)
 
-                    if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm)) setAlarm(task)
+                    if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm)) setAlarm(
+                        task
+                    )
 
                     finish()
                 }
             }
             R.id.action_delete -> {
                 presenter.deleteTask(taskId)
+                cancelAlarm()
                 showMessage("Задача удалена")
                 finish()
             }
@@ -97,11 +107,20 @@ class TaskActivity : AppCompatActivity(), TaskView {
         return true
     }
 
-    private fun setAlarm(task: Task) {
+    private fun createPendingIntent(): PendingIntent {
         val intent = Intent(this, AlarmReceiver::class.java)
         intent.putExtra("title", task.title)
+        return PendingIntent.getBroadcast(this, 0, intent, 0)
+    }
+
+    private fun setAlarm(task: Task) {
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAlarm, createPendingIntent())
+    }
+
+    private fun cancelAlarm() {
+        val intent = Intent(this, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
-        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAlarm, pendingIntent)
+        alarmManager.cancel(pendingIntent)
     }
 
     private fun getTaskData(): Task {
