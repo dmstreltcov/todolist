@@ -39,7 +39,6 @@
                 android:layout_margin="10dp"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@+id/list_item_title_2"
-                android:text="20:00"
                 android:textSize="14sp"
                 android:maxLines="2"
                 android:textStyle="normal" />

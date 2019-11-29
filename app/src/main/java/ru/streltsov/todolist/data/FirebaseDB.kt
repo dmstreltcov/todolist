@@ -26,17 +26,17 @@ class FirebaseDB : DataBase {
 
     override fun getData(): Query {
         Log.d(TAG, "Try to get data")
-        return db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").orderBy("createDate")
+        return db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
+            .orderBy("createDate")
     }
 
     override fun deleteTask(id: String?) {
         if (id == null) {
             throw NullPointerException("id is null")
         }
-        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id.toString()).delete()
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
+            .document(id.toString()).delete()
     }
-
-
 
     override fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
         Log.d(TAG, mAuth.currentUser!!.uid)
@@ -47,9 +47,10 @@ class FirebaseDB : DataBase {
             "status" to task.status,
             "dateStart" to task.dateStart
         )
-        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").add(data).addOnSuccessListener {
-            Log.d(TAG, "TODO _Document written with ID: ${it.id}")
-        }.addOnFailureListener {
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").add(data)
+            .addOnSuccessListener {
+                Log.d(TAG, "TODO _Document written with ID: ${it.id}")
+            }.addOnFailureListener {
             Log.w(TAG, "TODO _Error adding document", it)
         }
     }
@@ -61,11 +62,12 @@ class FirebaseDB : DataBase {
             "status" to task.status,
             "dateStart" to task.dateStart
         )
-        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(task.id.toString())
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
+            .document(task.id.toString())
             .update(data)
     }
 
-    override fun changeTaskStatus() {
+    fun getAllAlarm() {
 
     }
 }

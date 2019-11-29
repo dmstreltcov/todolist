@@ -44,19 +44,7 @@ class TaskListAdapter(private val options: FirestoreRecyclerOptions<Task>) :
 
         fun setData(task: Task) {
             titleView.text = task.title
-            taskTime.text = formatDate(task.dateStart)
-//            statusBox.setOnCheckedChangeListener {
-//                    box, status ->
-//                if (status){
-//                    (itemView.context as TaskListActivity).changeStatus(task.id, 0)
-//                    statusBox.isChecked = false
-//
-//                }else{
-//                    (itemView.context as TaskListActivity).changeStatus(task.id, 1)
-//                    statusBox.isChecked = true
-//                    titleView.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-//                }
-//            }
+            if (task.dateStart != null) taskTime.text = formatDate(task.dateStart)
             itemView.setOnClickListener {
                 openTask(task)
             }

@@ -41,6 +41,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private lateinit var alarmManager: AlarmManager
     private var timeAlarm: Long = 0
 
+
+
+    //TODO Сделать нормальную валидацию всех полей
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
@@ -62,8 +66,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
             taskId = task.id
             taskTitle.setText(task.title)
             taskDescription.setText(task.description)
-            dateStart.setText(formatDate(task.dateStart).split("|")[1])
-            timeStart.setText(formatDate(task.dateStart).split("|")[0])
+            if (task.dateStart != null ) {
+                dateStart.setText(formatDate(task.dateStart).split("|")[1])
+                timeStart.setText(formatDate(task.dateStart).split("|")[0])
+            }
         } else {
             flag = TaskType.NEW
         }
@@ -190,13 +196,14 @@ class TaskActivity : AppCompatActivity(), TaskView {
         }
     }
 
-    private fun parseDate(time: String, date: String): Timestamp {
-        val format = SimpleDateFormat("HH:mm dd.MM.yyyy")
-        val data: Date = format.parse("$time $date")
-        timeAlarm = data.time
-        return Timestamp(data)
-
-
+    private fun parseDate(time: String?, date: String?): Timestamp? {
+        if(!time.isNullOrEmpty() && !date.isNullOrEmpty()) {
+            val format = SimpleDateFormat("HH:mm dd.MM.yyyy")
+            val data: Date = format.parse("$time $date")
+            timeAlarm = data.time
+            return Timestamp(data)
+        }
+        return null
     }
 
     override fun setStartDateText(date: String) {
