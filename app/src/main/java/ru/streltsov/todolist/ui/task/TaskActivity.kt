@@ -82,7 +82,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
                 if (presenter.onSaveTask(task)) {
                     setResult(Activity.RESULT_OK)
 
-                    if (task.dateStart != null) setAlarm(task)
+                    if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm)) setAlarm(task)
 
                     finish()
                 }

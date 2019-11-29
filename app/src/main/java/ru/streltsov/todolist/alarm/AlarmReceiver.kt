@@ -8,11 +8,11 @@ import androidx.core.app.NotificationManagerCompat
 import ru.streltsov.todolist.R
 
 class AlarmReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        val title = intent!!.getStringExtra("title")
+    override fun onReceive(context: Context, intent: Intent) {
+        val title = intent.getStringExtra("title")
         Log.d("Alarm Reciever", "onReceive()")
         NotificationHelper.createNotificationChannel(
-            context!!,
+            context,
             NotificationManagerCompat.IMPORTANCE_DEFAULT,
             false,
             context.getString(R.string.app_name),

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#E8871E</color>
+    <color name="colorPrimaryDark">#EDB458</color>
+    <color name="colorAccent">#D4D4AA</color>
 
-    <color name="gr_dr_blue">#002B3C</color>
-    <color name="gr_lt_blue">#02C4FF</color>
+    <color name="gr_end">#BAD4AA</color>
+    <color name="gr_start">#EBF5DF</color>
 
 
     <array name="gradient">
-        <item>@color/gr_lt_blue</item>
-        <item>@color/gr_dr_blue</item>
+        <item>@color/gr_start</item>
+        <item>@color/gr_end</item>
     </array>
 </resources>
