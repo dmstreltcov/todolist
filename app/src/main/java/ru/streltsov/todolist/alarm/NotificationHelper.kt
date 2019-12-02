@@ -34,7 +34,6 @@ object NotificationHelper {
         val notificationBuilder = NotificationCompat.Builder(context, channelId).apply {
             setSmallIcon(R.drawable.ic_notification)
             setContentTitle(title)
-            setStyle(NotificationCompat.BigTextStyle().bigText("Some text"))
             priority = NotificationCompat.PRIORITY_DEFAULT
             setAutoCancel(true)
 

@@ -3,25 +3,18 @@ package ru.streltsov.todolist.ui.tasklist
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
-import com.google.firebase.auth.FirebaseUser
-import androidx.recyclerview.widget.RecyclerView
-import android.view.View
-import android.view.ViewGroup
-import android.widget.*
-import androidx.appcompat.widget.Toolbar
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.Query
-import kotlinx.android.synthetic.main.tasklist_item_2.*
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.task.TaskActivity
 
@@ -73,6 +66,16 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
             .build()  //хм
         adapter = TaskListAdapter(options)
         recyclerView.adapter = adapter
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy <= 0 && !addTaskBtn.isShown) addTaskBtn.show() else if (dy > 0 && addTaskBtn.isShown) addTaskBtn.hide()
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                addTaskBtn.isShown
+            }
+        })
     }
 
     override fun showMessage(message: String) {

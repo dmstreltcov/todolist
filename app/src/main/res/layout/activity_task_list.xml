@@ -8,7 +8,7 @@
         android:id="@+id/tasklist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?attr/actionBarSize"/>
+        />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
@@ -17,6 +17,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:fabAlignmentMode="end"
+        app:hideOnScroll="true"
+        app:layout_scrollFlags=""
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -25,7 +27,8 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
+        app:layout_anchorGravity="bottom|right|end"
         android:src="@drawable/ic_add"
-        app:layout_anchor="@id/bottomAppBar" />
+        app:layout_anchor="@id/bottomAppBar"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
