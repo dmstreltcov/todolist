@@ -13,6 +13,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
+import com.google.android.material.bottomappbar.BottomAppBar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.activity_task.*
@@ -36,11 +38,11 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private lateinit var timeStartSetListener: TimePickerDialog.OnTimeSetListener
     private lateinit var flag: TaskType
     private var taskId: String? = null
-    private lateinit var actionBarToolbar: Toolbar
+    private lateinit var actionBarToolbar: BottomAppBar
     private lateinit var task: Task
     private lateinit var alarmManager: AlarmManager
     private var timeAlarm: Long = 0
-
+    private lateinit var fab: FloatingActionButton
 
 
     //TODO Сделать нормальную валидацию всех полей
@@ -66,12 +68,16 @@ class TaskActivity : AppCompatActivity(), TaskView {
             taskId = task.id
             taskTitle.setText(task.title)
             taskDescription.setText(task.description)
-            if (task.dateStart != null ) {
+            if (task.dateStart != null) {
                 dateStart.setText(formatDate(task.dateStart).split("|")[1])
                 timeStart.setText(formatDate(task.dateStart).split("|")[0])
             }
+            fab.setImageDrawable(resources.getDrawable(R.drawable.ic_edit, getContext().theme))
+            changeInputEnableProperty(flag)
         } else {
             flag = TaskType.NEW
+            fab.setImageDrawable(resources.getDrawable(R.drawable.ic_save, getContext().theme))
+
         }
 
         dateStart.setOnClickListener {
@@ -83,25 +89,45 @@ class TaskActivity : AppCompatActivity(), TaskView {
         }
     }
 
+    private fun changeInputEnableProperty(flag:TaskType){
+        when(flag){
+            TaskType.NEW ->{
+                taskTitle.isEnabled = true
+                taskDescription.isEnabled = true
+                dateStart.isEnabled = true
+                timeStart.isEnabled = true
+            }
+            TaskType.EDIT ->{
+                taskTitle.isEnabled = false
+                taskDescription.isEnabled = false
+                dateStart.isEnabled = false
+                timeStart.isEnabled = false
+            }
+        }
+
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_activiy_main, menu)
+        val actionDelete = menu?.findItem(R.id.action_delete)
+        val actionCancel = menu?.findItem(R.id.action_cancel)
+
+        when (flag) {
+            TaskType.NEW -> {
+                actionDelete?.isVisible = false
+                actionCancel?.isVisible = false
+            }
+            TaskType.EDIT -> {
+                actionDelete?.isVisible = true
+                actionCancel?.isVisible = true
+            }
+        }
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.action_edit -> {
-                actionBarToolbar.menu.findItem(R.id.action_edit).isVisible = false
-                actionBarToolbar.menu.findItem(R.id.action_delete).isVisible = false
-                actionBarToolbar.menu.findItem(R.id.action_save).isVisible = true
-            }
-            R.id.action_save -> {
-                task = getTaskData()
-                if (presenter.onSaveTask(task)) {
-                    setResult(Activity.RESULT_OK)
-
-                    if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm)) setAlarm(
-                        task
-                    )
-
-                    finish()
-                }
-            }
             R.id.action_delete -> {
                 presenter.deleteTask(taskId)
                 cancelAlarm()
@@ -142,33 +168,39 @@ class TaskActivity : AppCompatActivity(), TaskView {
         )
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_activiy_main, menu)
-        val actionDelete = menu?.findItem(R.id.action_delete)
-        val actionSave = menu?.findItem(R.id.action_save)
-        val actionEdit = menu?.findItem(R.id.action_edit)
-
-        when (flag) {
-            TaskType.NEW -> {
-                actionDelete?.isVisible = false
-                actionEdit?.isVisible = false
-                actionSave?.isVisible = true
-            }
-            TaskType.EDIT -> {
-                actionDelete?.isVisible = true
-                actionEdit?.isVisible = true
-                actionSave?.isVisible = false
-            }
-        }
-        return true
-    }
-
     private fun init() {
         taskTitle = task_title
         taskDescription = task_description
         dateStart = start_date_input
         timeStart = time_start_input
-        actionBarToolbar = findViewById(R.id.toolbar_action_bar)
+        fab = findViewById(R.id.fab)
+        actionBarToolbar = findViewById(R.id.taskBottomAppBar)
+        fab.setOnClickListener {
+
+            when (flag) {
+                TaskType.EDIT -> {
+                    fab.setImageDrawable(
+                        resources.getDrawable(
+                            R.drawable.ic_save,
+                            getContext().theme
+                        )
+                    )
+                    flag = TaskType.NEW
+                    changeInputEnableProperty(flag)
+
+                }
+                TaskType.NEW -> {
+                    task = getTaskData()
+                    if (presenter.onSaveTask(task)) {
+                        setResult(Activity.RESULT_OK)
+                        if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm)) setAlarm(
+                            task
+                        )
+                        finish()
+                    }
+                }
+            }
+        }
         setSupportActionBar(actionBarToolbar)
         dateStartSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
             presenter.onDateStartSet(
@@ -197,7 +229,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     }
 
     private fun parseDate(time: String?, date: String?): Timestamp? {
-        if(!time.isNullOrEmpty() && !date.isNullOrEmpty()) {
+        if (!time.isNullOrEmpty() && !date.isNullOrEmpty()) {
             val format = SimpleDateFormat("HH:mm dd.MM.yyyy")
             val data: Date = format.parse("$time $date")
             timeAlarm = data.time

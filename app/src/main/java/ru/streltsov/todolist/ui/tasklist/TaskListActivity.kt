@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -36,6 +37,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
     private lateinit var query: Query
     private lateinit var options: FirestoreRecyclerOptions<Task>
     private lateinit var addTaskBtn: FloatingActionButton
+    private lateinit var actionBarToolbar: BottomAppBar
     private var currentUser: FirebaseUser? = intent?.getParcelableExtra("user")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,11 +53,19 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_task_list, menu)
+        return true
+    }
+
     private fun init() {
         recyclerView = findViewById(R.id.tasklist)
         addTaskBtn = findViewById(R.id.add_task)
         linearLayout = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = linearLayout
+        actionBarToolbar = findViewById(R.id.bottomAppBar)
+        setSupportActionBar(actionBarToolbar)
 
         query = presenter.onLoadData()
         options = FirestoreRecyclerOptions.Builder<Task>()
