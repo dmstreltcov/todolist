@@ -4,17 +4,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.core.app.NotificationManagerCompat
-import ru.streltsov.todolist.R
+import ru.streltsov.todolist.ui.tasklist.Task
 
 class AlarmReceiver : BroadcastReceiver() {
+
+
+
     override fun onReceive(context: Context, intent: Intent) {
-        val title = intent.getStringExtra("title")
-        Log.d("Alarm Reciever", "onReceive()")
+        val task:Task? = intent.getParcelableExtra<Task>("task")
+        Log.d("Alarm Reciever", "onReceive() $task")
         NotificationHelper.createNotificationChannel(
             context,
             false,
-            title,
+            task,
             "App notification channel."
         )
     }

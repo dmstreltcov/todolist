@@ -39,7 +39,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private lateinit var flag: TaskType
     private var taskId: String? = null
     private lateinit var actionBarToolbar: BottomAppBar
-    private lateinit var task: Task
+    private var task: Task? = null
     private lateinit var alarmManager: AlarmManager
     private var timeAlarm: Long = 0
     private lateinit var fab: FloatingActionButton
@@ -62,15 +62,15 @@ class TaskActivity : AppCompatActivity(), TaskView {
             PackageManager.DONT_KILL_APP
         )
 
-        val task = intent.getParcelableExtra<Task>("task")
+        task = intent.getParcelableExtra<Task>("task")
         if (task != null) {
             flag = TaskType.EDIT
-            taskId = task.id
-            taskTitle.setText(task.title)
-            taskDescription.setText(task.description)
-            if (task.dateStart != null) {
-                dateStart.setText(formatDate(task.dateStart).split("|")[1])
-                timeStart.setText(formatDate(task.dateStart).split("|")[0])
+            taskId = task!!.id
+            taskTitle.setText(task!!.title)
+            taskDescription.setText(task!!.description)
+            if (task!!.dateStart != null) {
+                dateStart.setText(formatDate(task!!.dateStart).split("|")[1])
+                timeStart.setText(formatDate(task!!.dateStart).split("|")[0])
             }
             fab.setImageDrawable(resources.getDrawable(R.drawable.ic_edit, getContext().theme))
             changeInputEnableProperty(flag)
@@ -89,15 +89,15 @@ class TaskActivity : AppCompatActivity(), TaskView {
         }
     }
 
-    private fun changeInputEnableProperty(flag:TaskType){
-        when(flag){
-            TaskType.NEW ->{
+    private fun changeInputEnableProperty(flag: TaskType) {
+        when (flag) {
+            TaskType.NEW -> {
                 taskTitle.isEnabled = true
                 taskDescription.isEnabled = true
                 dateStart.isEnabled = true
                 timeStart.isEnabled = true
             }
-            TaskType.EDIT ->{
+            TaskType.EDIT -> {
                 taskTitle.isEnabled = false
                 taskDescription.isEnabled = false
                 dateStart.isEnabled = false
@@ -141,12 +141,13 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
     private fun createPendingIntent(): PendingIntent {
         val intent = Intent(this, AlarmReceiver::class.java)
-        intent.putExtra("title", task.title)
+        intent.putExtra("task", task)
         return PendingIntent.getBroadcast(this, 0, intent, 0)
     }
 
     private fun setAlarm(task: Task) {
         alarmManager.set(AlarmManager.RTC_WAKEUP, timeAlarm, createPendingIntent())
+
     }
 
     private fun cancelAlarm() {
@@ -191,10 +192,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
                 }
                 TaskType.NEW -> {
                     task = getTaskData()
-                    if (presenter.onSaveTask(task)) {
+                    if (presenter.onSaveTask(task!!)) {
                         setResult(Activity.RESULT_OK)
-                        if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm)) setAlarm(
-                            task
+                        if (task!!.dateStart != null && (System.currentTimeMillis() < timeAlarm)) setAlarm(
+                            task!!
                         )
                         finish()
                     }
