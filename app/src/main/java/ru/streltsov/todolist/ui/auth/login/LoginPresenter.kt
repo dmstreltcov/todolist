@@ -13,6 +13,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
     private var db: DataBase = FirebaseDB()
 
     fun onLoginButton(email: String, password: String) {
+        view?.showProgress()
         if (validate(email, password)) {
             db.login(email, password).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -21,6 +22,7 @@ class LoginPresenter : BasePresenter<LoginView>() {
                 } else {
                     Log.d(TAG, "TODO _Login with email: failed")
                     view?.showMessage("Такой пользователь отсутствует")
+                    view?.hideProgress()
                 }
             }
         }
