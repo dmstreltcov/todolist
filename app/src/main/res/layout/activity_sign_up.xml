@@ -46,12 +46,23 @@
 
     <Button
         android:id="@+id/sign_up_btn"
-        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/password_input"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:background="@color/colorSea"
         android:textColor="@color/colorWhite"
         android:text="@string/sign_up_btn" />
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleInverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/password_input"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:visibility="invisible"
+        android:indeterminateDuration="1200"
+        />
 </RelativeLayout>

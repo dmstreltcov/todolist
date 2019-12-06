@@ -5,4 +5,6 @@ import ru.streltsov.todolist.base.BaseView
 
 interface SignUpView : BaseView {
     fun updateUI(user: FirebaseUser)
+    fun showProgress()
+    fun hideProgress()
 }

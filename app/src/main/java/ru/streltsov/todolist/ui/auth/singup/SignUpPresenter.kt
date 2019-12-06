@@ -12,6 +12,8 @@ class SignUpPresenter : BasePresenter<SignUpView>() {
     private var db: DataBase = FirebaseDB()
 
     fun onSignUp(email: String, password: String) {
+        view?.showProgress()
+//        Thread.sleep(1000)
         if (validate(email, password)) {
             db.signUp(email, password).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
@@ -20,9 +22,11 @@ class SignUpPresenter : BasePresenter<SignUpView>() {
                 } else {
                     Log.d(TAG, "TODO _Signup with email: failed")
                     view?.showMessage("Не удалось зарегистрироваться")
+                    view?.hideProgress()
                 }
             }
         }
+
     }
 
     private fun validate(email: String, password: String): Boolean {

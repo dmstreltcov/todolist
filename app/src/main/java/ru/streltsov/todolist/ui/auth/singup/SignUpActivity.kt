@@ -5,8 +5,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -27,6 +29,7 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
     private lateinit var signUp: Button
     private lateinit var emailInput: EditText
     private lateinit var passwordInput: EditText
+    private lateinit var progressBar:ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,7 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
         signUp = findViewById(R.id.sign_up_btn)
         emailInput = findViewById(R.id.email_input)
         passwordInput = findViewById(R.id.password_input)
+        progressBar=findViewById(R.id.progressBar)
 
         signUp.setOnClickListener {
             presenter.onSignUp(emailInput.text.toString(), passwordInput.text.toString())
@@ -52,6 +56,16 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
+    }
+
+    override fun showProgress() {
+        signUp.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideProgress() {
+        signUp.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
     }
 
     override fun getContext(): Context = this
