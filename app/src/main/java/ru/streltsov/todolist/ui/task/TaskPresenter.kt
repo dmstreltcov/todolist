@@ -8,8 +8,10 @@ import ru.streltsov.todolist.ui.tasklist.Task
 import java.util.*
 import kotlin.math.min
 
-class TaskPresenter : BasePresenter<TaskView>() {
+class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
     private var db: DataBase = FirebaseDB()
+
+
 
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {
@@ -79,5 +81,16 @@ class TaskPresenter : BasePresenter<TaskView>() {
             else -> true
         }
     }
+
+    fun getTaskById(id:String){
+        db.setCallback(this)
+        db.getTaskByID(id)
+    }
+
+    override fun returnData(task: Task?) {
+        if (task != null)
+        view?.showData(task)
+    }
+
 
 }

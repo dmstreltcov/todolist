@@ -52,7 +52,7 @@ class TaskListAdapter(private val options: FirestoreRecyclerOptions<Task>) :
 
         private fun openTask(task: Task) {
             val intent: Intent = Intent(itemView.context, TaskActivity::class.java)
-            intent.putExtra("task", task)
+            intent.putExtra("taskID", task.id)
             itemView.context.startActivity(intent)
         }
 

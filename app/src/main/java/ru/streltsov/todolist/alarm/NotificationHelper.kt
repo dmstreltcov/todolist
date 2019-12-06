@@ -22,6 +22,7 @@ object NotificationHelper {
         description: String
     ) {
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             val channelId = "${context.packageName}-todolist"

@@ -36,10 +36,9 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private val presenter: TaskPresenter by lazy { TaskPresenter() }
     private lateinit var dateStartSetListener: DatePickerDialog.OnDateSetListener
     private lateinit var timeStartSetListener: TimePickerDialog.OnTimeSetListener
-    private lateinit var flag: TaskType
+    private var flag: TaskType = TaskType.EDIT
     private var taskId: String? = null
     private lateinit var actionBarToolbar: BottomAppBar
-    private var task: Task? = null
     private lateinit var alarmManager: AlarmManager
     private var timeAlarm: Long = 0
     private lateinit var fab: FloatingActionButton
@@ -62,19 +61,24 @@ class TaskActivity : AppCompatActivity(), TaskView {
             PackageManager.DONT_KILL_APP
         )
 
-        task = intent.getParcelableExtra<Task>("task")
-        if (task != null) {
-            flag = TaskType.EDIT
-            taskId = task!!.id
-            taskTitle.setText(task!!.title)
-            taskDescription.setText(task!!.description)
-            if (task!!.dateStart != null) {
-                dateStart.setText(formatDate(task!!.dateStart).split("|")[1])
-                timeStart.setText(formatDate(task!!.dateStart).split("|")[0])
-            }
-            fab.setImageDrawable(resources.getDrawable(R.drawable.ic_edit, getContext().theme))
-            changeInputEnableProperty(flag)
-        } else {
+//        task = intent.getParcelableExtra<Task>("task")
+        val taskId = intent.getStringExtra("taskID")
+        if(taskId != null){
+            presenter.getTaskById(taskId)
+        }
+//        if (task != null) {
+//            flag = TaskType.EDIT
+//            taskId = task!!.id
+//            taskTitle.setText(task!!.title)
+//            taskDescription.setText(task!!.description)
+//            if (task!!.dateStart != null) {
+//                dateStart.setText(formatDate(task!!.dateStart).split("|")[1])
+//                timeStart.setText(formatDate(task!!.dateStart).split("|")[0])
+//            }
+//            fab.setImageDrawable(resources.getDrawable(R.drawable.ic_edit, getContext().theme))
+//            changeInputEnableProperty(flag)
+//        }
+        else {
             flag = TaskType.NEW
             fab.setImageDrawable(resources.getDrawable(R.drawable.ic_save, getContext().theme))
 
@@ -141,7 +145,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
     private fun createPendingIntent(): PendingIntent {
         val intent = Intent(this, AlarmReceiver::class.java)
-        intent.putExtra("task", task)
+        intent.putExtra("task", getTaskData().title)
         return PendingIntent.getBroadcast(this, 0, intent, 0)
     }
 
@@ -190,16 +194,16 @@ class TaskActivity : AppCompatActivity(), TaskView {
                     changeInputEnableProperty(flag)
 
                 }
-                TaskType.NEW -> {
-                    task = getTaskData()
-                    if (presenter.onSaveTask(task!!)) {
-                        setResult(Activity.RESULT_OK)
-                        if (task!!.dateStart != null && (System.currentTimeMillis() < timeAlarm)) setAlarm(
-                            task!!
-                        )
-                        finish()
-                    }
-                }
+//                TaskType.NEW -> {
+//                    task = getTaskData()
+//                    if (presenter.onSaveTask(task!!)) {
+//                        setResult(Activity.RESULT_OK)
+//                        if (task!!.dateStart != null && (System.currentTimeMillis() < timeAlarm)) setAlarm(
+//                            task!!
+//                        )
+//                        finish()
+//                    }
+//                }
             }
         }
         setSupportActionBar(actionBarToolbar)
@@ -279,6 +283,19 @@ class TaskActivity : AppCompatActivity(), TaskView {
             true
         )
         dialog.show()
+    }
+
+    override fun showData(task: Task) {
+        flag = TaskType.EDIT
+//            taskId = task!!.id
+            taskTitle.setText(task.title)
+            taskDescription.setText(task.description)
+            if (task.dateStart != null) {
+                dateStart.setText(formatDate(task.dateStart).split("|")[1])
+                timeStart.setText(formatDate(task.dateStart).split("|")[0])
+            }
+            fab.setImageDrawable(resources.getDrawable(R.drawable.ic_edit, getContext().theme))
+            changeInputEnableProperty(flag)
     }
 
     override fun getContext(): Context = this

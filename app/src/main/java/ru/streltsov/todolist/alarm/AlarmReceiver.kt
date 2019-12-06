@@ -9,9 +9,9 @@ import ru.streltsov.todolist.ui.tasklist.Task
 class AlarmReceiver : BroadcastReceiver() {
 
 
-
     override fun onReceive(context: Context, intent: Intent) {
-        val task:Task? = intent.getParcelableExtra<Task>("task")
+
+        val task = getTask(intent)
         Log.d("Alarm Reciever", "onReceive() $task")
         NotificationHelper.createNotificationChannel(
             context,
@@ -19,5 +19,12 @@ class AlarmReceiver : BroadcastReceiver() {
             task,
             "App notification channel."
         )
+
+
     }
+
+    fun getTask(intent: Intent): Task? {
+        return intent.extras?.getParcelable("task")
+    }
+
 }

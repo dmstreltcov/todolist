@@ -18,6 +18,14 @@ class LocalStorage : DataBase {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun getTaskByID(id: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun setCallback(callback: DataBase.Callback) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun deleteTask(id:String?) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

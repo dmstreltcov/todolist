@@ -6,6 +6,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import ru.streltsov.todolist.ui.tasklist.Task as TaskTD
 
 class FirebaseDB : DataBase {
 
@@ -13,6 +14,7 @@ class FirebaseDB : DataBase {
     private val TAG: String = "TODO _Firebase DataBase"
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private lateinit var mCallback: DataBase.Callback
 
     override fun currentUser(): Parcelable {
         return mAuth.currentUser!!
@@ -51,8 +53,8 @@ class FirebaseDB : DataBase {
             .addOnSuccessListener {
                 Log.d(TAG, "TODO _Document written with ID: ${it.id}")
             }.addOnFailureListener {
-            Log.w(TAG, "TODO _Error adding document", it)
-        }
+                Log.w(TAG, "TODO _Error adding document", it)
+            }
     }
 
     override fun updateTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
@@ -65,6 +67,20 @@ class FirebaseDB : DataBase {
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
             .document(task.id.toString())
             .update(data)
+    }
+
+    override fun getTaskByID(id: String){
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id).get()
+            .addOnSuccessListener {documentSnapshot ->
+                val task: TaskTD? = documentSnapshot.toObject(TaskTD::class.java)
+                mCallback.returnData(task)
+            }.addOnFailureListener {
+            Log.d(TAG, "$it")
+        }
+    }
+
+    override fun setCallback(callback: DataBase.Callback) {
+        mCallback = callback
     }
 
     fun getAllAlarm() {
