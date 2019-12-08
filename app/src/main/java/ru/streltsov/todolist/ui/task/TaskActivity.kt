@@ -61,24 +61,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
             PackageManager.DONT_KILL_APP
         )
 
-//        task = intent.getParcelableExtra<Task>("task")
         val taskId = intent.getStringExtra("taskID")
-        if(taskId != null){
+        if (taskId != null) {
             presenter.getTaskById(taskId)
-        }
-//        if (task != null) {
-//            flag = TaskType.EDIT
-//            taskId = task!!.id
-//            taskTitle.setText(task!!.title)
-//            taskDescription.setText(task!!.description)
-//            if (task!!.dateStart != null) {
-//                dateStart.setText(formatDate(task!!.dateStart).split("|")[1])
-//                timeStart.setText(formatDate(task!!.dateStart).split("|")[0])
-//            }
-//            fab.setImageDrawable(resources.getDrawable(R.drawable.ic_edit, getContext().theme))
-//            changeInputEnableProperty(flag)
-//        }
-        else {
+        } else {
             flag = TaskType.NEW
             fab.setImageDrawable(resources.getDrawable(R.drawable.ic_save, getContext().theme))
 
@@ -91,6 +77,65 @@ class TaskActivity : AppCompatActivity(), TaskView {
         timeStart.setOnClickListener {
             presenter.onTimeStartClicked()
         }
+    }
+
+    private fun init() {
+        taskTitle = task_title
+        taskDescription = task_description
+        dateStart = start_date_input
+        timeStart = time_start_input
+        fab = findViewById(R.id.fab)
+        actionBarToolbar = findViewById(R.id.taskBottomAppBar)
+        fab.setOnClickListener {
+            when (flag) {
+                TaskType.EDIT -> {
+                    fab.setImageDrawable(
+                        resources.getDrawable(
+                            R.drawable.ic_save,
+                            getContext().theme
+                        )
+                    )
+                    flag = TaskType.NEW
+                    changeInputEnableProperty(flag)
+
+                }
+                TaskType.NEW -> {
+                    val task = getTaskData()
+                    if (presenter.onSaveTask(task)) {
+                        setResult(Activity.RESULT_OK)
+                        if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm))
+                            setAlarm(task)
+                        finish()
+                    }
+                }
+            }
+        }
+        setSupportActionBar(actionBarToolbar)
+        dateStartSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
+            presenter.onDateStartSet(
+                year,
+                month,
+                day
+            )
+        }
+        timeStartSetListener = TimePickerDialog.OnTimeSetListener { picker, hour, minute ->
+            presenter.onTimeStartSet(
+                hour,
+                minute
+            )
+        }
+    }
+
+    override fun showData(task: Task) {
+        flag = TaskType.EDIT
+        taskTitle.setText(task.title)
+        taskDescription.setText(task.description)
+        if (task.dateStart != null) {
+            dateStart.setText(formatDate(task.dateStart).split("|")[1])
+            timeStart.setText(formatDate(task.dateStart).split("|")[0])
+        }
+        fab.setImageDrawable(resources.getDrawable(R.drawable.ic_edit, getContext().theme))
+        changeInputEnableProperty(flag)
     }
 
     private fun changeInputEnableProperty(flag: TaskType) {
@@ -173,55 +218,6 @@ class TaskActivity : AppCompatActivity(), TaskView {
         )
     }
 
-    private fun init() {
-        taskTitle = task_title
-        taskDescription = task_description
-        dateStart = start_date_input
-        timeStart = time_start_input
-        fab = findViewById(R.id.fab)
-        actionBarToolbar = findViewById(R.id.taskBottomAppBar)
-        fab.setOnClickListener {
-
-            when (flag) {
-                TaskType.EDIT -> {
-                    fab.setImageDrawable(
-                        resources.getDrawable(
-                            R.drawable.ic_save,
-                            getContext().theme
-                        )
-                    )
-                    flag = TaskType.NEW
-                    changeInputEnableProperty(flag)
-
-                }
-//                TaskType.NEW -> {
-//                    task = getTaskData()
-//                    if (presenter.onSaveTask(task!!)) {
-//                        setResult(Activity.RESULT_OK)
-//                        if (task!!.dateStart != null && (System.currentTimeMillis() < timeAlarm)) setAlarm(
-//                            task!!
-//                        )
-//                        finish()
-//                    }
-//                }
-            }
-        }
-        setSupportActionBar(actionBarToolbar)
-        dateStartSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
-            presenter.onDateStartSet(
-                year,
-                month,
-                day
-            )
-        }
-        timeStartSetListener = TimePickerDialog.OnTimeSetListener { picker, hour, minute ->
-            presenter.onTimeStartSet(
-                hour,
-                minute
-            )
-        }
-    }
-
 
     private fun formatDate(dateStart: Timestamp?): String {
         return try {
@@ -283,19 +279,6 @@ class TaskActivity : AppCompatActivity(), TaskView {
             true
         )
         dialog.show()
-    }
-
-    override fun showData(task: Task) {
-        flag = TaskType.EDIT
-//            taskId = task!!.id
-            taskTitle.setText(task.title)
-            taskDescription.setText(task.description)
-            if (task.dateStart != null) {
-                dateStart.setText(formatDate(task.dateStart).split("|")[1])
-                timeStart.setText(formatDate(task.dateStart).split("|")[0])
-            }
-            fab.setImageDrawable(resources.getDrawable(R.drawable.ic_edit, getContext().theme))
-            changeInputEnableProperty(flag)
     }
 
     override fun getContext(): Context = this

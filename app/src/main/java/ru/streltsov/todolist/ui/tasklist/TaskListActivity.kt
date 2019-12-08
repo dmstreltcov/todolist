@@ -79,7 +79,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
     }
 
     override fun showMessage(message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun getContext(): Context = this

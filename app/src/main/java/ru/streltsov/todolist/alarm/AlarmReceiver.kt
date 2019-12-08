@@ -19,8 +19,6 @@ class AlarmReceiver : BroadcastReceiver() {
             task,
             "App notification channel."
         )
-
-
     }
 
     fun getTask(intent: Intent): Task? {
