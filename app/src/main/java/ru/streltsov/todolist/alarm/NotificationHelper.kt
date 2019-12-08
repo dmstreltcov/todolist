@@ -18,7 +18,8 @@ object NotificationHelper {
     fun createNotificationChannel(
         context: Context,
         showBadge: Boolean,
-        task: Task?,
+        title: String?,
+        id:String?,
         description: String
     ) {
 
@@ -36,9 +37,8 @@ object NotificationHelper {
 
 
         val intent = Intent(context, TaskActivity::class.java)
-        intent.putExtra("task", task)
+        intent.putExtra("taskID", id)
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val title = task!!.title
 
         val channelId = "${context.packageName}-${context.getString(R.string.app_name)}"
         val notificationBuilder = NotificationCompat.Builder(context, channelId).apply {

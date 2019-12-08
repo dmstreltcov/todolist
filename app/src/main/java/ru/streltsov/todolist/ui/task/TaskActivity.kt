@@ -12,7 +12,6 @@ import android.text.Editable
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
-import androidx.appcompat.widget.Toolbar
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
@@ -61,9 +60,9 @@ class TaskActivity : AppCompatActivity(), TaskView {
             PackageManager.DONT_KILL_APP
         )
 
-        val taskId = intent.getStringExtra("taskID")
+        taskId = intent.getStringExtra("taskID")
         if (taskId != null) {
-            presenter.getTaskById(taskId)
+            presenter.getTaskById(taskId!!)
         } else {
             flag = TaskType.NEW
             fab.setImageDrawable(resources.getDrawable(R.drawable.ic_save, getContext().theme))
@@ -188,14 +187,20 @@ class TaskActivity : AppCompatActivity(), TaskView {
         return true
     }
 
-    private fun createPendingIntent(): PendingIntent {
+    private fun createIntent(task: Task): Intent {
         val intent = Intent(this, AlarmReceiver::class.java)
-        intent.putExtra("task", getTaskData().title)
+        intent.putExtra("title", task.title)
+        intent.putExtra("id", taskId)
+        return intent
+    }
+
+    private fun createPendingIntent(task: Task): PendingIntent {
+        val intent = createIntent(task)
         return PendingIntent.getBroadcast(this, 0, intent, 0)
     }
 
     private fun setAlarm(task: Task) {
-        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAlarm, createPendingIntent())
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAlarm, createPendingIntent(task))
 
     }
 

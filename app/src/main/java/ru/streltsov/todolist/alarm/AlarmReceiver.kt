@@ -11,18 +11,16 @@ class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        val task = getTask(intent)
-        Log.d("Alarm Reciever", "onReceive() $task")
+        val title = intent.getStringExtra("title")
+        val id = intent.getStringExtra("id")
+        Log.d("Alarm Reciever", "onReceive() $title  $id")
         NotificationHelper.createNotificationChannel(
             context,
             false,
-            task,
+            title,
+            id,
             "App notification channel."
         )
-    }
-
-    fun getTask(intent: Intent): Task? {
-        return intent.extras?.getParcelable("task")
     }
 
 }
