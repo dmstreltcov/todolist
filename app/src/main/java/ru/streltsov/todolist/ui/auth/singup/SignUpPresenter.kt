@@ -8,21 +8,25 @@ import ru.streltsov.todolist.data.FirebaseDB
 
 class SignUpPresenter : BasePresenter<SignUpView>() {
 
-    private val TAG: String = "TODO _SignUpPresenter"
+    private val TAG: String = "TodoList/SignUpPresenter"
     private var db: DataBase = FirebaseDB()
 
     fun onSignUp(email: String, password: String) {
+        view?.showProgress()
+//        Thread.sleep(1000)
         if (validate(email, password)) {
             db.signUp(email, password).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "TODO _SignUp with email: success")
+                    Log.d(TAG, "TodoList/SignUp with email: success")
                     view?.updateUI(db.currentUser() as FirebaseUser)
                 } else {
-                    Log.d(TAG, "TODO _Signup with email: failed")
+                    Log.d(TAG, "TodoList/Signup with email: failed")
                     view?.showMessage("Не удалось зарегистрироваться")
+                    view?.hideProgress()
                 }
             }
         }
+
     }
 
     private fun validate(email: String, password: String): Boolean {

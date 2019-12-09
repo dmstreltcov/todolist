@@ -3,24 +3,18 @@ package ru.streltsov.todolist.ui.tasklist
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
-import com.google.firebase.auth.FirebaseUser
-import androidx.recyclerview.widget.RecyclerView
-import android.view.View
-import android.view.ViewGroup
-import android.widget.*
-import androidx.appcompat.widget.Toolbar
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.Query
-import kotlinx.android.synthetic.main.tasklist_item_2.*
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.task.TaskActivity
 
@@ -36,11 +30,12 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
     private lateinit var query: Query
     private lateinit var options: FirestoreRecyclerOptions<Task>
     private lateinit var addTaskBtn: FloatingActionButton
+    private lateinit var actionBarToolbar: BottomAppBar
     private var currentUser: FirebaseUser? = intent?.getParcelableExtra("user")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "TODO _OnCreate()")
+        Log.d(TAG, "TodoList/OnCreate()")
         setContentView(R.layout.activity_task_list)
         presenter.attach(this)
 
@@ -51,11 +46,19 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_task_list, menu)
+        return true
+    }
+
     private fun init() {
         recyclerView = findViewById(R.id.tasklist)
         addTaskBtn = findViewById(R.id.add_task)
         linearLayout = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = linearLayout
+        actionBarToolbar = findViewById(R.id.bottomAppBar)
+        setSupportActionBar(actionBarToolbar)
 
         query = presenter.onLoadData()
         options = FirestoreRecyclerOptions.Builder<Task>()
@@ -63,10 +66,20 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
             .build()  //хм
         adapter = TaskListAdapter(options)
         recyclerView.adapter = adapter
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy <= 0 && !addTaskBtn.isShown) addTaskBtn.show() else if (dy > 0 && addTaskBtn.isShown) addTaskBtn.hide()
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                addTaskBtn.isShown
+            }
+        })
     }
 
     override fun showMessage(message: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun getContext(): Context = this

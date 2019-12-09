@@ -4,20 +4,23 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.core.app.NotificationManagerCompat
-import ru.streltsov.todolist.R
+import ru.streltsov.todolist.ui.tasklist.Task
 
 class AlarmReceiver : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        val title = intent!!.getStringExtra("title")
-        Log.d("Alarm Reciever", "onReceive()")
+
+
+    override fun onReceive(context: Context, intent: Intent) {
+
+        val title = intent.getStringExtra("title")
+        val id = intent.getStringExtra("id")
+        Log.d("Alarm Reciever", "onReceive() $title  $id")
         NotificationHelper.createNotificationChannel(
-            context!!,
-            NotificationManagerCompat.IMPORTANCE_DEFAULT,
+            context,
             false,
-            context.getString(R.string.app_name),
             title,
+            id,
             "App notification channel."
         )
     }
+
 }

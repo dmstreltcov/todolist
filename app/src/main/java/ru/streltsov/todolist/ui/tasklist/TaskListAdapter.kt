@@ -21,7 +21,7 @@ import java.text.SimpleDateFormat
 class TaskListAdapter(private val options: FirestoreRecyclerOptions<Task>) :
     FirestoreRecyclerAdapter<Task, TaskListAdapter.TaskViewHolder>(options) {
 
-    private val TAG: String = "TODO _TaskListAdapter"
+    private val TAG: String = "TodoList/TaskListAdapter"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val view: View = LayoutInflater.from(parent.context)
@@ -30,33 +30,19 @@ class TaskListAdapter(private val options: FirestoreRecyclerOptions<Task>) :
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int, task: Task) {
-        task.id = snapshots.getSnapshot(position).id
         holder.setData(task)
         Log.d(TAG, "$task")
     }
 
     class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-
         private val titleView: TextView = itemView.findViewById(R.id.list_item_title_2)
-        private val taskTime:TextView = itemView.findViewById(R.id.task_time_2)
-        private val statusBox:CheckBox = itemView.findViewById(R.id.task_check_box_2)
+        private val taskTime: TextView = itemView.findViewById(R.id.task_time_2)
+        private val statusBox: CheckBox = itemView.findViewById(R.id.task_check_box_2)
 
         fun setData(task: Task) {
             titleView.text = task.title
-            taskTime.text = formatDate(task.dateStart)
-//            statusBox.setOnCheckedChangeListener {
-//                    box, status ->
-//                if (status){
-//                    (itemView.context as TaskListActivity).changeStatus(task.id, 0)
-//                    statusBox.isChecked = false
-//
-//                }else{
-//                    (itemView.context as TaskListActivity).changeStatus(task.id, 1)
-//                    statusBox.isChecked = true
-//                    titleView.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
-//                }
-//            }
+            if (task.dateStart != null) taskTime.text = formatDate(task.dateStart)
             itemView.setOnClickListener {
                 openTask(task)
             }
@@ -64,7 +50,7 @@ class TaskListAdapter(private val options: FirestoreRecyclerOptions<Task>) :
 
         private fun openTask(task: Task) {
             val intent: Intent = Intent(itemView.context, TaskActivity::class.java)
-            intent.putExtra("task", task)
+            intent.putExtra("taskID", task.id)
             itemView.context.startActivity(intent)
         }
 

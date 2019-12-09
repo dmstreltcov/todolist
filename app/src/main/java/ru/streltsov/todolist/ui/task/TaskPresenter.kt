@@ -8,19 +8,17 @@ import ru.streltsov.todolist.ui.tasklist.Task
 import java.util.*
 import kotlin.math.min
 
-class TaskPresenter : BasePresenter<TaskView>() {
+class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
+    private val TAG:String = "TodoList/Task Presenter"
     private var db: DataBase = FirebaseDB()
+
+
 
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {
-            return if (task.id == null) {
-                Log.d("onSaveTask", "Created new task")
-                db.addTask(task)
-                true
-            } else {
-                db.updateTask(task)
-                true
-            }
+            Log.d("onSaveTask", "Created new task")
+            db.addTask(task)
+            return true
         }
         return false
     }
@@ -79,5 +77,16 @@ class TaskPresenter : BasePresenter<TaskView>() {
             else -> true
         }
     }
+
+    fun getTaskById(id:String){
+        db.setCallback(this)
+        db.getTaskByID(id)
+    }
+
+    override fun returnData(task: Task?) {
+        if (task != null)
+        view?.showData(task)
+    }
+
 
 }

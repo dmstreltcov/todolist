@@ -10,21 +10,24 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
+import ru.streltsov.todolist.ui.task.TaskActivity
+import ru.streltsov.todolist.ui.tasklist.Task
+import ru.streltsov.todolist.ui.tasklist.TaskListActivity
 
 object NotificationHelper {
     fun createNotificationChannel(
         context: Context,
-        importance: Int,
         showBadge: Boolean,
-        name: String,
         title: String?,
+        id:String?,
         description: String
     ) {
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            val channelId = "${context.packageName}-$name"
-            val channel = NotificationChannel(channelId, name, importance)
+            val channelId = "${context.packageName}-todolist"
+            val channel = NotificationChannel(channelId, "todolist", NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = description
             channel.setShowBadge(showBadge)
 
@@ -32,20 +35,18 @@ object NotificationHelper {
             notificationManager.createNotificationChannel(channel)
         }
 
+
+        val intent = Intent(context, TaskActivity::class.java)
+        intent.putExtra("taskID", id)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+
         val channelId = "${context.packageName}-${context.getString(R.string.app_name)}"
         val notificationBuilder = NotificationCompat.Builder(context, channelId).apply {
-            setSmallIcon(R.drawable.ic_notification)
+            setSmallIcon(R.drawable.ic_isolated_monochrome_black)
             setContentTitle(title)
-            setStyle(NotificationCompat.BigTextStyle().bigText("Some text"))
             priority = NotificationCompat.PRIORITY_DEFAULT
             setAutoCancel(true)
-
-            fun createSampleDataNotification() {
-                val intent = Intent(context, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-                setContentIntent(pendingIntent)
-            }
+            setContentIntent(pendingIntent)
         }
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.notify(10001, notificationBuilder.build())

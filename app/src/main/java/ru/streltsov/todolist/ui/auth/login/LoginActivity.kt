@@ -5,8 +5,10 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -25,6 +27,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
     private lateinit var password: EditText
     private lateinit var loginBtn: Button
     private lateinit var signUpBtn: Button
+    private lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
         password = findViewById(R.id.password_input)
         loginBtn = findViewById(R.id.log_in_btn)
         signUpBtn = findViewById(R.id.sign_up_btn)
+        progressBar = findViewById(R.id.progressBar)
 
         loginBtn.setOnClickListener {
             presenter.onLoginButton(email.text.toString(), password.text.toString())
@@ -54,8 +58,18 @@ class LoginActivity : AppCompatActivity(), LoginView {
         startActivity(intent)
     }
 
+    override fun showProgress() {
+        loginBtn.visibility = View.GONE
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideProgress() {
+        loginBtn.visibility = View.VISIBLE
+        progressBar.visibility = View.GONE
+    }
+
     override fun updateUI(user: FirebaseUser) {
-        Log.d(TAG, "TODO _Update UI")
+        Log.d(TAG, "TodoList/Update UI")
         val intent: Intent = MainActivity.createTaskListIntent(
             this,
             user
@@ -72,7 +86,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "TODO _onDestroy()")
+        Log.d(TAG, "TodoList/onDestroy()")
         presenter.detach()
     }
 }

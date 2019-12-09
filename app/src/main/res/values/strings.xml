@@ -32,6 +32,9 @@
     <string name="action_save_title">Сохранить</string>
 
     <string name="action_alarm">alarm</string>
+    <string name="action_search">Поиск</string>
+    <string name="action_close">Отмена</string>
+    <string name="logo">logo</string>
 
     <string-array name="remind_type">
         <item>Нет</item>
