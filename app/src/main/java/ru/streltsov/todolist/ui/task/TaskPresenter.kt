@@ -9,20 +9,16 @@ import java.util.*
 import kotlin.math.min
 
 class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
+    private val TAG:String = "TodoList/Task Presenter"
     private var db: DataBase = FirebaseDB()
 
 
 
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {
-            return if (task.id == null) {
-                Log.d("onSaveTask", "Created new task")
-                db.addTask(task)
-                true
-            } else {
-                db.updateTask(task)
-                true
-            }
+            Log.d("onSaveTask", "Created new task")
+            db.addTask(task)
+            return true
         }
         return false
     }

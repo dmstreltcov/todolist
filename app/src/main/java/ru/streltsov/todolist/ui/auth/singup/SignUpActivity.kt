@@ -24,7 +24,7 @@ import ru.streltsov.todolist.MainActivity
 
 class SignUpActivity : AppCompatActivity(), SignUpView {
 
-    private val TAG: String = "TODO _SignUpActivity"
+    private val TAG: String = "TodoList/SignUpActivity"
     private val presenter: SignUpPresenter by lazy { SignUpPresenter() }
     private lateinit var signUp: Button
     private lateinit var emailInput: EditText
@@ -34,7 +34,7 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
-        Log.d(TAG, "TODO _OnCreate()")
+        Log.d(TAG, "TodoList/OnCreate()")
         presenter.attach(this)
         init()
     }
@@ -51,7 +51,7 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
     }
 
     override fun updateUI(user: FirebaseUser) {
-        Log.d(TAG, "TODO _Update UI")
+        Log.d(TAG, "TodoList/Update UI")
         val intent: Intent = MainActivity.createTaskListIntent(this, user)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
@@ -76,7 +76,7 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "TODO _OnDestroy()")
+        Log.d(TAG, "TodoList/OnDestroy()")
         presenter.detach()
     }
 }

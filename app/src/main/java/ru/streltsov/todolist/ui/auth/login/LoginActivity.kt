@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
     }
 
     override fun updateUI(user: FirebaseUser) {
-        Log.d(TAG, "TODO _Update UI")
+        Log.d(TAG, "TodoList/Update UI")
         val intent: Intent = MainActivity.createTaskListIntent(
             this,
             user
@@ -86,7 +86,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "TODO _onDestroy()")
+        Log.d(TAG, "TodoList/onDestroy()")
         presenter.detach()
     }
 }

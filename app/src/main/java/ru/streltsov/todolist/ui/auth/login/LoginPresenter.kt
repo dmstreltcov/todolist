@@ -9,7 +9,7 @@ import ru.streltsov.todolist.base.BasePresenter
 
 class LoginPresenter : BasePresenter<LoginView>() {
 
-    private val TAG: String = "TODO _LoginPresenter"
+    private val TAG: String = "TodoList/LoginPresenter"
     private var db: DataBase = FirebaseDB()
 
     fun onLoginButton(email: String, password: String) {
@@ -17,10 +17,10 @@ class LoginPresenter : BasePresenter<LoginView>() {
         if (validate(email, password)) {
             db.login(email, password).addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "TODO _Login with email: success")
+                    Log.d(TAG, "TodoList/Login with email: success")
                     view?.updateUI(db.currentUser() as FirebaseUser)
                 } else {
-                    Log.d(TAG, "TODO _Login with email: failed")
+                    Log.d(TAG, "TodoList/Login with email: failed")
                     view?.showMessage("Такой пользователь отсутствует")
                     view?.hideProgress()
                 }
