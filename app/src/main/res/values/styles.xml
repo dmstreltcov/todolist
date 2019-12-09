@@ -8,6 +8,18 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="DatePicker" parent="Theme.MaterialComponents.Dialog.MinWidth">
+        <item name="colorControlActivated">@color/colorAlmond</item>
+        <item name="buttonBarPositiveButtonStyle">@color/colorWhite</item>
+        <item name="colorAccent">@color/colorAlmond</item>
+    </style>
+
+    <style name="TimePicker" parent="@style/ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="android:colorAccent">#757575</item>
+        <item name="colorControlActivated">@color/gr_end</item>
+        <item name="android:background">@color/gr_end</item>
+    </style>
+
 
 
 

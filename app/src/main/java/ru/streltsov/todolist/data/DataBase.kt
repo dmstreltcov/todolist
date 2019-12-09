@@ -24,6 +24,8 @@ interface DataBase {
 
     fun setCallback(callback: Callback)
     interface Callback{
+        fun returnInfo(message:String)
         fun returnData(task: TaskTD?)
+
     }
 }

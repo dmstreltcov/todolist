@@ -11,7 +11,7 @@ import ru.streltsov.todolist.ui.tasklist.Task as TaskTD
 class FirebaseDB : DataBase {
 
 
-    private val TAG: String = "TODO _Firebase DataBase"
+    private val TAG: String = "TodoList/Firebase DataBase"
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var mCallback: DataBase.Callback
@@ -32,6 +32,18 @@ class FirebaseDB : DataBase {
             .orderBy("createDate")
     }
 
+    override fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
+        Log.d(TAG, mAuth.currentUser!!.uid)
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(task.id!!).set(task)
+            .addOnSuccessListener {
+                mCallback.returnInfo("Задача была создана")
+                Log.d(TAG, "Document written with ID: ${task.id}")
+            }.addOnFailureListener {
+                mCallback.returnInfo("Возникла ошибка. Попробуйте снова")
+                Log.w(TAG, "Error adding document", it)
+            }
+    }
+
     override fun deleteTask(id: String?) {
         if (id == null) {
             throw NullPointerException("id is null")
@@ -40,33 +52,18 @@ class FirebaseDB : DataBase {
             .document(id.toString()).delete()
     }
 
-    override fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
-        Log.d(TAG, mAuth.currentUser!!.uid)
-        val data = hashMapOf(
-            "title" to task.title,
-            "description" to task.description,
-            "createDate" to task.createDate,
-            "status" to task.status,
-            "dateStart" to task.dateStart
-        )
-        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").add(data)
-            .addOnSuccessListener {
-                Log.d(TAG, "TODO _Document written with ID: ${it.id}")
-            }.addOnFailureListener {
-                Log.w(TAG, "TODO _Error adding document", it)
-            }
-    }
+
 
     override fun updateTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
-        val data = mapOf(
-            "title" to task.title,
-            "description" to task.description,
-            "status" to task.status,
-            "dateStart" to task.dateStart
-        )
-        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
-            .document(task.id.toString())
-            .update(data)
+//        val data = mapOf(
+//            "title" to task.title,
+//            "description" to task.description,
+//            "status" to task.status,
+//            "dateStart" to task.dateStart
+//        )
+//        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
+//            .document(task.id.toString())
+//            .update(data)
     }
 
     override fun getTaskByID(id: String){

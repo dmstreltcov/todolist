@@ -49,6 +49,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
         setContentView(R.layout.activity_task)
         presenter.attach(this)
         taskId = intent.getStringExtra("taskID")
+        Log.d(TAG, "$taskId")
         initElements()
         setListeners()
         setSupportActionBar(actionBarToolbar)
@@ -117,7 +118,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
         changeInputEnableProperty(flag)
     }
 
-    private fun onSaveTask(){
+    private fun onSaveTask() {
         Log.d(TAG, "Save task")
         val task = getTaskData()
         Log.d(TAG, "Task is $task")
@@ -168,21 +169,20 @@ class TaskActivity : AppCompatActivity(), TaskView {
         }
     }
 
-    private fun createIntent(task: Task): Intent {
-        val intent = Intent(this, AlarmReceiver::class.java)
-        intent.putExtra("title", task.title)
-        intent.putExtra("id", taskId)
-        return intent
+    private fun setAlarm(task: Task) {
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAlarm, createPendingIntent(task))
     }
 
     private fun createPendingIntent(task: Task): PendingIntent {
         val intent = createIntent(task)
-        return PendingIntent.getBroadcast(this, 0, intent, 0)
+        return PendingIntent.getBroadcast(this, System.currentTimeMillis().toInt(), intent,PendingIntent.FLAG_ONE_SHOT)
     }
 
-    private fun setAlarm(task: Task) {
-        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAlarm, createPendingIntent(task))
-
+    private fun createIntent(task: Task): Intent {
+        val intent = Intent(this, AlarmReceiver::class.java)
+        intent.putExtra("title", task.title)
+        intent.putExtra("id", task.id)
+        return intent
     }
 
     private fun cancelAlarm() {
@@ -204,11 +204,11 @@ class TaskActivity : AppCompatActivity(), TaskView {
         )
     }
 
-    private fun setTaskId(): String?{
+    private fun setTaskId(): String? {
         Log.d(TAG, "Set task id")
-        return if(taskId == null){
+        return if (taskId == null) {
             UUID.randomUUID().toString()
-        }else{
+        } else {
             taskId
         }
     }
@@ -277,7 +277,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     override fun displayDatePickerDialog(year: Int, month: Int, day: Int) {
         val dialog: DatePickerDialog = DatePickerDialog(
             this,
-            R.style.Theme_MaterialComponents_Dialog_MinWidth,
+            R.style.DatePicker,
             dateStartSetListener,
             year,
             month,
@@ -295,7 +295,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     override fun displayTimePickerDialog(hour: Int, minute: Int) {
         val dialog: TimePickerDialog = TimePickerDialog(
             this,
-            R.style.Theme_MaterialComponents_Dialog_MinWidth,
+            R.style.TimePicker,
             TimePickerDialog.OnTimeSetListener() { picker, hour, minute ->
                 presenter.onTimeStartSet(hour, minute)
             },

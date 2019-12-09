@@ -18,7 +18,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "TodoList/OnCreate()")
         setContentView(R.layout.activity_main)
         mAuth = FirebaseAuth.getInstance()
         currentUser = mAuth.currentUser
@@ -33,14 +32,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onLoginPage() {
-        Log.d(TAG, "TodoList/Переход на страницу авторизации")
+        Log.d(TAG, "Переход на страницу авторизации")
         val intent: Intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }
 
     private fun onTaskListPage(currentUser: FirebaseUser) {
-        Log.d(TAG, "TodoList/Переход на страницу со списком задач")
+        Log.d(TAG, "Переход на страницу со списком задач")
         val intent: Intent = createTaskListIntent(this, currentUser)
         startActivity(intent)
         finish()

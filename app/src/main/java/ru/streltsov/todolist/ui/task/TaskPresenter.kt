@@ -9,14 +9,14 @@ import java.util.*
 import kotlin.math.min
 
 class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
-    private val TAG:String = "TodoList/Task Presenter"
+    private val TAG: String = "TodoList/Task Presenter"
     private var db: DataBase = FirebaseDB()
-
 
 
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {
             Log.d("onSaveTask", "Created new task")
+            db.setCallback(this)
             db.addTask(task)
             return true
         }
@@ -78,14 +78,18 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
         }
     }
 
-    fun getTaskById(id:String){
+    fun getTaskById(id: String) {
         db.setCallback(this)
         db.getTaskByID(id)
     }
 
+    override fun returnInfo(message: String) {
+        view?.showMessage(message)
+    }
+
     override fun returnData(task: Task?) {
         if (task != null)
-        view?.showData(task)
+            view?.showData(task)
     }
 
 

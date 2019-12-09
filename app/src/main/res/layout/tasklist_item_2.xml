@@ -30,18 +30,21 @@
                 android:layout_toEndOf="@+id/task_check_box_2"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                tools:text="Название задачи" />
+                tools:text="Название задачи Название задачи Название" />
 
             <TextView
                 android:id="@+id/task_time_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_alignParentEnd="true"
                 android:layout_below="@+id/list_item_title_2"
-                android:textSize="14sp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
                 android:maxLines="2"
-                android:textStyle="normal" />
+                android:textSize="14sp"
+                android:textStyle="normal"
+                tools:text ="17:15 9 дек."/>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 

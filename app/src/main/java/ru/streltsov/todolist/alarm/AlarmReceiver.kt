@@ -8,12 +8,12 @@ import ru.streltsov.todolist.ui.tasklist.Task
 
 class AlarmReceiver : BroadcastReceiver() {
 
+    private val TAG:String = "TodoList/AlarmReceiver"
 
     override fun onReceive(context: Context, intent: Intent) {
-
         val title = intent.getStringExtra("title")
         val id = intent.getStringExtra("id")
-        Log.d("Alarm Reciever", "onReceive() $title  $id")
+        Log.d(TAG, "Title = $title  ID = $id")
         NotificationHelper.createNotificationChannel(
             context,
             false,
