@@ -23,7 +23,6 @@ data class Task(
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(id)
         parcel.writeString(title)
         parcel.writeString(description)
         parcel.writeParcelable(createDate, flags)
