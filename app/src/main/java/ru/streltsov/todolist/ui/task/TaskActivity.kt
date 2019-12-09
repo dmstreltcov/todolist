@@ -49,42 +49,30 @@ class TaskActivity : AppCompatActivity(), TaskView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
         presenter.attach(this)
-        init()
-
-
-        alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val receiver = ComponentName(applicationContext, BootCompleteReceiver::class.java)
-        applicationContext.packageManager?.setComponentEnabledSetting(
-            receiver,
-            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-            PackageManager.DONT_KILL_APP
-        )
-
         taskId = intent.getStringExtra("taskID")
+        initElements()
+        setListeners()
+        setSupportActionBar(actionBarToolbar)
+        setAlarmManager()
+
         if (taskId != null) {
             presenter.getTaskById(taskId!!)
         } else {
             flag = TaskType.NEW
             fab.setImageDrawable(resources.getDrawable(R.drawable.ic_save, getContext().theme))
-
-        }
-
-        dateStart.setOnClickListener {
-            presenter.onDateStartClicked()
-        }
-
-        timeStart.setOnClickListener {
-            presenter.onTimeStartClicked()
         }
     }
 
-    private fun init() {
+    private fun initElements() {
         taskTitle = task_title
         taskDescription = task_description
         dateStart = start_date_input
         timeStart = time_start_input
         fab = findViewById(R.id.fab)
         actionBarToolbar = findViewById(R.id.taskBottomAppBar)
+    }
+
+    private fun setListeners() {
         fab.setOnClickListener {
             when (flag) {
                 TaskType.EDIT -> {
@@ -109,7 +97,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
                 }
             }
         }
-        setSupportActionBar(actionBarToolbar)
+
         dateStartSetListener = DatePickerDialog.OnDateSetListener { datePicker, year, month, day ->
             presenter.onDateStartSet(
                 year,
@@ -123,6 +111,24 @@ class TaskActivity : AppCompatActivity(), TaskView {
                 minute
             )
         }
+
+        dateStart.setOnClickListener {
+            presenter.onDateStartClicked()
+        }
+
+        timeStart.setOnClickListener {
+            presenter.onTimeStartClicked()
+        }
+    }
+
+    private fun setAlarmManager() {
+        alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val receiver = ComponentName(applicationContext, BootCompleteReceiver::class.java)
+        applicationContext.packageManager?.setComponentEnabledSetting(
+            receiver,
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP
+        )
     }
 
     override fun showData(task: Task) {
@@ -152,39 +158,6 @@ class TaskActivity : AppCompatActivity(), TaskView {
                 timeStart.isEnabled = false
             }
         }
-
-
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_activiy_main, menu)
-        val actionDelete = menu?.findItem(R.id.action_delete)
-        val actionCancel = menu?.findItem(R.id.action_cancel)
-
-        when (flag) {
-            TaskType.NEW -> {
-                actionDelete?.isVisible = false
-                actionCancel?.isVisible = false
-            }
-            TaskType.EDIT -> {
-                actionDelete?.isVisible = true
-                actionCancel?.isVisible = true
-            }
-        }
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_delete -> {
-                presenter.deleteTask(taskId)
-                cancelAlarm()
-                showMessage("Задача удалена")
-                finish()
-            }
-        }
-
-        return true
     }
 
     private fun createIntent(task: Task): Intent {
@@ -223,7 +196,6 @@ class TaskActivity : AppCompatActivity(), TaskView {
         )
     }
 
-
     private fun formatDate(dateStart: Timestamp?): String {
         return try {
             val format = SimpleDateFormat("HH:mm|dd.MM.yyyy")
@@ -242,6 +214,37 @@ class TaskActivity : AppCompatActivity(), TaskView {
             return Timestamp(data)
         }
         return null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_activiy_main, menu)
+        val actionDelete = menu?.findItem(R.id.action_delete)
+        val actionCancel = menu?.findItem(R.id.action_cancel)
+
+        when (flag) {
+            TaskType.NEW -> {
+                actionDelete?.isVisible = false
+                actionCancel?.isVisible = false
+            }
+            TaskType.EDIT -> {
+                actionDelete?.isVisible = true
+                actionCancel?.isVisible = true
+            }
+        }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_delete -> {
+                presenter.deleteTask(taskId)
+                cancelAlarm()
+                showMessage("Задача удалена")
+                finish()
+            }
+        }
+
+        return true
     }
 
     override fun setStartDateText(date: String) {
