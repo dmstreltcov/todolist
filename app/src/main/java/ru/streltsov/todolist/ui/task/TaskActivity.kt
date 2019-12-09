@@ -9,6 +9,7 @@ import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
@@ -27,7 +28,7 @@ import java.util.*
 
 class TaskActivity : AppCompatActivity(), TaskView {
 
-    private val TAG: String = "TaskActivity"
+    private val TAG: String = "TodoList/TaskActivity"
     private lateinit var taskTitle: EditText
     private lateinit var taskDescription: EditText
     private lateinit var dateStart: TextInputEditText
@@ -42,8 +43,6 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private var timeAlarm: Long = 0
     private lateinit var fab: FloatingActionButton
 
-
-    //TODO Сделать нормальную валидацию всех полей
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,24 +75,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
         fab.setOnClickListener {
             when (flag) {
                 TaskType.EDIT -> {
-                    fab.setImageDrawable(
-                        resources.getDrawable(
-                            R.drawable.ic_save,
-                            getContext().theme
-                        )
-                    )
-                    flag = TaskType.NEW
-                    changeInputEnableProperty(flag)
-
+                    onEditTask()
                 }
                 TaskType.NEW -> {
-                    val task = getTaskData()
-                    if (presenter.onSaveTask(task)) {
-                        setResult(Activity.RESULT_OK)
-                        if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm))
-                            setAlarm(task)
-                        finish()
-                    }
+                    onSaveTask()
                 }
             }
         }
@@ -118,6 +103,29 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
         timeStart.setOnClickListener {
             presenter.onTimeStartClicked()
+        }
+    }
+
+    private fun onEditTask() {
+        fab.setImageDrawable(
+            resources.getDrawable(
+                R.drawable.ic_save,
+                getContext().theme
+            )
+        )
+        flag = TaskType.NEW
+        changeInputEnableProperty(flag)
+    }
+
+    private fun onSaveTask(){
+        Log.d(TAG, "Save task")
+        val task = getTaskData()
+        Log.d(TAG, "Task is $task")
+        if (presenter.onSaveTask(task)) {
+            setResult(Activity.RESULT_OK)
+            if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm))
+                setAlarm(task)
+            finish()
         }
     }
 
@@ -185,7 +193,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
     private fun getTaskData(): Task {
         return Task(
-            id = taskId,
+            id = setTaskId(),
             title = taskTitle.text.toString(),
             description = taskDescription.text.toString(),
             createDate = Timestamp.now(),
@@ -194,6 +202,15 @@ class TaskActivity : AppCompatActivity(), TaskView {
                 start_date_input.text.toString()
             )
         )
+    }
+
+    private fun setTaskId(): String?{
+        Log.d(TAG, "Set task id")
+        return if(taskId == null){
+            UUID.randomUUID().toString()
+        }else{
+            taskId
+        }
     }
 
     private fun formatDate(dateStart: Timestamp?): String {
