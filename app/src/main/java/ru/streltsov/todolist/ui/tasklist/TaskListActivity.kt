@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +17,7 @@ import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.Query
+import kotlinx.android.synthetic.main.activity_task_list.*
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.task.TaskActivity
 
@@ -31,6 +34,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     private lateinit var options: FirestoreRecyclerOptions<Task>
     private lateinit var addTaskBtn: FloatingActionButton
     private lateinit var actionBarToolbar: BottomAppBar
+    private lateinit var progressBar: ProgressBar
     private var currentUser: FirebaseUser? = intent?.getParcelableExtra("user")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +53,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         linearLayout = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = linearLayout
         actionBarToolbar = findViewById(R.id.bottomAppBar)
+        progressBar = progressBarList
         setSupportActionBar(actionBarToolbar)
     }
 
@@ -66,6 +71,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         adapter = TaskListAdapter(options)
         adapter.setCallback(this)
         recyclerView.adapter = adapter
+        hideProgressBar() //TODO переделать, очень плохо
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 if (dy <= 0 && !addTaskBtn.isShown) addTaskBtn.show() else if (dy > 0 && addTaskBtn.isShown) addTaskBtn.hide()
@@ -97,6 +103,22 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    override fun showProgressBar() {
+        progressBar.visibility = View.VISIBLE
+
+        tasklist.visibility = View.GONE
+        bottomAppBar.visibility = View.GONE
+        add_task.hide()
+    }
+
+    override fun hideProgressBar() {
+        progressBar.visibility = View.GONE
+
+        tasklist.visibility = View.VISIBLE
+        bottomAppBar.visibility = View.VISIBLE
+        add_task.show()
     }
 
     override fun getContext(): Context = this

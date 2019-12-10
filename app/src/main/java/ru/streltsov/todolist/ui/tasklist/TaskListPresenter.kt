@@ -15,6 +15,8 @@ class TaskListPresenter : BasePresenter<TaskListView>(), DataBase.Callback {
     private var db: DataBase = FirebaseDB()
 
     fun onLoadData() : Query{
+        view?.showProgressBar()
+        db.setCallback(this)
         return db.getData()
     }
 
@@ -31,6 +33,6 @@ class TaskListPresenter : BasePresenter<TaskListView>(), DataBase.Callback {
     }
 
     override fun returnData(task: Task?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        view?.hideProgressBar()
     }
 }

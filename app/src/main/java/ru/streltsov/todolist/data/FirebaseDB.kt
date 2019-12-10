@@ -20,6 +20,10 @@ class FirebaseDB : DataBase {
         return mAuth.currentUser!!
     } //Почему-то не нравится вот это
 
+    private fun createRequest(): CollectionReference {
+        return db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
+    }
+
     override fun login(email: String, password: String) =
         mAuth.signInWithEmailAndPassword(email, password)
 
@@ -28,13 +32,29 @@ class FirebaseDB : DataBase {
 
     override fun getData(): Query {
         Log.d(TAG, "Try to get data")
+
+        createRequest().orderBy("createDate").addSnapshotListener { snapshot,
+                                                                    exception ->
+            if (exception != null) {
+                mCallback.returnInfo("Что-то пошло не так")
+                Log.d(TAG, "Listen failed. ", exception)
+            }
+            if (snapshot != null && !snapshot.isEmpty) {
+                mCallback.returnInfo("${snapshot.documents[0]}")
+                Log.d(TAG, "${snapshot.documents}")
+            } else {
+                Log.d(TAG, "Data is null")
+            }
+        }
+
         return db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
             .orderBy("createDate")
     }
 
     override fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
         Log.d(TAG, mAuth.currentUser!!.uid)
-        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(task.id!!).set(task)
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
+            .document(task.id!!).set(task)
             .addOnSuccessListener {
                 mCallback.returnInfo("Задача была создана")
                 Log.d(TAG, "Document written with ID: ${task.id}")
@@ -52,39 +72,28 @@ class FirebaseDB : DataBase {
             .document(id.toString()).delete()
     }
 
-
-
-//    override fun updateTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
-//        val data = mapOf(
-//            "title" to task.title,
-//            "description" to task.description,
-//            "status" to task.status,
-//            "dateStart" to task.dateStart
-//        )
-//        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
-//            .document(task.id.toString())
-//            .update(data)
-//    }
-
-    override fun getTaskByID(id: String){
-        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id).get()
-            .addOnSuccessListener {documentSnapshot ->
+    override fun getTaskByID(id: String) {
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id)
+            .get()
+            .addOnSuccessListener { documentSnapshot ->
                 val task: TaskTD? = documentSnapshot.toObject(TaskTD::class.java)
                 mCallback.returnData(task)
             }.addOnFailureListener {
-            Log.d(TAG, "$it")
-        }
+                Log.d(TAG, "$it")
+            }
     }
 
     override fun changeStatus(id: String, status: Boolean) {
-        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id).update(
-            mapOf(
-                "status" to status
-            )).addOnSuccessListener {
-            mCallback.returnInfo("Красавчик!")
-        }.addOnFailureListener {
-            mCallback.returnInfo("Что-то пошло не так")
-        }
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id)
+            .update(
+                mapOf(
+                    "status" to status
+                )
+            ).addOnSuccessListener {
+                mCallback.returnInfo("Красавчик!")
+            }.addOnFailureListener {
+                mCallback.returnInfo("Что-то пошло не так")
+            }
     }
 
     override fun setCallback(callback: DataBase.Callback) {

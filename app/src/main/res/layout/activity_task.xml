@@ -6,10 +6,20 @@
     android:layout_height="match_parent"
     android:background="@color/colorBrown">
 
+    <ProgressBar
+        android:id="@+id/progressBarTask"
+        style="?android:attr/progressBarStyleInverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.task.TaskActivity">
+
 
 
         <com.google.android.material.textfield.TextInputLayout

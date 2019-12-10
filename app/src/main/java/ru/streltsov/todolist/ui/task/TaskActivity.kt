@@ -12,6 +12,7 @@ import android.text.Editable
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.*
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -33,15 +34,19 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private lateinit var taskDescription: EditText
     private lateinit var dateStart: TextInputEditText
     private lateinit var timeStart: TextInputEditText
-    private val presenter: TaskPresenter by lazy { TaskPresenter() }
+    private lateinit var fab: FloatingActionButton
+    private lateinit var progressBar: ProgressBar
+    private lateinit var actionBarToolbar: BottomAppBar
     private lateinit var dateStartSetListener: DatePickerDialog.OnDateSetListener
     private lateinit var timeStartSetListener: TimePickerDialog.OnTimeSetListener
+
+    private val presenter: TaskPresenter by lazy { TaskPresenter() }
+
     private var flag: TaskType = TaskType.EDIT
     private var taskId: String? = null
-    private lateinit var actionBarToolbar: BottomAppBar
     private lateinit var alarmManager: AlarmManager
     private var timeAlarm: Long = 0
-    private lateinit var fab: FloatingActionButton
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,8 +59,9 @@ class TaskActivity : AppCompatActivity(), TaskView {
         setListeners()
         setSupportActionBar(actionBarToolbar)
         setAlarmManager()
-
+        showProgressBar()
         if (taskId != null) {
+//            showProgressBar()
             presenter.getTaskById(taskId!!)
         } else {
             flag = TaskType.NEW
@@ -69,6 +75,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
         dateStart = start_date_input
         timeStart = time_start_input
         fab = findViewById(R.id.fab)
+        progressBar = progressBarTask
         actionBarToolbar = findViewById(R.id.taskBottomAppBar)
     }
 
@@ -307,6 +314,30 @@ class TaskActivity : AppCompatActivity(), TaskView {
     }
 
     override fun getContext(): Context = this
+
+    override fun showProgressBar() {
+        progressBar.visibility = View.VISIBLE
+
+        taskTitle.visibility = View.GONE
+        taskDescription.visibility = View.GONE
+        dateStart.visibility = View.GONE
+        timeStart.visibility = View.GONE
+        fab.hide()
+        progressBar.visibility = View.GONE
+        actionBarToolbar.visibility = View.GONE
+    }
+
+    override fun hideProgressBar(){
+        progressBar.visibility = View.GONE
+
+        taskTitle.visibility = View.VISIBLE
+        taskDescription.visibility = View.VISIBLE
+        dateStart.visibility = View.VISIBLE
+        timeStart.visibility = View.VISIBLE
+        fab.show()
+        progressBar.visibility = View.VISIBLE
+        actionBarToolbar.visibility = View.VISIBLE
+    }
 
     override fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

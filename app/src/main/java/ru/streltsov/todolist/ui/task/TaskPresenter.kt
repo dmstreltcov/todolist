@@ -23,6 +23,11 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
         return false
     }
 
+    fun getTaskById(id: String) {
+        db.setCallback(this)
+        db.getTaskByID(id)
+    }
+
     fun onDateStartClicked() {
         showCurrentDate()
     }
@@ -78,18 +83,17 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
         }
     }
 
-    fun getTaskById(id: String) {
-        db.setCallback(this)
-        db.getTaskByID(id)
-    }
 
     override fun returnInfo(message: String) {
         view?.showMessage(message)
     }
 
     override fun returnData(task: Task?) {
-        if (task != null)
+        view?.hideProgressBar()
+        if (task != null) {
             view?.showData(task)
+        }
+
     }
 
 
