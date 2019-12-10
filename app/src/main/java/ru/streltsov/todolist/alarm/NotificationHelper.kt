@@ -23,20 +23,14 @@ object NotificationHelper {
         id:String?,
         description: String
     ) {
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
             val channelId = "${context.packageName}-todolist"
             val channel = NotificationChannel("task", "todolist", NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = description
             channel.setShowBadge(showBadge)
-
             val notificationManager = context.getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannelGroup(NotificationChannelGroup("Task", "Tasks"))
-//            notificationManager.createNotificationChannel(channel)
         }
-
 
         val intent = Intent(context, TaskActivity::class.java)
         intent.putExtra("taskID", id)
@@ -49,11 +43,15 @@ object NotificationHelper {
             priority = NotificationCompat.PRIORITY_DEFAULT
             setAutoCancel(true)
             setContentIntent(pendingIntent)
-            setNumber(5)
+            setStyle(NotificationCompat.InboxStyle())
             setGroup("Task")
+            setGroupSummary(true)
         }
-        val notificationManager = NotificationManagerCompat.from(context)
-        notificationManager.notify(System.currentTimeMillis().toInt(), notificationBuilder.build())
 
+        val notificationManager = NotificationManagerCompat.from(context).apply {
+            notify(System.currentTimeMillis().toInt(), notificationBuilder.build())
+        }
     }
 }
+
+//TODO уведомления оставляю так. Возможно будет рефакторинг...
