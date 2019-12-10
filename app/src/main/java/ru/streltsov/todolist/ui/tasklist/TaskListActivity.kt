@@ -19,7 +19,7 @@ import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.task.TaskActivity
 
 
-class TaskListActivity : AppCompatActivity(), TaskListView {
+class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Callback {
 
     private val REQUEST_CODE = 1001
     private val TAG: String = "TaskListActivity"
@@ -38,8 +38,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
         Log.d(TAG, "TodoList/OnCreate()")
         setContentView(R.layout.activity_task_list)
         presenter.attach(this)
-
         init()
+
 
         addTaskBtn.setOnClickListener {
             startActivityForResult(Intent(this, TaskActivity::class.java),REQUEST_CODE)
@@ -65,6 +65,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
             .setQuery(query, Task::class.java)
             .build()  //хм
         adapter = TaskListAdapter(options)
+        adapter.setCallback(this)
         recyclerView.adapter = adapter
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -82,7 +83,6 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun getContext(): Context = this
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -90,6 +90,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
             1001 -> if (resultCode == Activity.RESULT_OK) Toast.makeText(this, "Задача создана", Toast.LENGTH_SHORT).show()
         }
     }
+
+    override fun getContext(): Context = this
 
     override fun onStart() {
         super.onStart()
@@ -104,5 +106,15 @@ class TaskListActivity : AppCompatActivity(), TaskListView {
     override fun onDestroy() {
         super.onDestroy()
         presenter.detach()
+    }
+
+    override fun onItemClicked(item: Task) {
+        val intent: Intent = Intent(this, TaskActivity::class.java)
+        intent.putExtra("taskID", item.id)
+        startActivity(intent)
+    }
+
+    override fun onStatusChanged(item: Task, status:Boolean) {
+        presenter.onChangeStatus(item.id, status)
     }
 }

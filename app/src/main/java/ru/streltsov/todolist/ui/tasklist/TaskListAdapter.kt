@@ -22,20 +22,31 @@ class TaskListAdapter(private val options: FirestoreRecyclerOptions<Task>) :
     FirestoreRecyclerAdapter<Task, TaskListAdapter.TaskViewHolder>(options) {
 
     private val TAG: String = "TodoList/TaskListAdapter"
+    private lateinit var mCallback: Callback
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val view: View = LayoutInflater.from(parent.context)
-            .inflate(R.layout.tasklist_item_2, parent, false)
-        return TaskViewHolder(view)
+    interface Callback {
+        fun onItemClicked(item: Task)
+        fun onStatusChanged(item: Task, status:Boolean)
     }
+
+    fun setCallback(callback: Callback) {
+        mCallback = callback
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = TaskViewHolder(
+        LayoutInflater.from(parent.context).inflate(
+            R.layout.tasklist_item_2,
+            parent,
+            false
+        )
+    )
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int, task: Task) {
         holder.setData(task)
         Log.d(TAG, "$task")
     }
 
-    class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val presenter: TaskListPresenter by lazy { TaskListPresenter() }
+   inner class TaskViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val TAG: String = "TodoList/TaskViewHolder"
 
         private val titleView: TextView = itemView.findViewById(R.id.list_item_title_2)
@@ -45,21 +56,13 @@ class TaskListAdapter(private val options: FirestoreRecyclerOptions<Task>) :
         fun setData(task: Task) {
             titleView.text = task.title
             if (task.dateStart != null) taskTime.text = formatDate(task.dateStart)
-
+            statusBox.isChecked = task.status
             itemView.setOnClickListener {
-                openTask(task)
+                mCallback.onItemClicked(options.snapshots[adapterPosition])
             }
             statusBox.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-                presenter.onChangeStatus(task.id, isChecked)
+                mCallback.onStatusChanged(options.snapshots[adapterPosition], isChecked)
             })
-            statusBox.isChecked = task.status!!
-        }
-
-
-        private fun openTask(task: Task) {
-            val intent: Intent = Intent(itemView.context, TaskActivity::class.java)
-            intent.putExtra("taskID", task.id)
-            itemView.context.startActivity(intent)
         }
 
         private fun formatDate(dateStart: Timestamp?): String {

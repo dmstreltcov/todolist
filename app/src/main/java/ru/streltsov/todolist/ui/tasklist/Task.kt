@@ -8,16 +8,16 @@ import com.google.firebase.Timestamp
 data class Task(
     var id: String? = null,
     val title: String? = null,
-    val description: String? = null,
+    val description: String = "",
     val createDate: Timestamp? = null,
-    val status: Boolean? = false,
+    val status: Boolean = false,
     val dateStart: Timestamp? = null
     ) : Parcelable {
     @SuppressLint("NewApi")
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
-        parcel.readString(),
+        parcel.readString().toString(),
         parcel.readParcelable(Timestamp::class.java.classLoader),
         parcel.readBoolean(),
         parcel.readParcelable(Timestamp::class.java.classLoader)
@@ -29,7 +29,7 @@ data class Task(
         parcel.writeString(title)
         parcel.writeString(description)
         parcel.writeParcelable(createDate, flags)
-        parcel.writeBoolean(status!!)
+        parcel.writeBoolean(status)
         parcel.writeParcelable(dateStart, flags)
     }
 
