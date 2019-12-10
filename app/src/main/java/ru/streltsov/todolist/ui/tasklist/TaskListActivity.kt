@@ -38,28 +38,27 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         Log.d(TAG, "TodoList/OnCreate()")
         setContentView(R.layout.activity_task_list)
         presenter.attach(this)
-        init()
-
-
-        addTaskBtn.setOnClickListener {
-            startActivityForResult(Intent(this, TaskActivity::class.java),REQUEST_CODE)
-        }
+        initElements()
+        setListeners()
+        initAdapter()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_task_list, menu)
-        return true
-    }
-
-    private fun init() {
+    private fun initElements() {
         recyclerView = findViewById(R.id.tasklist)
         addTaskBtn = findViewById(R.id.add_task)
         linearLayout = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = linearLayout
         actionBarToolbar = findViewById(R.id.bottomAppBar)
         setSupportActionBar(actionBarToolbar)
+    }
 
+    private fun setListeners() {
+        addTaskBtn.setOnClickListener {
+            startActivityForResult(Intent(this, TaskActivity::class.java), REQUEST_CODE)
+        }
+    }
+
+    private fun initAdapter() {
         query = presenter.onLoadData()
         options = FirestoreRecyclerOptions.Builder<Task>()
             .setQuery(query, Task::class.java)
@@ -79,15 +78,24 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_task_list, menu)
+        return true
+    }
+
     override fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(requestCode){
-            1001 -> if (resultCode == Activity.RESULT_OK) Toast.makeText(this, "Задача создана", Toast.LENGTH_SHORT).show()
+        when (requestCode) {
+            1001 -> if (resultCode == Activity.RESULT_OK) Toast.makeText(
+                this,
+                "Задача создана",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -114,7 +122,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         startActivity(intent)
     }
 
-    override fun onStatusChanged(item: Task, status:Boolean) {
+    override fun onStatusChanged(item: Task, status: Boolean) {
         presenter.onChangeStatus(item.id, status)
     }
 }
