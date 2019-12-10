@@ -124,7 +124,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
         Log.d(TAG, "Task is $task")
         if (presenter.onSaveTask(task)) {
             setResult(Activity.RESULT_OK)
-            if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm))
+            if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm) && task.status == false)
                 setAlarm(task)
             finish()
         }

@@ -19,9 +19,8 @@ interface DataBase {
     fun getData(): Query
     fun deleteTask(id:String?)
     fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task)
-    fun updateTask(task: ru.streltsov.todolist.ui.tasklist.Task)
     fun getTaskByID(id:String)
-
+    fun changeStatus(id:String, status:Boolean)
     fun setCallback(callback: Callback)
     interface Callback{
         fun returnInfo(message:String)

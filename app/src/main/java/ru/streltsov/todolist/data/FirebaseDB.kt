@@ -54,7 +54,7 @@ class FirebaseDB : DataBase {
 
 
 
-    override fun updateTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
+//    override fun updateTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
 //        val data = mapOf(
 //            "title" to task.title,
 //            "description" to task.description,
@@ -64,7 +64,7 @@ class FirebaseDB : DataBase {
 //        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
 //            .document(task.id.toString())
 //            .update(data)
-    }
+//    }
 
     override fun getTaskByID(id: String){
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id).get()
@@ -73,6 +73,17 @@ class FirebaseDB : DataBase {
                 mCallback.returnData(task)
             }.addOnFailureListener {
             Log.d(TAG, "$it")
+        }
+    }
+
+    override fun changeStatus(id: String, status: Boolean) {
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id).update(
+            mapOf(
+                "status" to status
+            )).addOnSuccessListener {
+            mCallback.returnInfo("Красавчик!")
+        }.addOnFailureListener {
+            mCallback.returnInfo("Что-то пошло не так")
         }
     }
 
