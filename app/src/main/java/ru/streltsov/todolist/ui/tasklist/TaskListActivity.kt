@@ -81,6 +81,10 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         })
     }
 
+    override fun updateUI(index: Int) {
+        adapter.notifyItemRemoved(index)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.menu_task_list, menu)
@@ -99,7 +103,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
                 "Задача создана",
                 Toast.LENGTH_SHORT
             ).show()
-            OPEN_TASK -> if(resultCode == TASK_DELETED) adapter.notifyDataSetChanged()
+//            OPEN_TASK -> if(resultCode == TASK_DELETED) adapter.notifyDataSetChanged()
         }
     }
 

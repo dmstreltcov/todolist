@@ -263,7 +263,6 @@ class TaskActivity : AppCompatActivity(), TaskView {
                 presenter.deleteTask(taskId)
                 setResult(TASK_DELETED)
                 cancelAlarm()
-                showMessage("Задача удалена")
                 finish()
             }
         }

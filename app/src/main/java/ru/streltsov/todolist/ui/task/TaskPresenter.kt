@@ -99,5 +99,9 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
 
     }
 
+    override fun updateUI(index: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 
 }

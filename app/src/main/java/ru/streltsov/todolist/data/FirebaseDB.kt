@@ -34,8 +34,6 @@ class FirebaseDB : DataBase {
         createRequest().orderBy("createDate").addSnapshotListener { snapshot,
                                                                     exception ->
 
-            // https://stackoverflow.com/questions/50754912/firebase-firestore-document-changes
-
             if (exception != null) {
                 mCallback.returnInfo("Что-то пошло не так")
                 Log.d(TAG, "Listen failed. ", exception)
@@ -55,7 +53,8 @@ class FirebaseDB : DataBase {
                         }
                         DocumentChange.Type.REMOVED -> {
                             mList.remove(documentChange.document.toObject(TaskTD::class.java))
-                            Log.d("TAG", "TASK WAS REMOVED ${documentChange.oldIndex}")
+                            mCallback.updateUI(documentChange.oldIndex) //лишняя какая-то
+                            mCallback.returnInfo("Задача удалена!")
                         }
                     }
                 }
@@ -84,9 +83,7 @@ class FirebaseDB : DataBase {
             throw NullPointerException("id is null")
         }
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
-            .document(id.toString()).delete().addOnSuccessListener {
-
-            }.addOnFailureListener {
+            .document(id.toString()).delete().addOnFailureListener {
                 mCallback.returnInfo("Косяк")
             }
     }

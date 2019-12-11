@@ -36,4 +36,8 @@ class TaskListPresenter : BasePresenter<TaskListView>(), DataBase.Callback {
         view?.initAdapter(data)
         view?.hideProgressBar()
     }
+
+    override fun updateUI(index: Int) {
+        view?.updateUI(index)
+    }
 }
