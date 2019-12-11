@@ -47,6 +47,7 @@ class FirebaseDB : DataBase {
                     when (documentChange.type) {
                         DocumentChange.Type.ADDED -> {
                             mList.add(documentChange.newIndex, documentChange.document.toObject(TaskTD::class.java))
+                            mCallback.returnData(mList)
                         }
                         DocumentChange.Type.MODIFIED -> {
                             mList[documentChange.newIndex] = documentChange.document.toObject(TaskTD::class.java)
@@ -58,7 +59,7 @@ class FirebaseDB : DataBase {
                         }
                     }
                 }
-                mCallback.returnData(mList)
+
             } else {
                 Log.d(TAG, "Data is ${mList}")
                 mCallback.returnData(mList)
