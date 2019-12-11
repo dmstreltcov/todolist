@@ -15,6 +15,7 @@ class FirebaseDB : DataBase {
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var mCallback: DataBase.Callback
+    private var mList = ArrayList<TaskTD>()
 
     override fun currentUser(): Parcelable {
         return mAuth.currentUser!!
@@ -30,9 +31,8 @@ class FirebaseDB : DataBase {
     override fun signUp(email: String, password: String) =
         mAuth.createUserWithEmailAndPassword(email, password)
 
-    override fun getData(): Query {
+    override fun getData() {
         Log.d(TAG, "Try to get data")
-
         createRequest().orderBy("createDate").addSnapshotListener { snapshot,
                                                                     exception ->
             if (exception != null) {
@@ -40,16 +40,41 @@ class FirebaseDB : DataBase {
                 Log.d(TAG, "Listen failed. ", exception)
             }
             if (snapshot != null && !snapshot.isEmpty) {
-                mCallback.returnInfo("${snapshot.documents[0]}")
-                Log.d(TAG, "${snapshot.documents}")
+                snapshot.documentChanges.forEachIndexed { index, documentChange ->
+                    when (documentChange.type) {
+                        DocumentChange.Type.ADDED -> {
+                            mList.add(index, documentChange.document.toObject(TaskTD::class.java))
+                            Log.d(
+                                TAG,
+                                "Document ${documentChange.document.toObject(TaskTD::class.java).id} added. Index $index"
+                            )
+                        }
+                        DocumentChange.Type.MODIFIED -> {
+                            mList[index] = documentChange.document.toObject(TaskTD::class.java)
+                            Log.d(
+                                TAG,
+                                "Index $index, Data ${documentChange.document.toObject(TaskTD::class.java)}"
+                            )
+                        }
+                        DocumentChange.Type.REMOVED -> {
+                            mList.remove(documentChange.document.toObject(TaskTD::class.java))
+                        }
+                    }
+                    Log.d(TAG, "List is: $mList")
+                }
+                mCallback.returnData(mList)
             } else {
                 Log.d(TAG, "Data is null")
             }
         }
-
-        return db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
-            .orderBy("createDate")
     }
+    // createDate
+    // dateStart
+    // description
+    // id
+    // status
+    // title
+
 
     override fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
         Log.d(TAG, mAuth.currentUser!!.uid)
@@ -77,7 +102,7 @@ class FirebaseDB : DataBase {
             .get()
             .addOnSuccessListener { documentSnapshot ->
                 val task: TaskTD? = documentSnapshot.toObject(TaskTD::class.java)
-                mCallback.returnData(task)
+                mCallback.returnData(arrayListOf(task!!))
             }.addOnFailureListener {
                 Log.d(TAG, "$it")
             }

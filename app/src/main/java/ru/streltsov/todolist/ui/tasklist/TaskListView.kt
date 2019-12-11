@@ -5,4 +5,5 @@ import ru.streltsov.todolist.base.BaseView
 interface TaskListView : BaseView {
     fun showProgressBar()
     fun hideProgressBar()
+    fun initAdapter(taskList:ArrayList<Task>)
 }

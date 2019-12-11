@@ -14,10 +14,10 @@ class TaskListPresenter : BasePresenter<TaskListView>(), DataBase.Callback {
 
     private var db: DataBase = FirebaseDB()
 
-    fun onLoadData() : Query{
+    fun onLoadData(){
         view?.showProgressBar()
         db.setCallback(this)
-        return db.getData()
+        db.getData()
     }
 
     fun onChangeStatus(id:String?, boolean: Boolean){
@@ -32,7 +32,8 @@ class TaskListPresenter : BasePresenter<TaskListView>(), DataBase.Callback {
         view?.showMessage(message)
     }
 
-    override fun returnData(task: Task?) {
+    override fun returnData(data: ArrayList<Task>) {
+        view?.initAdapter(data)
         view?.hideProgressBar()
     }
 }

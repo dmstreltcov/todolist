@@ -44,7 +44,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         presenter.attach(this)
         initElements()
         setListeners()
-        initAdapter()
+        presenter.onLoadData()
+
     }
 
     private fun initElements() {
@@ -63,12 +64,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         }
     }
 
-    private fun initAdapter() {
-        query = presenter.onLoadData()
-        options = FirestoreRecyclerOptions.Builder<Task>()
-            .setQuery(query, Task::class.java)
-            .build()  //хм
-        adapter = TaskListAdapter(options)
+    override fun initAdapter(taskList:ArrayList<Task>) {
+        adapter = TaskListAdapter(taskList)
         adapter.setCallback(this)
         recyclerView.adapter = adapter
         hideProgressBar() //TODO переделать, очень плохо
@@ -125,12 +122,12 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun onStart() {
         super.onStart()
-        adapter.startListening()
+//        adapter.startListening()
     }
 
     override fun onStop() {
         super.onStop()
-        adapter.stopListening()
+//        adapter.stopListening()
     }
 
     override fun onDestroy() {

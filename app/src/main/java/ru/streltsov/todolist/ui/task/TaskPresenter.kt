@@ -6,6 +6,7 @@ import ru.streltsov.todolist.data.DataBase
 import ru.streltsov.todolist.data.FirebaseDB
 import ru.streltsov.todolist.ui.tasklist.Task
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.min
 
 class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
@@ -88,10 +89,10 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
         view?.showMessage(message)
     }
 
-    override fun returnData(task: Task?) {
+    override fun returnData(data: ArrayList<Task>) {
         view?.hideProgressBar()
-        if (task != null) {
-            view?.showData(task)
+        if (data.size > 0) {
+            view?.showData(data[0])
         }
 
     }
