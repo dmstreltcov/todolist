@@ -54,14 +54,13 @@ class TaskActivity : AppCompatActivity(), TaskView {
         setContentView(R.layout.activity_task)
         presenter.attach(this)
         taskId = intent.getStringExtra("taskID")
-        Log.d(TAG, "$taskId")
+        Log.d(TAG, "Task ID is $taskId")
         initElements()
         setListeners()
         setSupportActionBar(actionBarToolbar)
         setAlarmManager()
-        showProgressBar()
         if (taskId != null) {
-//            showProgressBar()
+            showProgressBar()
             presenter.getTaskById(taskId!!)
         } else {
             flag = TaskType.NEW
@@ -126,12 +125,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
     }
 
     private fun onSaveTask() {
-        Log.d(TAG, "Save task")
         val task = getTaskData()
-        Log.d(TAG, "Task is $task")
         if (presenter.onSaveTask(task)) {
             setResult(Activity.RESULT_OK)
-            if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm) && task.status == false)
+            if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm) && !task.status)
                 setAlarm(task)
             finish()
         }
@@ -212,7 +209,6 @@ class TaskActivity : AppCompatActivity(), TaskView {
     }
 
     private fun setTaskId(): String? {
-        Log.d(TAG, "Set task id")
         return if (taskId == null) {
             UUID.randomUUID().toString()
         } else {

@@ -39,7 +39,6 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "TodoList/OnCreate()")
         setContentView(R.layout.activity_task_list)
         presenter.attach(this)
         initElements()

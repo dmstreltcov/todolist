@@ -43,28 +43,33 @@ class FirebaseDB : DataBase {
                 snapshot.documentChanges.forEachIndexed { index, documentChange ->
                     when (documentChange.type) {
                         DocumentChange.Type.ADDED -> {
-                            mList.add(index, documentChange.document.toObject(TaskTD::class.java))
+                            mList.add(documentChange.newIndex, documentChange.document.toObject(TaskTD::class.java))
                             Log.d(
                                 TAG,
-                                "Document ${documentChange.document.toObject(TaskTD::class.java).id} added. Index $index"
+                                "Document ${documentChange.document.toObject(TaskTD::class.java).id} added. NewIndex: ${documentChange.newIndex} OldIndex ${documentChange.oldIndex}"
                             )
                         }
+                        //TODO косяк тут по всей видимости
                         DocumentChange.Type.MODIFIED -> {
-                            mList[index] = documentChange.document.toObject(TaskTD::class.java)
+                            mList[documentChange.newIndex] = documentChange.document.toObject(TaskTD::class.java)
                             Log.d(
                                 TAG,
-                                "Index $index, Data ${documentChange.document.toObject(TaskTD::class.java)}"
+                                "Index $index, Data ${documentChange.document.toObject(TaskTD::class.java)} modified. NewIndex: ${documentChange.newIndex} OldIndex ${documentChange.oldIndex}"
                             )
                         }
                         DocumentChange.Type.REMOVED -> {
                             mList.remove(documentChange.document.toObject(TaskTD::class.java))
+                            Log.d(
+                                TAG,
+                                "Index $index, Data ${documentChange.document.toObject(TaskTD::class.java)} removed. NewIndex: ${documentChange.newIndex} OldIndex ${documentChange.oldIndex}"
+                            )
                         }
                     }
-                    Log.d(TAG, "List is: $mList")
                 }
                 mCallback.returnData(mList)
             } else {
                 Log.d(TAG, "Data is null")
+                mCallback.returnData(mList)
             }
         }
     }
@@ -94,7 +99,11 @@ class FirebaseDB : DataBase {
             throw NullPointerException("id is null")
         }
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
-            .document(id.toString()).delete()
+            .document(id.toString()).delete().addOnSuccessListener {
+
+            }.addOnFailureListener {
+                mCallback.returnInfo("Косяк")
+            }
     }
 
     override fun getTaskByID(id: String) {

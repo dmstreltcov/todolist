@@ -56,6 +56,7 @@ class TaskListAdapter(private val list: ArrayList<Task>) :
                 mCallback.onItemClicked(list[adapterPosition])
             }
             statusBox.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+                Log.d(TAG, "${list[adapterPosition].id}")
                 mCallback.onStatusChanged(list[adapterPosition], isChecked)
             })
         }
@@ -63,7 +64,6 @@ class TaskListAdapter(private val list: ArrayList<Task>) :
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.bind(list[position])
-        Log.d(TAG, "${list[position]}")
     }
 
     private fun formatDate(dateStart: Timestamp?): String {
