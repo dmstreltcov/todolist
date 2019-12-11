@@ -65,6 +65,7 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
     }
 
     fun deleteTask(id: String?) {
+
         try {
             db.deleteTask(id)
         } catch (e: NullPointerException) {

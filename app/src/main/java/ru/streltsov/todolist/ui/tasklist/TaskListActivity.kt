@@ -1,10 +1,8 @@
 package ru.streltsov.todolist.ui.tasklist
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.ProgressBar
@@ -24,7 +22,10 @@ import ru.streltsov.todolist.ui.task.TaskActivity
 
 class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Callback {
 
-    private val REQUEST_CODE = 1001
+    private val CREATE_TASK = 1001
+    private val OPEN_TASK = 1002
+    private val TASK_SAVED = 1412
+    private val TASK_DELETED = 1413
     private val TAG: String = "TaskListActivity"
     private val presenter: TaskListPresenter by lazy { TaskListPresenter() }
     private lateinit var recyclerView: RecyclerView
@@ -59,7 +60,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     private fun setListeners() {
         addTaskBtn.setOnClickListener {
-            startActivityForResult(Intent(this, TaskActivity::class.java), REQUEST_CODE)
+            startActivityForResult(Intent(this, TaskActivity::class.java), CREATE_TASK)
         }
     }
 
@@ -93,11 +94,12 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            1001 -> if (resultCode == Activity.RESULT_OK) Toast.makeText(
+            CREATE_TASK -> if (resultCode == TASK_SAVED) Toast.makeText(
                 this,
                 "Задача создана",
                 Toast.LENGTH_SHORT
             ).show()
+            OPEN_TASK -> if(resultCode == TASK_DELETED) adapter.notifyDataSetChanged()
         }
     }
 
@@ -137,7 +139,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     override fun onItemClicked(item: Task) {
         val intent: Intent = Intent(this, TaskActivity::class.java)
         intent.putExtra("taskID", item.id)
-        startActivity(intent)
+        startActivityForResult(intent, OPEN_TASK)
     }
 
     override fun onStatusChanged(item: Task, status: Boolean) {

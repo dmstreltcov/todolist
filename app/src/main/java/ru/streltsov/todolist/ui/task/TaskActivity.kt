@@ -30,6 +30,9 @@ import java.util.*
 class TaskActivity : AppCompatActivity(), TaskView {
 
     private val TAG: String = "TodoList/TaskActivity"
+    private val TASK_SAVED:Int = 1412
+    private val TASK_DELETED:Int = 1413
+
     private lateinit var taskTitle: EditText
     private lateinit var taskDescription: EditText
     private lateinit var dateStart: TextInputEditText
@@ -127,7 +130,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private fun onSaveTask() {
         val task = getTaskData()
         if (presenter.onSaveTask(task)) {
-            setResult(Activity.RESULT_OK)
+            setResult(TASK_SAVED)
             if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm) && !task.status)
                 setAlarm(task)
             finish()
@@ -258,6 +261,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
         when (item.itemId) {
             R.id.action_delete -> {
                 presenter.deleteTask(taskId)
+                setResult(TASK_DELETED)
                 cancelAlarm()
                 showMessage("Задача удалена")
                 finish()

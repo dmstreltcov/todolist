@@ -10,7 +10,6 @@ import ru.streltsov.todolist.ui.tasklist.Task as TaskTD
 
 class FirebaseDB : DataBase {
 
-
     private val TAG: String = "TodoList/Firebase DataBase"
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -32,62 +31,48 @@ class FirebaseDB : DataBase {
         mAuth.createUserWithEmailAndPassword(email, password)
 
     override fun getData() {
-        Log.d(TAG, "Try to get data")
         createRequest().orderBy("createDate").addSnapshotListener { snapshot,
                                                                     exception ->
+
+            // https://stackoverflow.com/questions/50754912/firebase-firestore-document-changes
+
             if (exception != null) {
                 mCallback.returnInfo("Что-то пошло не так")
                 Log.d(TAG, "Listen failed. ", exception)
+                return@addSnapshotListener
             }
-            if (snapshot != null && !snapshot.isEmpty) {
+
+            Log.d(TAG, "${snapshot?.isEmpty}")
+
+            if (snapshot != null) {
                 snapshot.documentChanges.forEachIndexed { index, documentChange ->
                     when (documentChange.type) {
                         DocumentChange.Type.ADDED -> {
                             mList.add(documentChange.newIndex, documentChange.document.toObject(TaskTD::class.java))
-                            Log.d(
-                                TAG,
-                                "Document ${documentChange.document.toObject(TaskTD::class.java).id} added. NewIndex: ${documentChange.newIndex} OldIndex ${documentChange.oldIndex}"
-                            )
                         }
-                        //TODO косяк тут по всей видимости
                         DocumentChange.Type.MODIFIED -> {
                             mList[documentChange.newIndex] = documentChange.document.toObject(TaskTD::class.java)
-                            Log.d(
-                                TAG,
-                                "Index $index, Data ${documentChange.document.toObject(TaskTD::class.java)} modified. NewIndex: ${documentChange.newIndex} OldIndex ${documentChange.oldIndex}"
-                            )
                         }
                         DocumentChange.Type.REMOVED -> {
                             mList.remove(documentChange.document.toObject(TaskTD::class.java))
-                            Log.d(
-                                TAG,
-                                "Index $index, Data ${documentChange.document.toObject(TaskTD::class.java)} removed. NewIndex: ${documentChange.newIndex} OldIndex ${documentChange.oldIndex}"
-                            )
+                            Log.d("TAG", "TASK WAS REMOVED ${documentChange.oldIndex}")
                         }
                     }
                 }
                 mCallback.returnData(mList)
             } else {
-                Log.d(TAG, "Data is null")
+                Log.d(TAG, "Data is ${mList}")
                 mCallback.returnData(mList)
             }
         }
     }
-    // createDate
-    // dateStart
-    // description
-    // id
-    // status
-    // title
-
 
     override fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
-        Log.d(TAG, mAuth.currentUser!!.uid)
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
             .document(task.id!!).set(task)
             .addOnSuccessListener {
                 mCallback.returnInfo("Задача была создана")
-                Log.d(TAG, "Document written with ID: ${task.id}")
+                Log.d(TAG, "Document written.")
             }.addOnFailureListener {
                 mCallback.returnInfo("Возникла ошибка. Попробуйте снова")
                 Log.w(TAG, "Error adding document", it)

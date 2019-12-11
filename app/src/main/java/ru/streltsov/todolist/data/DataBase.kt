@@ -22,6 +22,7 @@ interface DataBase {
     fun getTaskByID(id:String)
     fun changeStatus(id:String, status:Boolean)
     fun setCallback(callback: Callback)
+
     interface Callback{
         fun returnInfo(message:String)
         fun returnData(data: ArrayList<TaskTD>)
