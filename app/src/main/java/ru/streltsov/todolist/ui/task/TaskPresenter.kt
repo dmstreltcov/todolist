@@ -9,8 +9,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.min
 
+private const val TAG: String = "TodoList/Task Presenter"
+
 class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
-    private val TAG: String = "TodoList/Task Presenter"
     private var db: DataBase = FirebaseDB()
 
 
@@ -26,6 +27,7 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
 
     fun getTaskById(id: String) {
         db.setCallback(this)
+        view?.showProgressBar()
         db.getTaskByID(id)
     }
 
@@ -95,8 +97,6 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
         if (data.size > 0) {
             view?.showData(data[0])
         }
-
-
     }
 
     override fun updateUI(index: Int) {

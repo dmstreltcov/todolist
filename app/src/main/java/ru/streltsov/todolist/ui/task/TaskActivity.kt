@@ -27,11 +27,11 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TaskActivity : AppCompatActivity(), TaskView {
+private const val TAG: String = "TodoList/TaskActivity"
+private const val TASK_SAVED: Int = 1412
+private const val TASK_DELETED: Int = 1413
 
-    private val TAG: String = "TodoList/TaskActivity"
-    private val TASK_SAVED:Int = 1412
-    private val TASK_DELETED:Int = 1413
+class TaskActivity : AppCompatActivity(), TaskView {
 
     private lateinit var taskTitle: EditText
     private lateinit var taskDescription: EditText
@@ -51,7 +51,6 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private var timeAlarm: Long = 0
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
@@ -63,7 +62,6 @@ class TaskActivity : AppCompatActivity(), TaskView {
         setSupportActionBar(actionBarToolbar)
         setAlarmManager()
         if (taskId != null) {
-            showProgressBar()
             presenter.getTaskById(taskId!!)
         } else {
             flag = TaskType.NEW
@@ -182,7 +180,12 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
     private fun createPendingIntent(task: Task): PendingIntent {
         val intent = createIntent(task)
-        return PendingIntent.getBroadcast(this, System.currentTimeMillis().toInt(), intent,PendingIntent.FLAG_ONE_SHOT)
+        return PendingIntent.getBroadcast(
+            this,
+            System.currentTimeMillis().toInt(),
+            intent,
+            PendingIntent.FLAG_ONE_SHOT
+        )
     }
 
     private fun createIntent(task: Task): Intent {
@@ -322,11 +325,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
         dateStart.visibility = View.GONE
         timeStart.visibility = View.GONE
         fab.hide()
-        progressBar.visibility = View.GONE
         actionBarToolbar.visibility = View.GONE
     }
 
-    override fun hideProgressBar(){
+    override fun hideProgressBar() {
         progressBar.visibility = View.GONE
 
         taskTitle.visibility = View.VISIBLE
@@ -334,7 +336,6 @@ class TaskActivity : AppCompatActivity(), TaskView {
         dateStart.visibility = View.VISIBLE
         timeStart.visibility = View.VISIBLE
         fab.show()
-        progressBar.visibility = View.VISIBLE
         actionBarToolbar.visibility = View.VISIBLE
     }
 

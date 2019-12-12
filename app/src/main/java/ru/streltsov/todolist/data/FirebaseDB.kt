@@ -2,19 +2,18 @@ package ru.streltsov.todolist.data
 
 import android.os.Parcelable
 import android.util.Log
-import com.google.android.gms.tasks.Task
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import ru.streltsov.todolist.ui.tasklist.Task as TaskTD
+import ru.streltsov.todolist.ui.tasklist.Task
+
+private const val TAG: String = "TodoList/Firebase DataBase"
 
 class FirebaseDB : DataBase {
 
-    private val TAG: String = "TodoList/Firebase DataBase"
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var mCallback: DataBase.Callback
-    private var mList = ArrayList<TaskTD>()
+    private var mList = ArrayList<Task>()
 
     override fun currentUser(): Parcelable {
         return mAuth.currentUser!!
@@ -40,20 +39,18 @@ class FirebaseDB : DataBase {
                 return@addSnapshotListener
             }
 
-            Log.d(TAG, "${snapshot?.isEmpty}")
-
             if (snapshot != null) {
                 snapshot.documentChanges.forEachIndexed { index, documentChange ->
                     when (documentChange.type) {
                         DocumentChange.Type.ADDED -> {
-                            mList.add(documentChange.newIndex, documentChange.document.toObject(TaskTD::class.java))
+                            mList.add(documentChange.newIndex, documentChange.document.toObject(Task::class.java))
                             mCallback.returnData(mList)
                         }
                         DocumentChange.Type.MODIFIED -> {
-                            mList[documentChange.newIndex] = documentChange.document.toObject(TaskTD::class.java)
+                            mList[documentChange.newIndex] = documentChange.document.toObject(Task::class.java)
                         }
                         DocumentChange.Type.REMOVED -> {
-                            mList.remove(documentChange.document.toObject(TaskTD::class.java))
+                            mList.remove(documentChange.document.toObject(Task::class.java))
                             mCallback.updateUI(documentChange.oldIndex) //лишняя какая-то
                             mCallback.returnInfo("Задача удалена!")
                         }
@@ -61,7 +58,8 @@ class FirebaseDB : DataBase {
                 }
 
             } else {
-                Log.d(TAG, "Data is ${mList}")
+                //TODO удали
+                Log.d(TAG, "Data is $mList")
                 mCallback.returnData(mList)
             }
         }
@@ -71,7 +69,7 @@ class FirebaseDB : DataBase {
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
             .document(task.id!!).set(task)
             .addOnSuccessListener {
-                mCallback.returnInfo("Задача была создана")
+                mCallback.returnInfo("Задача сохранена")
                 Log.d(TAG, "Document written.")
             }.addOnFailureListener {
                 mCallback.returnInfo("Возникла ошибка. Попробуйте снова")
@@ -93,7 +91,7 @@ class FirebaseDB : DataBase {
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id)
             .get()
             .addOnSuccessListener { documentSnapshot ->
-                val task: TaskTD? = documentSnapshot.toObject(TaskTD::class.java)
+                val task: Task? = documentSnapshot.toObject(Task::class.java)
                 mCallback.returnData(arrayListOf(task!!))
             }.addOnFailureListener {
                 Log.d(TAG, "$it")

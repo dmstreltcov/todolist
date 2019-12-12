@@ -97,14 +97,14 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            CREATE_TASK -> if (resultCode == TASK_SAVED) Toast.makeText(
-                this,
-                "Задача создана",
-                Toast.LENGTH_SHORT
-            ).show()
-//            OPEN_TASK -> if(resultCode == TASK_DELETED) adapter.notifyDataSetChanged()
-        }
+//        when (requestCode) {
+//            CREATE_TASK -> if (resultCode == TASK_SAVED) Toast.makeText(
+//                this,
+//                "Задача создана",
+//                Toast.LENGTH_SHORT
+//            ).show()
+////            OPEN_TASK -> if(resultCode == TASK_DELETED) adapter.notifyDataSetChanged()
+//        }
     }
 
     override fun showProgressBar() {
