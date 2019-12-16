@@ -5,8 +5,9 @@ import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.base.BasePresenter
 import ru.streltsov.todolist.data.DataBase
 import ru.streltsov.todolist.data.FirebaseDB
+import ru.streltsov.todolist.data.Validator
 
-class SignUpPresenter : BasePresenter<SignUpView>() {
+class SignUpPresenter : BasePresenter<SignUpView>(), Validator {
 
     private val TAG: String = "TodoList/SignUpPresenter"
     private var db: DataBase = FirebaseDB()
@@ -29,7 +30,9 @@ class SignUpPresenter : BasePresenter<SignUpView>() {
 
     }
 
-    private fun validate(email: String, password: String): Boolean {
+    override fun validate(vararg args: String): Boolean {
+        val email = args[0]
+        val password = args[1]
         return when {
             email.isEmpty() -> {
                 view?.showMessage("Введите email")
@@ -41,5 +44,5 @@ class SignUpPresenter : BasePresenter<SignUpView>() {
             }
             else -> true
         }
-    } //Не выполняется принцип DRY. Решение, которое я могу предложить: Создать абстрактный класс, например AuthPresenter : BasePresenter<V: BaseView> и в нем метод на валидацию
+    }
 }

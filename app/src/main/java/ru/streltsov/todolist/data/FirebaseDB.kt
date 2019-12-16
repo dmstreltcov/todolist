@@ -6,9 +6,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import ru.streltsov.todolist.ui.tasklist.Task
 
-private const val TAG: String = "TodoList/Firebase DataBase"
 
 class FirebaseDB : DataBase {
+    private val TAG: String = "TodoList/Firebase DataBase"
 
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -32,6 +32,9 @@ class FirebaseDB : DataBase {
     override fun getData() {
         createRequest().orderBy("createDate").addSnapshotListener { snapshot,
                                                                     exception ->
+            if(snapshot!!.isEmpty){
+                mCallback.returnData(mList)
+            }
 
             if (exception != null) {
                 mCallback.returnInfo("Что-то пошло не так")
@@ -39,28 +42,21 @@ class FirebaseDB : DataBase {
                 return@addSnapshotListener
             }
 
-            if (snapshot != null) {
-                snapshot.documentChanges.forEachIndexed { index, documentChange ->
-                    when (documentChange.type) {
-                        DocumentChange.Type.ADDED -> {
-                            mList.add(documentChange.newIndex, documentChange.document.toObject(Task::class.java))
-                            mCallback.returnData(mList)
-                        }
-                        DocumentChange.Type.MODIFIED -> {
-                            mList[documentChange.newIndex] = documentChange.document.toObject(Task::class.java)
-                        }
-                        DocumentChange.Type.REMOVED -> {
-                            mList.remove(documentChange.document.toObject(Task::class.java))
-                            mCallback.updateUI(documentChange.oldIndex) //лишняя какая-то
-                            mCallback.returnInfo("Задача удалена!")
-                        }
+            snapshot.documentChanges.forEachIndexed { index, documentChange ->
+                when (documentChange.type) {
+                    DocumentChange.Type.ADDED -> {
+                        mList.add(documentChange.newIndex, documentChange.document.toObject(Task::class.java))
+                        mCallback.returnData(mList)
+                    }
+                    DocumentChange.Type.MODIFIED -> {
+                        mList[documentChange.newIndex] = documentChange.document.toObject(Task::class.java)
+                    }
+                    DocumentChange.Type.REMOVED -> {
+                        mList.remove(documentChange.document.toObject(Task::class.java))
+                        mCallback.updateUI(documentChange.oldIndex) //лишняя какая-то
+                        mCallback.returnInfo("Задача удалена!")
                     }
                 }
-
-            } else {
-                //TODO удали
-                Log.d(TAG, "Data is $mList")
-                mCallback.returnData(mList)
             }
         }
     }

@@ -17,10 +17,11 @@ interface DataBase {
 
     fun currentUser(): Parcelable
     fun signUp(email: String, password: String): Task<AuthResult>
+
     fun getData()
+    fun getTaskByID(id:String)
     fun deleteTask(id:String?)
     fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task)
-    fun getTaskByID(id:String)
     fun changeStatus(id:String, status:Boolean)
     fun setCallback(callback: Callback)
 
@@ -28,6 +29,5 @@ interface DataBase {
         fun returnInfo(message:String)
         fun returnData(data: ArrayList<TaskTD>)
         fun updateUI(index:Int)
-
     }
 }

@@ -27,11 +27,14 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-private const val TAG: String = "TodoList/TaskActivity"
-private const val TASK_SAVED: Int = 1412
-private const val TASK_DELETED: Int = 1413
+
 
 class TaskActivity : AppCompatActivity(), TaskView {
+
+
+    private val TAG: String = "TodoList/TaskActivity"
+    private val TASK_SAVED: Int = 1412
+    private val TASK_DELETED: Int = 1413
 
     private lateinit var taskTitle: EditText
     private lateinit var taskDescription: EditText

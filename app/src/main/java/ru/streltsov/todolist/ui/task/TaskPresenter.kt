@@ -9,11 +9,11 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.min
 
-private const val TAG: String = "TodoList/Task Presenter"
 
 class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
     private var db: DataBase = FirebaseDB()
 
+    private val TAG: String = "TodoList/Task Presenter"
 
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {

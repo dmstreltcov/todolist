@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import ru.streltsov.todolist.MainActivity
@@ -25,11 +26,11 @@ object NotificationHelper {
     ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "${context.packageName}-todolist"
-            val channel = NotificationChannel("task", "todolist", NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel(channelId, "todolist", NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = description
             channel.setShowBadge(showBadge)
             val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannelGroup(NotificationChannelGroup("Task", "Tasks"))
+            notificationManager.createNotificationChannel(channel)
         }
 
         val intent = Intent(context, TaskActivity::class.java)
@@ -44,13 +45,11 @@ object NotificationHelper {
             setAutoCancel(true)
             setContentIntent(pendingIntent)
             setStyle(NotificationCompat.InboxStyle())
-            setGroup("Task")
             setGroupSummary(true)
         }
 
-        val notificationManager = NotificationManagerCompat.from(context).apply {
-            notify(System.currentTimeMillis().toInt(), notificationBuilder.build())
-        }
+        val notificationManager = NotificationManagerCompat.from(context)
+        notificationManager.notify(System.currentTimeMillis().toInt(), notificationBuilder.build())
     }
 }
 
