@@ -18,6 +18,7 @@ import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_task_list.*
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.task.TaskActivity
+import ru.streltsov.todolist.ui.task.TaskType
 
 
 class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Callback {
@@ -32,11 +33,9 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     private lateinit var linearLayout: LinearLayoutManager
     private lateinit var adapter: TaskListAdapter
     private lateinit var query: Query
-    private lateinit var options: FirestoreRecyclerOptions<Task>
     private lateinit var addTaskBtn: FloatingActionButton
     private lateinit var actionBarToolbar: BottomAppBar
     private lateinit var progressBar: ProgressBar
-    private var currentUser: FirebaseUser? = intent?.getParcelableExtra("user")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +44,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         initElements()
         setListeners()
         presenter.onLoadData()
-
     }
+
 
     private fun initElements() {
         recyclerView = findViewById(R.id.tasklist)
@@ -60,7 +59,9 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     private fun setListeners() {
         addTaskBtn.setOnClickListener {
-            startActivityForResult(Intent(this, TaskActivity::class.java), CREATE_TASK)
+            val intent = Intent(this, TaskActivity::class.java)
+            intent.putExtra("flag", TaskType.NEW)
+            startActivityForResult(intent, CREATE_TASK)
         }
     }
 
@@ -143,10 +144,17 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     override fun onItemClicked(item: Task) {
         val intent: Intent = Intent(this, TaskActivity::class.java)
         intent.putExtra("taskID", item.id)
+        intent.putExtra("flag", TaskType.EDIT)
         startActivityForResult(intent, OPEN_TASK)
     }
 
     override fun onStatusChanged(item: Task, status: Boolean) {
         presenter.onChangeStatus(item.id, status)
+    }
+
+    companion object {
+        fun createIntent(){
+
+        }
     }
 }

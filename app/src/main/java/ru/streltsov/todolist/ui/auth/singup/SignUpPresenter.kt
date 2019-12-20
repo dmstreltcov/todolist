@@ -3,31 +3,21 @@ package ru.streltsov.todolist.ui.auth.singup
 import android.util.Log
 import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.base.BasePresenter
-import ru.streltsov.todolist.data.DataBase
-import ru.streltsov.todolist.data.FirebaseDB
+import ru.streltsov.todolist.data.repository.DatabaseRepository
+import ru.streltsov.todolist.data.FirebaseRepository
 import ru.streltsov.todolist.data.Validator
+import ru.streltsov.todolist.data.repository.UserRepository
 
-class SignUpPresenter : BasePresenter<SignUpView>(), Validator {
+class SignUpPresenter : BasePresenter<SignUpView>(), Validator, UserRepository.UserCallback {
 
     private val TAG: String = "TodoList/SignUpPresenter"
-    private var db: DataBase = FirebaseDB()
+    private var db: UserRepository = FirebaseRepository()
 
     fun onSignUp(email: String, password: String) {
         view?.showProgress()
-//        Thread.sleep(1000)
         if (validate(email, password)) {
-            db.signUp(email, password).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "TodoList/SignUp with email: success")
-                    view?.updateUI(db.currentUser() as FirebaseUser)
-                } else {
-                    Log.d(TAG, "TodoList/Signup with email: failed")
-                    view?.showMessage("Не удалось зарегистрироваться")
-                    view?.hideProgress()
-                }
-            }
+            db.signUp(email, password)
         }
-
     }
 
     override fun validate(vararg args: String): Boolean {
@@ -44,5 +34,16 @@ class SignUpPresenter : BasePresenter<SignUpView>(), Validator {
             }
             else -> true
         }
+    }
+
+    override fun onSuccess() {
+        Log.d(TAG, "TodoList/SignUp with email: success")
+        view?.updateUI()
+    }
+
+    override fun onError() {
+        Log.d(TAG, "TodoList/Signup with email: failed")
+        view?.showMessage("Не удалось зарегистрироваться")
+        view?.hideProgress()
     }
 }

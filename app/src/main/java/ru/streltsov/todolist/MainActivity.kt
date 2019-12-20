@@ -14,20 +14,18 @@ class MainActivity : AppCompatActivity() {
 
     private val TAG: String = "TodoList/MainActivity"
     private lateinit var mAuth: FirebaseAuth
-    private var currentUser: FirebaseUser? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mAuth = FirebaseAuth.getInstance()
-        currentUser = mAuth.currentUser
-        updateUI(currentUser)
+        updateUI()
     }
 
-    private fun updateUI(currentUser: FirebaseUser?) {
-        when (currentUser) {
+    private fun updateUI() {
+        when (mAuth.currentUser) {
             null -> onLoginPage()
-            else -> onTaskListPage(currentUser)
+            else -> onTaskListPage()
         }
     }
 
@@ -38,19 +36,10 @@ class MainActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun onTaskListPage(currentUser: FirebaseUser) {
+    private fun onTaskListPage() {
         Log.d(TAG, "Переход на страницу со списком задач")
-        val intent: Intent = createTaskListIntent(this, currentUser)
+        val intent: Intent = Intent(this, TaskListActivity::class.java)
         startActivity(intent)
         finish()
-    }
-
-    companion object {
-        fun createTaskListIntent(
-            context: Context,
-            user: FirebaseUser
-        ): Intent {
-            return Intent(context, TaskListActivity::class.java).putExtra("user", user)
-        }
     }
 }

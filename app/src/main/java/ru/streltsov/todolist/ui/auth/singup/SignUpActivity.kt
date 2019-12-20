@@ -50,9 +50,9 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
         }
     }
 
-    override fun updateUI(user: FirebaseUser) {
+    override fun updateUI() {
         Log.d(TAG, "TodoList/Update UI")
-        val intent: Intent = MainActivity.createTaskListIntent(this, user)
+        val intent: Intent = Intent(this, TaskListActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()

@@ -1,43 +1,46 @@
 package ru.streltsov.todolist.ui.tasklist
 
-import android.os.Parcelable
-import android.util.Log
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.Query
 import ru.streltsov.todolist.base.BasePresenter
-import ru.streltsov.todolist.data.DataBase
-import ru.streltsov.todolist.data.FirebaseDB
+import ru.streltsov.todolist.data.repository.DatabaseRepository
+import ru.streltsov.todolist.data.FirebaseRepository
+import ru.streltsov.todolist.data.repository.TaskListRepository
 
-class TaskListPresenter : BasePresenter<TaskListView>(), DataBase.Callback {
+class TaskListPresenter : BasePresenter<TaskListView>(), TaskListRepository.TaskListCallback {
 
-    private var db: DataBase = FirebaseDB()
+    private var db: TaskListRepository = FirebaseRepository()
 
-    fun onLoadData(){
+    fun onLoadData() {
         view?.showProgressBar()
         db.setCallback(this)
-        db.getData()
+        db.getAllTasks()
     }
 
-    fun onChangeStatus(id:String?, boolean: Boolean){
+    fun onChangeStatus(id: String?, boolean: Boolean) {
         db.setCallback(this)
-        when(boolean){
+        when (boolean) {
             true -> db.changeStatus(id!!, boolean)
             false -> db.changeStatus(id!!, boolean)
         }
     }
 
-    override fun returnInfo(message: String) {
-        view?.showMessage(message)
+    override fun returnTask(task: Task) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun returnData(data: ArrayList<Task>) {
+    override fun returnTaskList(data: ArrayList<Task>) {
         view?.initAdapter(data)
         view?.hideProgressBar()
     }
 
-    override fun updateUI(index: Int) {
-        view?.updateUI(index)
+    override fun sendMessage(message: String) {
+        view?.showMessage(message)
+    }
+
+    override fun onSuccess() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onError() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

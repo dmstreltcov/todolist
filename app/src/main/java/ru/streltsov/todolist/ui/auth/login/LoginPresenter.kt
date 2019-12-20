@@ -1,33 +1,36 @@
 package ru.streltsov.todolist.ui.auth.login
 
 import android.util.Log
-import ru.streltsov.todolist.data.DataBase
-import ru.streltsov.todolist.data.FirebaseDB
+import ru.streltsov.todolist.data.FirebaseRepository
 import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.base.BasePresenter
 import ru.streltsov.todolist.data.Validator
+import ru.streltsov.todolist.data.repository.Callback
+import ru.streltsov.todolist.data.repository.UserRepository
 
 
-class LoginPresenter : BasePresenter<LoginView>(), Validator {
+class LoginPresenter : BasePresenter<LoginView>(), Validator, UserRepository.UserCallback {
 
     private val TAG: String = "TodoList/LoginPresenter"
-    private var db: DataBase = FirebaseDB()
+    private var db: UserRepository = FirebaseRepository()
 
     fun onLoginButton(email: String, password: String) {
-        view?.showProgress()
-        validate(email, password)
         if (validate(email, password)) {
-            db.login(email, password).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "TodoList/Login with email: success")
-                    view?.updateUI(db.currentUser() as FirebaseUser)
-                } else {
-                    Log.d(TAG, "TodoList/Login with email: failed")
-                    view?.showMessage("Такой пользователь отсутствует")
-                    view?.hideProgress()
-                }
-            }
+            view?.showProgress()
+            db.setCallback(this)
+            db.login(email, password)
         }
+    }
+
+    override fun onSuccess() {
+        Log.d(TAG, "TodoList/Login with email: success")
+        view?.updateUI()
+    }
+
+    override fun onError() {
+        Log.d(TAG, "TodoList/Login with email: failed")
+        view?.showMessage("Такой пользователь отсутствует")
+        view?.hideProgress()
     }
 
     fun onSignUpButton() {
