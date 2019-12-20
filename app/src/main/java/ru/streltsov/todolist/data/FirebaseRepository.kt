@@ -11,11 +11,10 @@ import ru.streltsov.todolist.data.repository.TaskRepository
 import ru.streltsov.todolist.data.repository.TaskRepository.TaskCallback
 import ru.streltsov.todolist.ui.tasklist.Task
 
-class FirebaseRepository : DatabaseRepository {
+class FirebaseRepository(private val mCallback: Callback) : DatabaseRepository {
     private val TAG: String = "TodoList/Firebase DataBase"
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private lateinit var mCallback: Callback
     private var mList = ArrayList<Task>()
 
     private fun createRequest(): CollectionReference {
@@ -76,7 +75,7 @@ class FirebaseRepository : DatabaseRepository {
                         }
                         DocumentChange.Type.REMOVED -> {
                             mList.remove(documentChange.document.toObject(Task::class.java))
-//                            mCallback.updateUI(documentChange.oldIndex) //лишняя какая-то
+                            (mCallback as TaskListRepository.TaskListCallback).updateUI(documentChange.oldIndex) //лишняя какая-то
                             (mCallback as TaskListRepository.TaskListCallback).sendMessage("Задача удалена!")
                         }
                     }
@@ -106,7 +105,7 @@ class FirebaseRepository : DatabaseRepository {
             .get()
             .addOnSuccessListener { documentSnapshot ->
                 val task: Task = documentSnapshot.toObject(Task::class.java)!!
-                (mCallback as TaskListRepository.TaskListCallback).returnTask(task)
+                (mCallback as TaskRepository.TaskCallback).returnTask(task)
             }.addOnFailureListener {
                 Log.d(TAG, "$it")
             }
@@ -137,6 +136,6 @@ class FirebaseRepository : DatabaseRepository {
     }
 
     override fun setCallback(callback: Callback) {
-        mCallback = callback
+//        mCallback = callback
     }
 }

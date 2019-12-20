@@ -12,14 +12,14 @@ import kotlin.collections.ArrayList
 
 
 class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
-    private var db: DatabaseRepository = FirebaseRepository()
+    private var db: TaskRepository = FirebaseRepository(this)
 
     private val TAG: String = "TodoList/Task Presenter"
 
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {
             Log.d("onSaveTask", "Created new task")
-            db.setCallback(this)
+//            db.setCallback(this)
             db.addTask(task)
             return true
         }
@@ -27,7 +27,7 @@ class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
     }
 
     fun getTaskById(id: String) {
-        db.setCallback(this)
+//        db.setCallback(this)
         view?.showProgressBar()
         db.getTaskById(id)
     }
@@ -68,7 +68,6 @@ class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
     }
 
     fun deleteTask(id: String) {
-
         try {
             db.deleteTask(id)
         } catch (e: NullPointerException) {
@@ -97,6 +96,11 @@ class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
 
     override fun sendInfo() {
         view?.showMessage("Задача удалена")
+    }
+
+    override fun returnTask(task: Task) {
+        view?.showData(task)
+        view?.hideProgressBar()
     }
 
     override fun onSuccess() {

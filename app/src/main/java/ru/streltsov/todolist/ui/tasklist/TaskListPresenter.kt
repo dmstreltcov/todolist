@@ -7,24 +7,20 @@ import ru.streltsov.todolist.data.repository.TaskListRepository
 
 class TaskListPresenter : BasePresenter<TaskListView>(), TaskListRepository.TaskListCallback {
 
-    private var db: TaskListRepository = FirebaseRepository()
+    private var db: TaskListRepository = FirebaseRepository(this)
 
     fun onLoadData() {
         view?.showProgressBar()
-        db.setCallback(this)
+//        db.setCallback(this)
         db.getAllTasks()
     }
 
     fun onChangeStatus(id: String?, boolean: Boolean) {
-        db.setCallback(this)
+//        db.setCallback(this)
         when (boolean) {
             true -> db.changeStatus(id!!, boolean)
             false -> db.changeStatus(id!!, boolean)
         }
-    }
-
-    override fun returnTask(task: Task) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun returnTaskList(data: ArrayList<Task>) {
@@ -34,6 +30,10 @@ class TaskListPresenter : BasePresenter<TaskListView>(), TaskListRepository.Task
 
     override fun sendMessage(message: String) {
         view?.showMessage(message)
+    }
+
+    override fun updateUI(index: Int) {
+        view?.updateUI(index)
     }
 
     override fun onSuccess() {
