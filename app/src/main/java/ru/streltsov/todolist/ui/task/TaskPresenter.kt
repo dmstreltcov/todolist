@@ -6,21 +6,29 @@ import ru.streltsov.todolist.data.DataBase
 import ru.streltsov.todolist.data.FirebaseDB
 import ru.streltsov.todolist.ui.tasklist.Task
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.min
 
-class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
-    private val TAG:String = "TodoList/Task Presenter"
-    private var db: DataBase = FirebaseDB()
+private const val TAG: String = "TodoList/Task Presenter"
 
+class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
+    private var db: DataBase = FirebaseDB()
 
 
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {
             Log.d("onSaveTask", "Created new task")
+            db.setCallback(this)
             db.addTask(task)
             return true
         }
         return false
+    }
+
+    fun getTaskById(id: String) {
+        db.setCallback(this)
+        view?.showProgressBar()
+        db.getTaskByID(id)
     }
 
     fun onDateStartClicked() {
@@ -59,6 +67,7 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
     }
 
     fun deleteTask(id: String?) {
+
         try {
             db.deleteTask(id)
         } catch (e: NullPointerException) {
@@ -78,14 +87,20 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
         }
     }
 
-    fun getTaskById(id:String){
-        db.setCallback(this)
-        db.getTaskByID(id)
+
+    override fun returnInfo(message: String) {
+        view?.showMessage(message)
     }
 
-    override fun returnData(task: Task?) {
-        if (task != null)
-        view?.showData(task)
+    override fun returnData(data: ArrayList<Task>) {
+        view?.hideProgressBar()
+        if (data.size > 0) {
+            view?.showData(data[0])
+        }
+    }
+
+    override fun updateUI(index: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 

@@ -14,11 +14,11 @@ class LocalStorage : DataBase {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun updateTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
+    override fun getTaskByID(id: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getTaskByID(id: String) {
+    override fun changeStatus(id: String, status: Boolean) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -30,7 +30,7 @@ class LocalStorage : DataBase {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getData(): Query {
+    override fun getData() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

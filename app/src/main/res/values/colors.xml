@@ -19,8 +19,8 @@
 
 
 
-    <color name="gr_end">#BAD4AA</color>
-    <color name="gr_start">#EBF5DF</color>
+    <color name="gr_end">#555555</color>
+    <color name="gr_start">#555555</color>
 
 
     <array name="gradient">

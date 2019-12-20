@@ -2,23 +2,26 @@ package ru.streltsov.todolist.data
 
 import android.os.Parcelable
 import android.util.Log
-import com.google.android.gms.tasks.Task
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import ru.streltsov.todolist.ui.tasklist.Task as TaskTD
+import ru.streltsov.todolist.ui.tasklist.Task
+
+private const val TAG: String = "TodoList/Firebase DataBase"
 
 class FirebaseDB : DataBase {
 
-
-    private val TAG: String = "TODO _Firebase DataBase"
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var mCallback: DataBase.Callback
+    private var mList = ArrayList<Task>()
 
     override fun currentUser(): Parcelable {
         return mAuth.currentUser!!
     } //Почему-то не нравится вот это
+
+    private fun createRequest(): CollectionReference {
+        return db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
+    }
 
     override fun login(email: String, password: String) =
         mAuth.signInWithEmailAndPassword(email, password)
@@ -26,10 +29,52 @@ class FirebaseDB : DataBase {
     override fun signUp(email: String, password: String) =
         mAuth.createUserWithEmailAndPassword(email, password)
 
-    override fun getData(): Query {
-        Log.d(TAG, "Try to get data")
-        return db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
-            .orderBy("createDate")
+    override fun getData() {
+        createRequest().orderBy("createDate").addSnapshotListener { snapshot,
+                                                                    exception ->
+
+            if (exception != null) {
+                mCallback.returnInfo("Что-то пошло не так")
+                Log.d(TAG, "Listen failed. ", exception)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                snapshot.documentChanges.forEachIndexed { index, documentChange ->
+                    when (documentChange.type) {
+                        DocumentChange.Type.ADDED -> {
+                            mList.add(documentChange.newIndex, documentChange.document.toObject(Task::class.java))
+                            mCallback.returnData(mList)
+                        }
+                        DocumentChange.Type.MODIFIED -> {
+                            mList[documentChange.newIndex] = documentChange.document.toObject(Task::class.java)
+                        }
+                        DocumentChange.Type.REMOVED -> {
+                            mList.remove(documentChange.document.toObject(Task::class.java))
+                            mCallback.updateUI(documentChange.oldIndex) //лишняя какая-то
+                            mCallback.returnInfo("Задача удалена!")
+                        }
+                    }
+                }
+
+            } else {
+                //TODO удали
+                Log.d(TAG, "Data is $mList")
+                mCallback.returnData(mList)
+            }
+        }
+    }
+
+    override fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
+            .document(task.id!!).set(task)
+            .addOnSuccessListener {
+                mCallback.returnInfo("Задача сохранена")
+                Log.d(TAG, "Document written.")
+            }.addOnFailureListener {
+                mCallback.returnInfo("Возникла ошибка. Попробуйте снова")
+                Log.w(TAG, "Error adding document", it)
+            }
     }
 
     override fun deleteTask(id: String?) {
@@ -37,46 +82,33 @@ class FirebaseDB : DataBase {
             throw NullPointerException("id is null")
         }
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
-            .document(id.toString()).delete()
-    }
-
-    override fun addTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
-        Log.d(TAG, mAuth.currentUser!!.uid)
-        val data = hashMapOf(
-            "title" to task.title,
-            "description" to task.description,
-            "createDate" to task.createDate,
-            "status" to task.status,
-            "dateStart" to task.dateStart
-        )
-        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").add(data)
-            .addOnSuccessListener {
-                Log.d(TAG, "TODO _Document written with ID: ${it.id}")
-            }.addOnFailureListener {
-                Log.w(TAG, "TODO _Error adding document", it)
+            .document(id.toString()).delete().addOnFailureListener {
+                mCallback.returnInfo("Косяк")
             }
     }
 
-    override fun updateTask(task: ru.streltsov.todolist.ui.tasklist.Task) {
-        val data = mapOf(
-            "title" to task.title,
-            "description" to task.description,
-            "status" to task.status,
-            "dateStart" to task.dateStart
-        )
-        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
-            .document(task.id.toString())
-            .update(data)
+    override fun getTaskByID(id: String) {
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id)
+            .get()
+            .addOnSuccessListener { documentSnapshot ->
+                val task: Task? = documentSnapshot.toObject(Task::class.java)
+                mCallback.returnData(arrayListOf(task!!))
+            }.addOnFailureListener {
+                Log.d(TAG, "$it")
+            }
     }
 
-    override fun getTaskByID(id: String){
-        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id).get()
-            .addOnSuccessListener {documentSnapshot ->
-                val task: TaskTD? = documentSnapshot.toObject(TaskTD::class.java)
-                mCallback.returnData(task)
+    override fun changeStatus(id: String, status: Boolean) {
+        db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id)
+            .update(
+                mapOf(
+                    "status" to status
+                )
+            ).addOnSuccessListener {
+                mCallback.returnInfo("Красавчик!")
             }.addOnFailureListener {
-            Log.d(TAG, "$it")
-        }
+                mCallback.returnInfo("Что-то пошло не так")
+            }
     }
 
     override fun setCallback(callback: DataBase.Callback) {

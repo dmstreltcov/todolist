@@ -12,6 +12,7 @@ import android.text.Editable
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.*
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -26,22 +27,28 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
+private const val TAG: String = "TodoList/TaskActivity"
+private const val TASK_SAVED: Int = 1412
+private const val TASK_DELETED: Int = 1413
+
 class TaskActivity : AppCompatActivity(), TaskView {
 
-    private val TAG: String = "TodoList/TaskActivity"
     private lateinit var taskTitle: EditText
     private lateinit var taskDescription: EditText
     private lateinit var dateStart: TextInputEditText
     private lateinit var timeStart: TextInputEditText
-    private val presenter: TaskPresenter by lazy { TaskPresenter() }
+    private lateinit var fab: FloatingActionButton
+    private lateinit var progressBar: ProgressBar
+    private lateinit var actionBarToolbar: BottomAppBar
     private lateinit var dateStartSetListener: DatePickerDialog.OnDateSetListener
     private lateinit var timeStartSetListener: TimePickerDialog.OnTimeSetListener
+
+    private val presenter: TaskPresenter by lazy { TaskPresenter() }
+
     private var flag: TaskType = TaskType.EDIT
     private var taskId: String? = null
-    private lateinit var actionBarToolbar: BottomAppBar
     private lateinit var alarmManager: AlarmManager
     private var timeAlarm: Long = 0
-    private lateinit var fab: FloatingActionButton
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,11 +56,11 @@ class TaskActivity : AppCompatActivity(), TaskView {
         setContentView(R.layout.activity_task)
         presenter.attach(this)
         taskId = intent.getStringExtra("taskID")
+        Log.d(TAG, "Task ID is $taskId")
         initElements()
         setListeners()
         setSupportActionBar(actionBarToolbar)
         setAlarmManager()
-
         if (taskId != null) {
             presenter.getTaskById(taskId!!)
         } else {
@@ -68,6 +75,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
         dateStart = start_date_input
         timeStart = time_start_input
         fab = findViewById(R.id.fab)
+        progressBar = progressBarTask
         actionBarToolbar = findViewById(R.id.taskBottomAppBar)
     }
 
@@ -117,13 +125,11 @@ class TaskActivity : AppCompatActivity(), TaskView {
         changeInputEnableProperty(flag)
     }
 
-    private fun onSaveTask(){
-        Log.d(TAG, "Save task")
+    private fun onSaveTask() {
         val task = getTaskData()
-        Log.d(TAG, "Task is $task")
         if (presenter.onSaveTask(task)) {
-            setResult(Activity.RESULT_OK)
-            if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm))
+            setResult(TASK_SAVED)
+            if (task.dateStart != null && (System.currentTimeMillis() < timeAlarm) && !task.status)
                 setAlarm(task)
             finish()
         }
@@ -168,21 +174,25 @@ class TaskActivity : AppCompatActivity(), TaskView {
         }
     }
 
-    private fun createIntent(task: Task): Intent {
-        val intent = Intent(this, AlarmReceiver::class.java)
-        intent.putExtra("title", task.title)
-        intent.putExtra("id", taskId)
-        return intent
+    private fun setAlarm(task: Task) {
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAlarm, createPendingIntent(task))
     }
 
     private fun createPendingIntent(task: Task): PendingIntent {
         val intent = createIntent(task)
-        return PendingIntent.getBroadcast(this, 0, intent, 0)
+        return PendingIntent.getBroadcast(
+            this,
+            System.currentTimeMillis().toInt(),
+            intent,
+            PendingIntent.FLAG_ONE_SHOT
+        )
     }
 
-    private fun setAlarm(task: Task) {
-        alarmManager.set(AlarmManager.RTC_WAKEUP, timeAlarm, createPendingIntent(task))
-
+    private fun createIntent(task: Task): Intent {
+        val intent = Intent(this, AlarmReceiver::class.java)
+        intent.putExtra("title", task.title)
+        intent.putExtra("id", task.id)
+        return intent
     }
 
     private fun cancelAlarm() {
@@ -204,11 +214,10 @@ class TaskActivity : AppCompatActivity(), TaskView {
         )
     }
 
-    private fun setTaskId(): String?{
-        Log.d(TAG, "Set task id")
-        return if(taskId == null){
+    private fun setTaskId(): String? {
+        return if (taskId == null) {
             UUID.randomUUID().toString()
-        }else{
+        } else {
             taskId
         }
     }
@@ -255,8 +264,8 @@ class TaskActivity : AppCompatActivity(), TaskView {
         when (item.itemId) {
             R.id.action_delete -> {
                 presenter.deleteTask(taskId)
+                setResult(TASK_DELETED)
                 cancelAlarm()
-                showMessage("Задача удалена")
                 finish()
             }
         }
@@ -277,7 +286,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     override fun displayDatePickerDialog(year: Int, month: Int, day: Int) {
         val dialog: DatePickerDialog = DatePickerDialog(
             this,
-            R.style.Theme_MaterialComponents_Dialog_MinWidth,
+            R.style.DatePicker,
             dateStartSetListener,
             year,
             month,
@@ -295,7 +304,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     override fun displayTimePickerDialog(hour: Int, minute: Int) {
         val dialog: TimePickerDialog = TimePickerDialog(
             this,
-            R.style.Theme_MaterialComponents_Dialog_MinWidth,
+            R.style.TimePicker,
             TimePickerDialog.OnTimeSetListener() { picker, hour, minute ->
                 presenter.onTimeStartSet(hour, minute)
             },
@@ -307,6 +316,28 @@ class TaskActivity : AppCompatActivity(), TaskView {
     }
 
     override fun getContext(): Context = this
+
+    override fun showProgressBar() {
+        progressBar.visibility = View.VISIBLE
+
+        taskTitle.visibility = View.GONE
+        taskDescription.visibility = View.GONE
+        dateStart.visibility = View.GONE
+        timeStart.visibility = View.GONE
+        fab.hide()
+        actionBarToolbar.visibility = View.GONE
+    }
+
+    override fun hideProgressBar() {
+        progressBar.visibility = View.GONE
+
+        taskTitle.visibility = View.VISIBLE
+        taskDescription.visibility = View.VISIBLE
+        dateStart.visibility = View.VISIBLE
+        timeStart.visibility = View.VISIBLE
+        fab.show()
+        actionBarToolbar.visibility = View.VISIBLE
+    }
 
     override fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()

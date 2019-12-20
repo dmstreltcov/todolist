@@ -1,6 +1,7 @@
 package ru.streltsov.todolist.alarm
 
 import android.app.NotificationChannel
+import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -22,23 +23,18 @@ object NotificationHelper {
         id:String?,
         description: String
     ) {
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
             val channelId = "${context.packageName}-todolist"
-            val channel = NotificationChannel(channelId, "todolist", NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel("task", "todolist", NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = description
             channel.setShowBadge(showBadge)
-
             val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
+            notificationManager.createNotificationChannelGroup(NotificationChannelGroup("Task", "Tasks"))
         }
-
 
         val intent = Intent(context, TaskActivity::class.java)
         intent.putExtra("taskID", id)
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(context, id.hashCode(), intent, PendingIntent.FLAG_ONE_SHOT)
 
         val channelId = "${context.packageName}-${context.getString(R.string.app_name)}"
         val notificationBuilder = NotificationCompat.Builder(context, channelId).apply {
@@ -47,9 +43,16 @@ object NotificationHelper {
             priority = NotificationCompat.PRIORITY_DEFAULT
             setAutoCancel(true)
             setContentIntent(pendingIntent)
+            setStyle(NotificationCompat.InboxStyle())
+            setGroup("Task")
+            setGroupSummary(true)
         }
-        val notificationManager = NotificationManagerCompat.from(context)
-        notificationManager.notify(10001, notificationBuilder.build())
 
+        val notificationManager = NotificationManagerCompat.from(context).apply {
+            notify(System.currentTimeMillis().toInt(), notificationBuilder.build())
+        }
     }
 }
+
+//TODO уведомления оставляю так. Возможно будет рефакторинг...
+// Здесь сейчас итак не все гладко
