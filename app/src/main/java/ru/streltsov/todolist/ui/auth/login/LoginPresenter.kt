@@ -17,7 +17,6 @@ class LoginPresenter : BasePresenter<LoginView>(), Validator, UserRepository.Use
     fun onLoginButton(email: String, password: String) {
         if (validate(email, password)) {
             view?.showProgress()
-//            db.setCallback(this)
             db.login(email, password)
         }
     }

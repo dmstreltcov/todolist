@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_task_list.*
 import ru.streltsov.todolist.R
+import ru.streltsov.todolist.data.Action
 import ru.streltsov.todolist.ui.task.TaskActivity
 import ru.streltsov.todolist.ui.task.TaskType
 
@@ -82,8 +83,13 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         })
     }
 
-    override fun updateUI(index: Int) {
-        adapter.notifyItemRemoved(index)
+    override fun updateList(index: Int, action:Action) {
+        adapter.notifyDataSetChanged()
+//        when(action){
+//            Action.REMOVED -> adapter.notifyItemRemoved(index)
+////            Action.MODIFIED -> adapter.notifyItemChanged(index)
+//            Action.ADDED -> adapter.notifyItemInserted(index)
+//        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -126,16 +132,6 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun getContext(): Context = this
 
-    override fun onStart() {
-        super.onStart()
-//        adapter.startListening()
-    }
-
-    override fun onStop() {
-        super.onStop()
-//        adapter.stopListening()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         presenter.detach()
@@ -150,11 +146,5 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun onStatusChanged(item: Task, status: Boolean) {
         presenter.onChangeStatus(item.id, status)
-    }
-
-    companion object {
-        fun createIntent(){
-
-        }
     }
 }

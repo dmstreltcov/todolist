@@ -1,6 +1,7 @@
 package ru.streltsov.todolist.ui.tasklist
 
 import ru.streltsov.todolist.base.BasePresenter
+import ru.streltsov.todolist.data.Action
 import ru.streltsov.todolist.data.repository.DatabaseRepository
 import ru.streltsov.todolist.data.FirebaseRepository
 import ru.streltsov.todolist.data.repository.TaskListRepository
@@ -11,12 +12,10 @@ class TaskListPresenter : BasePresenter<TaskListView>(), TaskListRepository.Task
 
     fun onLoadData() {
         view?.showProgressBar()
-//        db.setCallback(this)
         db.getAllTasks()
     }
 
     fun onChangeStatus(id: String?, boolean: Boolean) {
-//        db.setCallback(this)
         when (boolean) {
             true -> db.changeStatus(id!!, boolean)
             false -> db.changeStatus(id!!, boolean)
@@ -32,8 +31,8 @@ class TaskListPresenter : BasePresenter<TaskListView>(), TaskListRepository.Task
         view?.showMessage(message)
     }
 
-    override fun updateUI(index: Int) {
-        view?.updateUI(index)
+    override fun updateList(index: Int, action: Action) {
+        view?.updateList(index, action)
     }
 
     override fun onSuccess() {

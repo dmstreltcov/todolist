@@ -19,7 +19,6 @@ class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {
             Log.d("onSaveTask", "Created new task")
-//            db.setCallback(this)
             db.addTask(task)
             return true
         }
@@ -27,7 +26,6 @@ class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
     }
 
     fun getTaskById(id: String) {
-//        db.setCallback(this)
         view?.showProgressBar()
         db.getTaskById(id)
     }

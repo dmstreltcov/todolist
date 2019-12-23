@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 
-interface UserRepository : BaseRepository{
+interface UserRepository{
     fun login(email: String,password: String)  //<- вот это мне не совсем нравится, какой-то костыль
     fun signUp(email: String, password: String)
 

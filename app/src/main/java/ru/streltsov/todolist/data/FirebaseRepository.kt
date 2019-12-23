@@ -12,6 +12,7 @@ import ru.streltsov.todolist.data.repository.TaskRepository.TaskCallback
 import ru.streltsov.todolist.ui.tasklist.Task
 
 class FirebaseRepository(private val mCallback: Callback) : DatabaseRepository {
+
     private val TAG: String = "TodoList/Firebase DataBase"
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -70,12 +71,16 @@ class FirebaseRepository(private val mCallback: Callback) : DatabaseRepository {
                             (mCallback as TaskListRepository.TaskListCallback).returnTaskList(mList)
                         }
                         DocumentChange.Type.MODIFIED -> {
-                            mList[documentChange.newIndex] =
-                                documentChange.document.toObject(Task::class.java)
+                            mList[documentChange.newIndex] = documentChange.document.toObject(Task::class.java)
+                            (mCallback as TaskListRepository.TaskListCallback).updateList(documentChange.newIndex,Action.MODIFIED) //лишняя какая-то
+
                         }
                         DocumentChange.Type.REMOVED -> {
                             mList.remove(documentChange.document.toObject(Task::class.java))
-                            (mCallback as TaskListRepository.TaskListCallback).updateUI(documentChange.oldIndex) //лишняя какая-то
+                            (mCallback as TaskListRepository.TaskListCallback).updateList(
+                                documentChange.oldIndex,
+                                Action.REMOVED
+                            ) //лишняя какая-то
                             (mCallback as TaskListRepository.TaskListCallback).sendMessage("Задача удалена!")
                         }
                     }
@@ -133,9 +138,5 @@ class FirebaseRepository(private val mCallback: Callback) : DatabaseRepository {
             .addOnFailureListener {
                 (mCallback as TaskCallback).sendInfo()
             }
-    }
-
-    override fun setCallback(callback: Callback) {
-//        mCallback = callback
     }
 }
