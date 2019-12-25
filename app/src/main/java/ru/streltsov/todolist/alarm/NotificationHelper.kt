@@ -1,20 +1,16 @@
 package ru.streltsov.todolist.alarm
 
 import android.app.NotificationChannel
-import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.task.TaskActivity
-import ru.streltsov.todolist.ui.tasklist.Task
-import ru.streltsov.todolist.ui.tasklist.TaskListActivity
+import ru.streltsov.todolist.ui.task.TaskType
 
 object NotificationHelper {
     fun createNotificationChannel(
@@ -35,6 +31,7 @@ object NotificationHelper {
 
         val intent = Intent(context, TaskActivity::class.java)
         intent.putExtra("taskID", id)
+        intent.putExtra("flag", TaskType.EDIT)
         val pendingIntent = PendingIntent.getActivity(context, id.hashCode(), intent, PendingIntent.FLAG_ONE_SHOT)
 
         val channelId = "${context.packageName}-${context.getString(R.string.app_name)}"
