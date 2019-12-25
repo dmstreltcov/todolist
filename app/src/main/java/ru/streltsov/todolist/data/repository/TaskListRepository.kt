@@ -12,5 +12,9 @@ interface TaskListRepository{
         fun returnTaskList(data: ArrayList<Task>)
         fun sendMessage(message:String)
         fun updateList(index:Int, action:Action)
+
+        fun addTask(index: Int)
+        fun updateTask(oldIndex:Int, newIndex:Int)
+        fun deleteTask(index:Int)
     }
 }

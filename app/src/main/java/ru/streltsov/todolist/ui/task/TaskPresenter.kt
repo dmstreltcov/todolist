@@ -2,13 +2,10 @@ package ru.streltsov.todolist.ui.task
 
 import android.util.Log
 import ru.streltsov.todolist.base.BasePresenter
-import ru.streltsov.todolist.data.repository.DatabaseRepository
 import ru.streltsov.todolist.data.FirebaseRepository
-import ru.streltsov.todolist.data.repository.Callback
 import ru.streltsov.todolist.data.repository.TaskRepository
 import ru.streltsov.todolist.ui.tasklist.Task
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
@@ -84,13 +81,6 @@ class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
             else -> true
         }
     }
-
-//    override fun returnData(data: ArrayList<Task>) {
-//        view?.hideProgressBar()
-//        if (data.size > 0) {
-//            view?.showData(data[0])
-//        }
-//    }
 
     override fun sendInfo() {
         view?.showMessage("Задача удалена")

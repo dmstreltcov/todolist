@@ -4,14 +4,11 @@ import android.os.Parcelable
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import ru.streltsov.todolist.data.repository.Callback
-import ru.streltsov.todolist.data.repository.DatabaseRepository
-import ru.streltsov.todolist.data.repository.TaskListRepository
-import ru.streltsov.todolist.data.repository.TaskRepository
+import ru.streltsov.todolist.data.repository.*
 import ru.streltsov.todolist.data.repository.TaskRepository.TaskCallback
 import ru.streltsov.todolist.ui.tasklist.Task
 
-class FirebaseRepository(private val mCallback: Callback) : DatabaseRepository {
+class FirebaseRepository(private val mCallback: Callback) : UserRepository, TaskRepository, TaskListRepository {
 
     private val TAG: String = "TodoList/Firebase DataBase"
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -71,16 +68,22 @@ class FirebaseRepository(private val mCallback: Callback) : DatabaseRepository {
                             (mCallback as TaskListRepository.TaskListCallback).returnTaskList(mList)
                         }
                         DocumentChange.Type.MODIFIED -> {
-                            mList[documentChange.newIndex] = documentChange.document.toObject(Task::class.java)
-                            (mCallback as TaskListRepository.TaskListCallback).updateList(documentChange.newIndex,Action.MODIFIED) //лишняя какая-то
+                            if (documentChange.oldIndex != documentChange.newIndex){
+                                mList.removeAt(documentChange.oldIndex)
+                                mList.add(
+                                    documentChange.newIndex,
+                                    documentChange.document.toObject(Task::class.java)
+                                )
+                            }else{
+                                mList[documentChange.newIndex] = documentChange.document.toObject(Task::class.java)
+                            }
+
+                            (mCallback as TaskListRepository.TaskListCallback).updateTask(documentChange.oldIndex, documentChange.newIndex) //лишняя какая-то
 
                         }
                         DocumentChange.Type.REMOVED -> {
                             mList.remove(documentChange.document.toObject(Task::class.java))
-                            (mCallback as TaskListRepository.TaskListCallback).updateList(
-                                documentChange.oldIndex,
-                                Action.REMOVED
-                            ) //лишняя какая-то
+                            (mCallback as TaskListRepository.TaskListCallback).deleteTask(documentChange.oldIndex)
                             (mCallback as TaskListRepository.TaskListCallback).sendMessage("Задача удалена!")
                         }
                     }
@@ -89,7 +92,7 @@ class FirebaseRepository(private val mCallback: Callback) : DatabaseRepository {
     }
 
     override fun getTasksByDay() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("Сделать") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun changeStatus(id: String, status: Boolean) {
@@ -126,10 +129,6 @@ class FirebaseRepository(private val mCallback: Callback) : DatabaseRepository {
             }.addOnFailureListener {
                 mCallback.onError()
             }
-    }
-
-    override fun updateTask() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun deleteTask(id: String) {

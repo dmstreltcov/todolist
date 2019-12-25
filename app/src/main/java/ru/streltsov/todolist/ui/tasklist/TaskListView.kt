@@ -8,4 +8,8 @@ interface TaskListView : BaseView {
     fun hideProgressBar()
     fun initAdapter(taskList:ArrayList<Task>)
     fun updateList(index:Int, action: Action)
+
+    fun addTask(index: Int)
+    fun updateTask(oldIndex:Int, newIndex:Int)
+    fun deleteTask(index:Int)
 }

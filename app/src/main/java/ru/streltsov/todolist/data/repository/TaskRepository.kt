@@ -4,7 +4,6 @@ import ru.streltsov.todolist.ui.tasklist.Task
 
 interface TaskRepository{
     fun addTask(task: Task)
-    fun updateTask()
     fun deleteTask(id:String)
     fun getTaskById(id:String)
 

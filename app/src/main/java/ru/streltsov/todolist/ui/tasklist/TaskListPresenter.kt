@@ -2,7 +2,6 @@ package ru.streltsov.todolist.ui.tasklist
 
 import ru.streltsov.todolist.base.BasePresenter
 import ru.streltsov.todolist.data.Action
-import ru.streltsov.todolist.data.repository.DatabaseRepository
 import ru.streltsov.todolist.data.FirebaseRepository
 import ru.streltsov.todolist.data.repository.TaskListRepository
 
@@ -35,11 +34,25 @@ class TaskListPresenter : BasePresenter<TaskListView>(), TaskListRepository.Task
         view?.updateList(index, action)
     }
 
+    override fun addTask(index: Int) {
+        view?.addTask(index)
+    }
+
+    override fun updateTask(oldIndex: Int, newIndex: Int) {
+        view?.updateTask(oldIndex, newIndex)
+    }
+
+    override fun deleteTask(index: Int) {
+        view?.deleteTask(index)
+    }
+
     override fun onSuccess() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO - удалить
+        // Почему пустой
     }
 
     override fun onError() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        //TODO - удалить
+        // Почему пустой
     }
 }

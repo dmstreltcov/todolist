@@ -24,6 +24,9 @@ import ru.streltsov.todolist.ui.task.TaskType
 
 class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Callback {
 
+    //TODO - удалить
+    // Навести тут порядок
+
     private val CREATE_TASK = 1001
     private val OPEN_TASK = 1002
     private val TASK_SAVED = 1412
@@ -84,12 +87,26 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     }
 
     override fun updateList(index: Int, action:Action) {
-        adapter.notifyDataSetChanged()
-//        when(action){
-//            Action.REMOVED -> adapter.notifyItemRemoved(index)
-////            Action.MODIFIED -> adapter.notifyItemChanged(index)
-//            Action.ADDED -> adapter.notifyItemInserted(index)
-//        }
+        when(action){
+            Action.REMOVED -> adapter.notifyItemRemoved(index)
+            Action.MODIFIED -> adapter.notifyItemChanged(index)
+            Action.ADDED -> adapter.notifyItemInserted(index)
+        }
+    }
+
+    override fun addTask(index: Int) {
+        adapter.notifyItemInserted(index)
+    }
+
+    override fun updateTask(oldIndex: Int, newIndex: Int) {
+        if(oldIndex != newIndex){
+            adapter.notifyItemMoved(oldIndex, newIndex)
+        }
+        adapter.notifyItemChanged(newIndex)
+    }
+
+    override fun deleteTask(index: Int) {
+        adapter.notifyItemRemoved(index)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -104,14 +121,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-//        when (requestCode) {
-//            CREATE_TASK -> if (resultCode == TASK_SAVED) Toast.makeText(
-//                this,
-//                "Задача создана",
-//                Toast.LENGTH_SHORT
-//            ).show()
-////            OPEN_TASK -> if(resultCode == TASK_DELETED) adapter.notifyDataSetChanged()
-//        }
+        //TODO - удалить
+        // Решить что с этим методом делать
     }
 
     override fun showProgressBar() {

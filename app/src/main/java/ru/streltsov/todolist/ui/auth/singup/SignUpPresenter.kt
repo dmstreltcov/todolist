@@ -1,9 +1,7 @@
 package ru.streltsov.todolist.ui.auth.singup
 
 import android.util.Log
-import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.base.BasePresenter
-import ru.streltsov.todolist.data.repository.DatabaseRepository
 import ru.streltsov.todolist.data.FirebaseRepository
 import ru.streltsov.todolist.data.Validator
 import ru.streltsov.todolist.data.repository.UserRepository

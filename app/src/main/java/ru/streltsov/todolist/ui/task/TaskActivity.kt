@@ -189,7 +189,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
             this,
             System.currentTimeMillis().toInt(),
             intent,
-            PendingIntent.FLAG_ONE_SHOT
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
 
