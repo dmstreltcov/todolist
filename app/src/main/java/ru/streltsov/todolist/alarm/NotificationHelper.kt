@@ -1,7 +1,6 @@
 package ru.streltsov.todolist.alarm
 
 import android.app.NotificationChannel
-import android.app.NotificationChannelGroup
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -9,11 +8,9 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.task.TaskActivity
-import ru.streltsov.todolist.ui.tasklist.Task
-import ru.streltsov.todolist.ui.tasklist.TaskListActivity
+import ru.streltsov.todolist.ui.task.TaskType
 
 object NotificationHelper {
     fun createNotificationChannel(
@@ -25,15 +22,16 @@ object NotificationHelper {
     ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = "${context.packageName}-todolist"
-            val channel = NotificationChannel("task", "todolist", NotificationManager.IMPORTANCE_DEFAULT)
+            val channel = NotificationChannel(channelId, "todolist", NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = description
             channel.setShowBadge(showBadge)
             val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannelGroup(NotificationChannelGroup("Task", "Tasks"))
+            notificationManager.createNotificationChannel(channel)
         }
 
         val intent = Intent(context, TaskActivity::class.java)
         intent.putExtra("taskID", id)
+        intent.putExtra("flag", TaskType.EDIT)
         val pendingIntent = PendingIntent.getActivity(context, id.hashCode(), intent, PendingIntent.FLAG_ONE_SHOT)
 
         val channelId = "${context.packageName}-${context.getString(R.string.app_name)}"
@@ -44,13 +42,11 @@ object NotificationHelper {
             setAutoCancel(true)
             setContentIntent(pendingIntent)
             setStyle(NotificationCompat.InboxStyle())
-            setGroup("Task")
             setGroupSummary(true)
         }
 
-        val notificationManager = NotificationManagerCompat.from(context).apply {
-            notify(System.currentTimeMillis().toInt(), notificationBuilder.build())
-        }
+        val notificationManager = NotificationManagerCompat.from(context)
+        notificationManager.notify(System.currentTimeMillis().toInt(), notificationBuilder.build())
     }
 }
 

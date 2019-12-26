@@ -15,9 +15,9 @@ import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.auth.singup.SignUpActivity
+import ru.streltsov.todolist.ui.tasklist.TaskListActivity
 
 class LoginActivity : AppCompatActivity(), LoginView {
-
     private val TAG: String = "TAG_LoginActivity"
     private lateinit var mAuth: FirebaseAuth
 
@@ -68,12 +68,9 @@ class LoginActivity : AppCompatActivity(), LoginView {
         progressBar.visibility = View.GONE
     }
 
-    override fun updateUI(user: FirebaseUser) {
+    override fun updateUI() {
         Log.d(TAG, "TodoList/Update UI")
-        val intent: Intent = MainActivity.createTaskListIntent(
-            this,
-            user
-        ) // Не уверен насчет такого решения, но так сделал
+        val intent: Intent = Intent(this, TaskListActivity::class.java)
         startActivity(intent)
         finish()
     }

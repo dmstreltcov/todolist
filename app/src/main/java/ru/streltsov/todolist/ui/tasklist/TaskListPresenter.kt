@@ -1,43 +1,58 @@
 package ru.streltsov.todolist.ui.tasklist
 
-import android.os.Parcelable
-import android.util.Log
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.Query
 import ru.streltsov.todolist.base.BasePresenter
-import ru.streltsov.todolist.data.DataBase
-import ru.streltsov.todolist.data.FirebaseDB
+import ru.streltsov.todolist.data.Action
+import ru.streltsov.todolist.data.FirebaseRepository
+import ru.streltsov.todolist.data.repository.TaskListRepository
 
-class TaskListPresenter : BasePresenter<TaskListView>(), DataBase.Callback {
+class TaskListPresenter : BasePresenter<TaskListView>(), TaskListRepository.TaskListCallback {
 
-    private var db: DataBase = FirebaseDB()
+    private var db: TaskListRepository = FirebaseRepository(this)
 
-    fun onLoadData(){
+    fun onLoadData() {
         view?.showProgressBar()
-        db.setCallback(this)
-        db.getData()
+        db.getAllTasks()
     }
 
-    fun onChangeStatus(id:String?, boolean: Boolean){
-        db.setCallback(this)
-        when(boolean){
+    fun onChangeStatus(id: String?, boolean: Boolean) {
+        when (boolean) {
             true -> db.changeStatus(id!!, boolean)
             false -> db.changeStatus(id!!, boolean)
         }
     }
 
-    override fun returnInfo(message: String) {
-        view?.showMessage(message)
-    }
-
-    override fun returnData(data: ArrayList<Task>) {
+    override fun returnTaskList(data: ArrayList<Task>) {
         view?.initAdapter(data)
         view?.hideProgressBar()
     }
 
-    override fun updateUI(index: Int) {
-        view?.updateUI(index)
+    override fun sendMessage(message: String) {
+        view?.showMessage(message)
+    }
+
+    override fun updateList(index: Int, action: Action) {
+        view?.updateList(index, action)
+    }
+
+    override fun addTask(index: Int) {
+        view?.addTask(index)
+    }
+
+    override fun updateTask(oldIndex: Int, newIndex: Int) {
+        view?.updateTask(oldIndex, newIndex)
+    }
+
+    override fun deleteTask(index: Int) {
+        view?.deleteTask(index)
+    }
+
+    override fun onSuccess() {
+        //TODO - удалить
+        // Почему пустой
+    }
+
+    override fun onError() {
+        //TODO - удалить
+        // Почему пустой
     }
 }

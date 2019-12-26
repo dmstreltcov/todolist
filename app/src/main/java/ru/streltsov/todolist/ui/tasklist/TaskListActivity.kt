@@ -17,10 +17,15 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_task_list.*
 import ru.streltsov.todolist.R
+import ru.streltsov.todolist.data.Action
 import ru.streltsov.todolist.ui.task.TaskActivity
+import ru.streltsov.todolist.ui.task.TaskType
 
 
 class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Callback {
+
+    //TODO - удалить
+    // Навести тут порядок
 
     private val CREATE_TASK = 1001
     private val OPEN_TASK = 1002
@@ -32,11 +37,9 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     private lateinit var linearLayout: LinearLayoutManager
     private lateinit var adapter: TaskListAdapter
     private lateinit var query: Query
-    private lateinit var options: FirestoreRecyclerOptions<Task>
     private lateinit var addTaskBtn: FloatingActionButton
     private lateinit var actionBarToolbar: BottomAppBar
     private lateinit var progressBar: ProgressBar
-    private var currentUser: FirebaseUser? = intent?.getParcelableExtra("user")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +48,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         initElements()
         setListeners()
         presenter.onLoadData()
-
     }
+
 
     private fun initElements() {
         recyclerView = findViewById(R.id.tasklist)
@@ -60,7 +63,9 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     private fun setListeners() {
         addTaskBtn.setOnClickListener {
-            startActivityForResult(Intent(this, TaskActivity::class.java), CREATE_TASK)
+            val intent = Intent(this, TaskActivity::class.java)
+            intent.putExtra("flag", TaskType.NEW)
+            startActivityForResult(intent, CREATE_TASK)
         }
     }
 
@@ -81,7 +86,26 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         })
     }
 
-    override fun updateUI(index: Int) {
+    override fun updateList(index: Int, action:Action) {
+        when(action){
+            Action.REMOVED -> adapter.notifyItemRemoved(index)
+            Action.MODIFIED -> adapter.notifyItemChanged(index)
+            Action.ADDED -> adapter.notifyItemInserted(index)
+        }
+    }
+
+    override fun addTask(index: Int) {
+        adapter.notifyItemInserted(index)
+    }
+
+    override fun updateTask(oldIndex: Int, newIndex: Int) {
+        if(oldIndex != newIndex){
+            adapter.notifyItemMoved(oldIndex, newIndex)
+        }
+        adapter.notifyItemChanged(newIndex)
+    }
+
+    override fun deleteTask(index: Int) {
         adapter.notifyItemRemoved(index)
     }
 
@@ -97,14 +121,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-//        when (requestCode) {
-//            CREATE_TASK -> if (resultCode == TASK_SAVED) Toast.makeText(
-//                this,
-//                "Задача создана",
-//                Toast.LENGTH_SHORT
-//            ).show()
-////            OPEN_TASK -> if(resultCode == TASK_DELETED) adapter.notifyDataSetChanged()
-//        }
+        //TODO - удалить
+        // Решить что с этим методом делать
     }
 
     override fun showProgressBar() {
@@ -125,16 +143,6 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun getContext(): Context = this
 
-    override fun onStart() {
-        super.onStart()
-//        adapter.startListening()
-    }
-
-    override fun onStop() {
-        super.onStop()
-//        adapter.stopListening()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         presenter.detach()
@@ -143,6 +151,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     override fun onItemClicked(item: Task) {
         val intent: Intent = Intent(this, TaskActivity::class.java)
         intent.putExtra("taskID", item.id)
+        intent.putExtra("flag", TaskType.EDIT)
         startActivityForResult(intent, OPEN_TASK)
     }
 

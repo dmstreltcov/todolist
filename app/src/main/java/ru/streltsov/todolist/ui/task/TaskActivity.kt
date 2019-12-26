@@ -27,11 +27,14 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-private const val TAG: String = "TodoList/TaskActivity"
-private const val TASK_SAVED: Int = 1412
-private const val TASK_DELETED: Int = 1413
+
 
 class TaskActivity : AppCompatActivity(), TaskView {
+
+
+    private val TAG: String = "TodoList/TaskActivity"
+    private val TASK_SAVED: Int = 1412
+    private val TASK_DELETED: Int = 1413
 
     private lateinit var taskTitle: EditText
     private lateinit var taskDescription: EditText
@@ -45,8 +48,8 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
     private val presenter: TaskPresenter by lazy { TaskPresenter() }
 
-    private var flag: TaskType = TaskType.EDIT
-    private var taskId: String? = null
+    private lateinit var flag: TaskType
+    private var taskId: String = ""
     private lateinit var alarmManager: AlarmManager
     private var timeAlarm: Long = 0
 
@@ -55,19 +58,21 @@ class TaskActivity : AppCompatActivity(), TaskView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
         presenter.attach(this)
-        taskId = intent.getStringExtra("taskID")
-        Log.d(TAG, "Task ID is $taskId")
+        flag = intent.extras!!["flag"] as TaskType
         initElements()
         setListeners()
         setSupportActionBar(actionBarToolbar)
         setAlarmManager()
-        if (taskId != null) {
-            presenter.getTaskById(taskId!!)
+
+        if (flag == TaskType.EDIT) {
+            taskId = intent.getStringExtra("taskID")!!
+            presenter.getTaskById(taskId)
         } else {
-            flag = TaskType.NEW
             fab.setImageDrawable(resources.getDrawable(R.drawable.ic_save, getContext().theme))
         }
     }
+
+
 
     private fun initElements() {
         taskTitle = task_title
@@ -184,7 +189,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
             this,
             System.currentTimeMillis().toInt(),
             intent,
-            PendingIntent.FLAG_ONE_SHOT
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
     }
 
@@ -215,7 +220,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     }
 
     private fun setTaskId(): String? {
-        return if (taskId == null) {
+        return if (taskId.isEmpty()) {
             UUID.randomUUID().toString()
         } else {
             taskId

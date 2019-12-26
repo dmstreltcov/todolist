@@ -2,23 +2,20 @@ package ru.streltsov.todolist.ui.task
 
 import android.util.Log
 import ru.streltsov.todolist.base.BasePresenter
-import ru.streltsov.todolist.data.DataBase
-import ru.streltsov.todolist.data.FirebaseDB
+import ru.streltsov.todolist.data.FirebaseRepository
+import ru.streltsov.todolist.data.repository.TaskRepository
 import ru.streltsov.todolist.ui.tasklist.Task
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.math.min
 
-private const val TAG: String = "TodoList/Task Presenter"
 
-class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
-    private var db: DataBase = FirebaseDB()
+class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
+    private var db: TaskRepository = FirebaseRepository(this)
 
+    private val TAG: String = "TodoList/Task Presenter"
 
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {
             Log.d("onSaveTask", "Created new task")
-            db.setCallback(this)
             db.addTask(task)
             return true
         }
@@ -26,9 +23,8 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
     }
 
     fun getTaskById(id: String) {
-        db.setCallback(this)
         view?.showProgressBar()
-        db.getTaskByID(id)
+        db.getTaskById(id)
     }
 
     fun onDateStartClicked() {
@@ -66,15 +62,14 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
         view?.setStartTimeText(time)
     }
 
-    fun deleteTask(id: String?) {
-
+    fun deleteTask(id: String) {
         try {
             db.deleteTask(id)
         } catch (e: NullPointerException) {
             view?.showMessage("Не удалось удалить задачу")
             e.printStackTrace()
         }
-        Log.d("Task Presenter", "$id")
+        Log.d("Task Presenter", id)
     }
 
     private fun validate(task: Task): Boolean {
@@ -87,20 +82,21 @@ class TaskPresenter : BasePresenter<TaskView>(), DataBase.Callback {
         }
     }
 
-
-    override fun returnInfo(message: String) {
-        view?.showMessage(message)
+    override fun sendInfo() {
+        view?.showMessage("Задача удалена")
     }
 
-    override fun returnData(data: ArrayList<Task>) {
+    override fun returnTask(task: Task) {
+        view?.showData(task)
         view?.hideProgressBar()
-        if (data.size > 0) {
-            view?.showData(data[0])
-        }
     }
 
-    override fun updateUI(index: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onSuccess() {
+        view?.showMessage("Задача сохранена")
+    }
+
+    override fun onError() {
+        view?.showMessage("Возникла ошибка. Попробуйте снова")
     }
 
 

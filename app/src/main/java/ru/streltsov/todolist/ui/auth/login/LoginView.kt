@@ -4,8 +4,8 @@ import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.base.BaseView
 
 interface LoginView : BaseView {
-    fun updateUI(user: FirebaseUser)
     fun signUp()
     fun showProgress()
     fun hideProgress()
+    fun updateUI()
 }
