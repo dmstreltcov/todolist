@@ -21,20 +21,21 @@ import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.tasklist.TaskListActivity
 import com.google.android.gms.common.api.ApiException
 import ru.streltsov.todolist.MainActivity
+import javax.inject.Inject
 
 class SignUpActivity : AppCompatActivity(), SignUpView {
 
     private val TAG: String = "TodoList/SignUpActivity"
-    private val presenter: SignUpPresenter by lazy { SignUpPresenter() }
     private lateinit var signUp: Button
     private lateinit var emailInput: EditText
     private lateinit var passwordInput: EditText
     private lateinit var progressBar:ProgressBar
+    @Inject lateinit var presenter:SignUpPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
-        Log.d(TAG, "TodoList/OnCreate()")
+        MainActivity.component.inject(this)
         presenter.attach(this)
         init()
     }

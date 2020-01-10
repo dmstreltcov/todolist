@@ -1,19 +1,14 @@
 package ru.streltsov.todolist
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.ui.auth.login.LoginActivity
-import ru.streltsov.todolist.ui.auth.login.LoginPresenter
-import ru.streltsov.todolist.ui.auth.login.di.DaggerLoginComponent
-import ru.streltsov.todolist.ui.auth.login.di.LoginComponent
+import ru.streltsov.todolist.ui.di.DaggerMyComponent
+import ru.streltsov.todolist.ui.di.MyComponent
 import ru.streltsov.todolist.ui.tasklist.TaskListActivity
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
 
     companion object{
-        val component:LoginComponent = DaggerLoginComponent.builder().build()
+        val component: MyComponent = DaggerMyComponent.builder().build()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

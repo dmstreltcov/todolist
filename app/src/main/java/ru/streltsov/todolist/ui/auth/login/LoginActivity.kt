@@ -31,11 +31,10 @@ class LoginActivity : AppCompatActivity(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        MainActivity.component.getLoginPresenter(this)
+        MainActivity.component.inject(this)
         presenter.attach(this)
         init()
         mAuth = FirebaseAuth.getInstance()
-        Log.d(TAG, "${mAuth.currentUser}")
     }
 
     private fun init() {
