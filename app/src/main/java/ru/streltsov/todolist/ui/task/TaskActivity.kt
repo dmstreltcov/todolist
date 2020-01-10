@@ -19,18 +19,19 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.activity_task.*
+import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.alarm.AlarmReceiver
 import ru.streltsov.todolist.alarm.BootCompleteReceiver
 import ru.streltsov.todolist.ui.tasklist.Task
+import ru.streltsov.todolist.ui.tasklist.TaskListPresenter
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
-
+import javax.inject.Inject
 
 
 class TaskActivity : AppCompatActivity(), TaskView {
-
 
     private val TAG: String = "TodoList/TaskActivity"
     private val TASK_SAVED: Int = 1412
@@ -45,8 +46,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     private lateinit var actionBarToolbar: BottomAppBar
     private lateinit var dateStartSetListener: DatePickerDialog.OnDateSetListener
     private lateinit var timeStartSetListener: TimePickerDialog.OnTimeSetListener
-
-    private val presenter: TaskPresenter by lazy { TaskPresenter() }
+    @Inject lateinit var presenter: TaskPresenter
 
     private lateinit var flag: TaskType
     private var taskId: String = ""
@@ -57,6 +57,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
+        MainActivity.component.inject(this)
         presenter.attach(this)
         flag = intent.extras!!["flag"] as TaskType
         initElements()

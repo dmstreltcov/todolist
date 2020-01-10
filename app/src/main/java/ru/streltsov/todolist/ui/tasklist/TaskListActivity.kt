@@ -10,16 +10,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_task_list.*
+import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.data.Action
 import ru.streltsov.todolist.ui.task.TaskActivity
 import ru.streltsov.todolist.ui.task.TaskType
+import javax.inject.Inject
 
 
 class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Callback {
@@ -32,7 +32,6 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     private val TASK_SAVED = 1412
     private val TASK_DELETED = 1413
     private val TAG: String = "TaskListActivity"
-    private val presenter: TaskListPresenter by lazy { TaskListPresenter() }
     private lateinit var recyclerView: RecyclerView
     private lateinit var linearLayout: LinearLayoutManager
     private lateinit var adapter: TaskListAdapter
@@ -41,9 +40,12 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     private lateinit var actionBarToolbar: BottomAppBar
     private lateinit var progressBar: ProgressBar
 
+    @Inject lateinit var presenter: TaskListPresenter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
+        MainActivity.component.inject(this)
         presenter.attach(this)
         initElements()
         setListeners()

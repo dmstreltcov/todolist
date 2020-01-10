@@ -9,9 +9,10 @@ import ru.streltsov.todolist.data.repository.Callback
 import ru.streltsov.todolist.data.repository.UserRepository
 
 
-class LoginPresenter : BasePresenter<LoginView>(), Validator, UserRepository.UserCallback {
+class LoginPresenter  : BasePresenter<LoginView>(), Validator, UserRepository.UserCallback {
 
     private val TAG: String = "TodoList/LoginPresenter"
+    //TODO Убрать зависимость от бд
     private var db: UserRepository = FirebaseRepository(this)
 
     fun onLoginButton(email: String, password: String) {

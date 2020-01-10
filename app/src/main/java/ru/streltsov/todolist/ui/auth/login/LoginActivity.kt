@@ -11,31 +11,30 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.auth.singup.SignUpActivity
 import ru.streltsov.todolist.ui.tasklist.TaskListActivity
+import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity(), LoginView {
     private val TAG: String = "TAG_LoginActivity"
+
     private lateinit var mAuth: FirebaseAuth
-
-    private val presenter: LoginPresenter by lazy { LoginPresenter() }
-
     private lateinit var email: EditText
     private lateinit var password: EditText
     private lateinit var loginBtn: Button
     private lateinit var signUpBtn: Button
     private lateinit var progressBar: ProgressBar
+    @Inject lateinit var presenter: LoginPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        MainActivity.component.inject(this)
         presenter.attach(this)
         init()
         mAuth = FirebaseAuth.getInstance()
-        Log.d(TAG, "${mAuth.currentUser}")
     }
 
     private fun init() {
