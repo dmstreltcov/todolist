@@ -9,12 +9,12 @@ import ru.streltsov.todolist.data.repository.UserRepository
 class SignUpPresenter : BasePresenter<SignUpView>(), Validator, UserRepository.UserCallback {
 
     private val TAG: String = "TodoList/SignUpPresenter"
-    private var db: UserRepository = FirebaseRepository(this)
+    private var db: UserRepository = FirebaseRepository()
 
     fun onSignUp(email: String, password: String) {
         view?.showProgress()
         if (validate(email, password)) {
-            db.signUp(email, password)
+            db.signUp(email, password, this)
         }
     }
 

@@ -9,14 +9,14 @@ import java.util.*
 
 
 class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
-    private var db: TaskRepository = FirebaseRepository(this)
+    private var db: TaskRepository = FirebaseRepository()
 
     private val TAG: String = "TodoList/Task Presenter"
 
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {
             Log.d("onSaveTask", "Created new task")
-            db.addTask(task)
+            db.addTask(task, this)
             return true
         }
         return false
@@ -24,7 +24,7 @@ class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
 
     fun getTaskById(id: String) {
         view?.showProgressBar()
-        db.getTaskById(id)
+        db.getTaskById(id, this)
     }
 
     fun onDateStartClicked() {
@@ -64,7 +64,7 @@ class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
 
     fun deleteTask(id: String) {
         try {
-            db.deleteTask(id)
+            db.deleteTask(id, this)
         } catch (e: NullPointerException) {
             view?.showMessage("Не удалось удалить задачу")
             e.printStackTrace()

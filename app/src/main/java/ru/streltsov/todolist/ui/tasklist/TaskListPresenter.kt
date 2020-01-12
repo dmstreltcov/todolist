@@ -1,23 +1,32 @@
 package ru.streltsov.todolist.ui.tasklist
 
+import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.base.BasePresenter
 import ru.streltsov.todolist.data.Action
 import ru.streltsov.todolist.data.FirebaseRepository
 import ru.streltsov.todolist.data.repository.TaskListRepository
+import javax.inject.Inject
 
 class TaskListPresenter : BasePresenter<TaskListView>(), TaskListRepository.TaskListCallback {
 
-    private var db: TaskListRepository = FirebaseRepository(this)
+    @Inject lateinit var db:TaskListRepository
 
-    fun onLoadData() {
+    init {
+        MainActivity.component.inject(this)
+    }
+     fun getAllTasks() {
         view?.showProgressBar()
-        db.getAllTasks()
+        db.getAllTasks(this)
     }
 
-    fun onChangeStatus(id: String?, boolean: Boolean) {
-        when (boolean) {
-            true -> db.changeStatus(id!!, boolean)
-            false -> db.changeStatus(id!!, boolean)
+     fun getTasksByDay() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+     fun changeStatus(id: String, status: Boolean) {
+        when (status) {
+            true -> db.changeStatus(id, status, this)
+            false -> db.changeStatus(id, status,this)
         }
     }
 

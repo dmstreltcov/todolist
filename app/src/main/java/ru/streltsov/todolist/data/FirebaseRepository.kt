@@ -7,8 +7,9 @@ import com.google.firebase.firestore.*
 import ru.streltsov.todolist.data.repository.*
 import ru.streltsov.todolist.data.repository.TaskRepository.TaskCallback
 import ru.streltsov.todolist.ui.tasklist.Task
+import javax.inject.Inject
 
-class FirebaseRepository(private val mCallback: Callback) : UserRepository, TaskRepository, TaskListRepository {
+class FirebaseRepository : UserRepository, TaskRepository, TaskListRepository {
 
     private val TAG: String = "TodoList/Firebase DataBase"
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -21,39 +22,39 @@ class FirebaseRepository(private val mCallback: Callback) : UserRepository, Task
 
     /*  Авторизация/Регистрация     */
 
-    override fun login(email: String, password: String) {
+    override fun login(email: String, password: String, _callback: UserRepository.UserCallback) {
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                mCallback.onSuccess()
+                _callback.onSuccess()
             } else {
-                mCallback.onError()
+                _callback.onError()
             }
         }
     }
 
-    override fun signUp(email: String, password: String) {
+    override fun signUp(email: String, password: String, _callback: UserRepository.UserCallback) {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                mCallback.onSuccess()
+                _callback.onSuccess()
             } else {
-                mCallback.onError()
+                _callback.onError()
             }
         }
     }
 
     /*   TasksListProvider    */
 
-    override fun getAllTasks() {
+    override fun getAllTasks(_callback: TaskListRepository.TaskListCallback) {
         createRequest().orderBy("dateStart")
 
             .addSnapshotListener { snapshot,
                                    exception ->
                 if (snapshot!!.isEmpty) {
-                    (mCallback as TaskListRepository.TaskListCallback).returnTaskList(mList)
+                    _callback.returnTaskList(mList)
                 }
 
                 if (exception != null) {
-                    (mCallback as TaskListRepository.TaskListCallback).sendMessage("Что-то пошло не так")
+                    _callback.sendMessage("Что-то пошло не так")
                     Log.d(TAG, "Listen failed. ", exception)
                     return@addSnapshotListener
                 }
@@ -65,7 +66,7 @@ class FirebaseRepository(private val mCallback: Callback) : UserRepository, Task
                                 documentChange.newIndex,
                                 documentChange.document.toObject(Task::class.java)
                             )
-                            (mCallback as TaskListRepository.TaskListCallback).returnTaskList(mList)
+                            _callback.returnTaskList(mList)
                         }
                         DocumentChange.Type.MODIFIED -> {
                             if (documentChange.oldIndex != documentChange.newIndex){
@@ -78,13 +79,13 @@ class FirebaseRepository(private val mCallback: Callback) : UserRepository, Task
                                 mList[documentChange.newIndex] = documentChange.document.toObject(Task::class.java)
                             }
 
-                            (mCallback as TaskListRepository.TaskListCallback).updateTask(documentChange.oldIndex, documentChange.newIndex) //лишняя какая-то
+                            _callback.updateTask(documentChange.oldIndex, documentChange.newIndex) //лишняя какая-то
 
                         }
                         DocumentChange.Type.REMOVED -> {
                             mList.remove(documentChange.document.toObject(Task::class.java))
-                            (mCallback as TaskListRepository.TaskListCallback).deleteTask(documentChange.oldIndex)
-                            (mCallback as TaskListRepository.TaskListCallback).sendMessage("Задача удалена!")
+                            _callback.deleteTask(documentChange.oldIndex)
+                            _callback.sendMessage("Задача удалена!")
                         }
                     }
                 }
@@ -95,25 +96,25 @@ class FirebaseRepository(private val mCallback: Callback) : UserRepository, Task
         TODO("Сделать") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun changeStatus(id: String, status: Boolean) {
+    override fun changeStatus(id: String, status: Boolean, _callback: TaskListRepository.TaskListCallback) {
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id)
             .update(
                 mapOf(
                     "status" to status
                 )
             ).addOnSuccessListener {
-                (mCallback as TaskListRepository.TaskListCallback).sendMessage("Красавчик!")
+                _callback.sendMessage("Красавчик!")
             }.addOnFailureListener {
-                (mCallback as TaskListRepository.TaskListCallback).sendMessage("Что-то пошло не так")
+                _callback.sendMessage("Что-то пошло не так")
             }
     }
 
-    override fun getTaskById(id: String) {
+    override fun getTaskById(id: String, _callback:TaskCallback) {
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id)
             .get()
             .addOnSuccessListener { documentSnapshot ->
                 val task: Task = documentSnapshot.toObject(Task::class.java)!!
-                (mCallback as TaskRepository.TaskCallback).returnTask(task)
+                _callback.returnTask(task)
             }.addOnFailureListener {
                 Log.d(TAG, "$it")
             }
@@ -121,21 +122,21 @@ class FirebaseRepository(private val mCallback: Callback) : UserRepository, Task
 
     /*   TaskProvider    */
 
-    override fun addTask(task: Task) {
+    override fun addTask(task: Task, _callback: TaskCallback) {
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
             .document(task.id!!).set(task)
             .addOnSuccessListener {
-                mCallback.onSuccess()
+                _callback.onSuccess()
             }.addOnFailureListener {
-                mCallback.onError()
+                _callback.onError()
             }
     }
 
-    override fun deleteTask(id: String) {
+    override fun deleteTask(id: String, _callback: TaskCallback) {
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
-            .document(id).delete().addOnSuccessListener { mCallback.onSuccess() }
+            .document(id).delete().addOnSuccessListener { _callback.onSuccess() }
             .addOnFailureListener {
-                (mCallback as TaskCallback).sendInfo()
+                _callback.sendInfo()
             }
     }
 }

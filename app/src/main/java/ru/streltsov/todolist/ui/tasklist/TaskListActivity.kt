@@ -3,6 +3,7 @@ package ru.streltsov.todolist.ui.tasklist
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.ProgressBar
@@ -45,11 +46,12 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
+        Log.d(TAG, "Авторизовался")
         MainActivity.component.inject(this)
         presenter.attach(this)
         initElements()
         setListeners()
-        presenter.onLoadData()
+        presenter.getAllTasks()
     }
 
 
@@ -158,6 +160,6 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     }
 
     override fun onStatusChanged(item: Task, status: Boolean) {
-        presenter.onChangeStatus(item.id, status)
+        presenter.changeStatus(item.id!!, status)
     }
 }
