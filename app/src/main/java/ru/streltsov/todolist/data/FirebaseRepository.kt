@@ -12,6 +12,8 @@ import javax.inject.Inject
 class FirebaseRepository : UserRepository, TaskRepository, TaskListRepository {
 
     private val TAG: String = "TodoList/Firebase DataBase"
+
+    //TODO зависимость
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var mList = ArrayList<Task>()

@@ -20,6 +20,7 @@ import javax.inject.Inject
 class LoginActivity : AppCompatActivity(), LoginView {
     private val TAG: String = "TAG_LoginActivity"
 
+    //TODO зависимость
     private lateinit var mAuth: FirebaseAuth
     private lateinit var email: EditText
     private lateinit var password: EditText

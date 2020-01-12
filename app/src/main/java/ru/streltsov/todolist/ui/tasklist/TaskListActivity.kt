@@ -35,6 +35,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     private val TAG: String = "TaskListActivity"
     private lateinit var recyclerView: RecyclerView
     private lateinit var linearLayout: LinearLayoutManager
+    //TODO зависимость
     private lateinit var adapter: TaskListAdapter
     private lateinit var query: Query
     private lateinit var addTaskBtn: FloatingActionButton
@@ -123,12 +124,6 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        //TODO - удалить
-        // Решить что с этим методом делать
-    }
-
     override fun showProgressBar() {
         progressBar.visibility = View.VISIBLE
 
@@ -139,7 +134,6 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun hideProgressBar() {
         progressBar.visibility = View.GONE
-
         tasklist.visibility = View.VISIBLE
         bottomAppBar.visibility = View.VISIBLE
         add_task.show()

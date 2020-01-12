@@ -14,14 +14,12 @@ import javax.inject.Inject
 class LoginPresenter  : BasePresenter<LoginView>(), Validator, UserRepository.UserCallback {
 
     private val TAG: String = "TodoList/LoginPresenter"
-    //TODO Убрать зависимость от бд
     @Inject lateinit var db:UserRepository
 
     init {
         MainActivity.component.inject(this)
     }
 
-//    private var db: UserRepository = FirebaseRepository(this)
 
     fun onLoginButton(email: String, password: String) {
         if (validate(email, password)) {

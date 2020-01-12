@@ -9,6 +9,7 @@ import java.util.*
 
 
 class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
+    //TODO зависимость
     private var db: TaskRepository = FirebaseRepository()
 
     private val TAG: String = "TodoList/Task Presenter"
