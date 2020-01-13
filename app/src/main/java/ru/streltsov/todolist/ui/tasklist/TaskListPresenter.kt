@@ -7,13 +7,8 @@ import ru.streltsov.todolist.data.FirebaseRepository
 import ru.streltsov.todolist.data.repository.TaskListRepository
 import javax.inject.Inject
 
-class TaskListPresenter : BasePresenter<TaskListView>(), TaskListRepository.TaskListCallback {
+class TaskListPresenter @Inject constructor(private val db:TaskListRepository) : BasePresenter<TaskListView>(), TaskListRepository.TaskListCallback {
 
-    @Inject lateinit var db:TaskListRepository
-
-    init {
-        MainActivity.component.inject(this)
-    }
      fun getAllTasks() {
         view?.showProgressBar()
         db.getAllTasks(this)

@@ -10,15 +10,12 @@ import ru.streltsov.todolist.ui.tasklist.TaskListActivity
 import ru.streltsov.todolist.ui.tasklist.TaskListPresenter
 import javax.security.auth.callback.Callback
 
-@Component (modules = [LoginModule::class, SignUpModule::class, TaskModule::class, TaskListModule::class])
+@Component (modules = [RepositoryModule::class])
 interface MyComponent {
 
     fun inject(activity: SignUpActivity)
     fun inject(activity: LoginActivity)
     fun inject(activity: TaskActivity)
     fun inject(activity: TaskListActivity)
-
-    fun inject(presenter: LoginPresenter)
-    fun inject(presenter: TaskListPresenter)
 
 }

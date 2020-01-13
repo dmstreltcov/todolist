@@ -6,11 +6,10 @@ import ru.streltsov.todolist.data.FirebaseRepository
 import ru.streltsov.todolist.data.repository.TaskRepository
 import ru.streltsov.todolist.ui.tasklist.Task
 import java.util.*
+import javax.inject.Inject
 
 
-class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
-    //TODO зависимость
-    private var db: TaskRepository = FirebaseRepository()
+class TaskPresenter @Inject constructor(private val db: TaskRepository) : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
 
     private val TAG: String = "TodoList/Task Presenter"
 

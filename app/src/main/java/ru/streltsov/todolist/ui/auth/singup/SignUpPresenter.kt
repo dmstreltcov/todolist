@@ -5,12 +5,11 @@ import ru.streltsov.todolist.base.BasePresenter
 import ru.streltsov.todolist.data.FirebaseRepository
 import ru.streltsov.todolist.data.Validator
 import ru.streltsov.todolist.data.repository.UserRepository
+import javax.inject.Inject
 
-class SignUpPresenter : BasePresenter<SignUpView>(), Validator, UserRepository.UserCallback {
+class SignUpPresenter @Inject constructor(private val db: UserRepository) : BasePresenter<SignUpView>(), Validator, UserRepository.UserCallback {
 
     private val TAG: String = "TodoList/SignUpPresenter"
-    //TODO зависимость
-    private var db: UserRepository = FirebaseRepository()
 
     fun onSignUp(email: String, password: String) {
         view?.showProgress()

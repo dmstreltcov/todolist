@@ -11,15 +11,9 @@ import ru.streltsov.todolist.data.repository.UserRepository
 import javax.inject.Inject
 
 
-class LoginPresenter  : BasePresenter<LoginView>(), Validator, UserRepository.UserCallback {
+class LoginPresenter @Inject constructor(private val db:UserRepository)  : BasePresenter<LoginView>(), Validator, UserRepository.UserCallback {
 
     private val TAG: String = "TodoList/LoginPresenter"
-    @Inject lateinit var db:UserRepository
-
-    init {
-        MainActivity.component.inject(this)
-    }
-
 
     fun onLoginButton(email: String, password: String) {
         if (validate(email, password)) {

@@ -4,18 +4,24 @@ import dagger.Module
 import dagger.Provides
 import ru.streltsov.todolist.data.FirebaseRepository
 import ru.streltsov.todolist.data.repository.TaskListRepository
-import ru.streltsov.todolist.ui.tasklist.TaskListPresenter
+import ru.streltsov.todolist.data.repository.TaskRepository
+import ru.streltsov.todolist.data.repository.UserRepository
 
 @Module
-class TaskListModule {
+class RepositoryModule {
 
     @Provides
-    fun provideTaskListPresenter():TaskListPresenter{
-        return TaskListPresenter()
+    fun provideUserRepository(): UserRepository {
+        return FirebaseRepository()
     }
 
     @Provides
     fun provideTaskListRepository(): TaskListRepository {
+        return FirebaseRepository()
+    }
+
+    @Provides
+    fun provideTaskRepository():TaskRepository{
         return FirebaseRepository()
     }
 
