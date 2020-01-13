@@ -50,6 +50,8 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
     private lateinit var flag: TaskType
     private var taskId: String = ""
+
+    //TODO зависимость
     private lateinit var alarmManager: AlarmManager
     private var timeAlarm: Long = 0
 

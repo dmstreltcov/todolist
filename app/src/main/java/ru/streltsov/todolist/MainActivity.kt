@@ -13,6 +13,7 @@ import ru.streltsov.todolist.ui.tasklist.TaskListActivity
 class MainActivity : AppCompatActivity() {
 
     private val TAG: String = "TodoList/MainActivity"
+    //TODO зависимость
     private lateinit var mAuth: FirebaseAuth
 
     companion object{

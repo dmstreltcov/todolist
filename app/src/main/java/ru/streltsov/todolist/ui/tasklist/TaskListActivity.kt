@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_task_list.*
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
@@ -37,7 +36,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     private lateinit var linearLayout: LinearLayoutManager
     //TODO зависимость
     private lateinit var adapter: TaskListAdapter
-    private lateinit var query: Query
+//    @Inject lateinit var _adapter:TaskListAdapter
+
     private lateinit var addTaskBtn: FloatingActionButton
     private lateinit var actionBarToolbar: BottomAppBar
     private lateinit var progressBar: ProgressBar

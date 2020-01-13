@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-import com.google.firebase.auth.FirebaseAuth
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.auth.singup.SignUpActivity
@@ -20,8 +19,6 @@ import javax.inject.Inject
 class LoginActivity : AppCompatActivity(), LoginView {
     private val TAG: String = "TAG_LoginActivity"
 
-    //TODO зависимость
-    private lateinit var mAuth: FirebaseAuth
     private lateinit var email: EditText
     private lateinit var password: EditText
     private lateinit var loginBtn: Button
@@ -35,7 +32,6 @@ class LoginActivity : AppCompatActivity(), LoginView {
         MainActivity.component.inject(this)
         presenter.attach(this)
         init()
-        mAuth = FirebaseAuth.getInstance()
     }
 
     private fun init() {

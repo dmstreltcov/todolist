@@ -22,6 +22,7 @@ class TaskListAdapter(private val list: ArrayList<Task>) :
     RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
 
     private val TAG: String = "TodoList/TaskListAdapter"
+    //TODO кажется зависимость
     private lateinit var mCallback: Callback
 
     interface Callback {
