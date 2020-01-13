@@ -1,5 +1,7 @@
 package ru.streltsov.todolist.ui.di
 
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import ru.streltsov.todolist.data.FirebaseRepository
@@ -11,18 +13,18 @@ import ru.streltsov.todolist.data.repository.UserRepository
 class RepositoryModule {
 
     @Provides
-    fun provideUserRepository(): UserRepository {
-        return FirebaseRepository()
+    fun provideUserRepository(mAuth: FirebaseAuth, db: FirebaseFirestore): UserRepository {
+        return FirebaseRepository(mAuth,db)
     }
 
     @Provides
-    fun provideTaskListRepository(): TaskListRepository {
-        return FirebaseRepository()
+    fun provideTaskListRepository(mAuth: FirebaseAuth, db: FirebaseFirestore): TaskListRepository {
+        return FirebaseRepository(mAuth,db)
     }
 
     @Provides
-    fun provideTaskRepository():TaskRepository{
-        return FirebaseRepository()
+    fun provideTaskRepository(mAuth: FirebaseAuth, db: FirebaseFirestore):TaskRepository{
+        return FirebaseRepository(mAuth,db)
     }
 
 }

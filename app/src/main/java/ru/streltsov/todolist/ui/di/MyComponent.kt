@@ -8,9 +8,10 @@ import ru.streltsov.todolist.ui.auth.singup.SignUpActivity
 import ru.streltsov.todolist.ui.task.TaskActivity
 import ru.streltsov.todolist.ui.tasklist.TaskListActivity
 import ru.streltsov.todolist.ui.tasklist.TaskListPresenter
+import javax.inject.Singleton
 import javax.security.auth.callback.Callback
 
-@Component (modules = [RepositoryModule::class])
+@Component (modules = [RepositoryModule::class, FirebaseModule::class])
 interface MyComponent {
 
     fun inject(activity: SignUpActivity)

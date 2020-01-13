@@ -9,13 +9,13 @@ import ru.streltsov.todolist.data.repository.TaskRepository.TaskCallback
 import ru.streltsov.todolist.ui.tasklist.Task
 import javax.inject.Inject
 
-class FirebaseRepository : UserRepository, TaskRepository, TaskListRepository {
+class FirebaseRepository @Inject constructor(
+    private val mAuth: FirebaseAuth,
+    private val db:FirebaseFirestore) : UserRepository, TaskRepository, TaskListRepository {
 
     private val TAG: String = "TodoList/Firebase DataBase"
 
     //TODO зависимость
-    private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
     private var mList = ArrayList<Task>()
 
     private fun createRequest(): CollectionReference {
