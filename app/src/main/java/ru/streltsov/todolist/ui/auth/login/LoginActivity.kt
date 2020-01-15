@@ -6,10 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.auth.singup.SignUpActivity
@@ -22,7 +19,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
     private lateinit var email: EditText
     private lateinit var password: EditText
     private lateinit var loginBtn: Button
-    private lateinit var signUpBtn: Button
+    private lateinit var signUpBtn: TextView
     private lateinit var progressBar: ProgressBar
     @Inject lateinit var presenter: LoginPresenter
 

@@ -105,7 +105,7 @@ class FirebaseRepository @Inject constructor(
                     "status" to status
                 )
             ).addOnSuccessListener {
-                _callback.sendMessage("Красавчик!")
+//                _callback.sendMessage("Красавчик!")
             }.addOnFailureListener {
                 _callback.sendMessage("Что-то пошло не так")
             }
