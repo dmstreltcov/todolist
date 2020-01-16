@@ -1,6 +1,6 @@
 package ru.streltsov.todolist.ui.tasklist
 
-import android.content.Intent
+import android.graphics.Paint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +9,8 @@ import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.Timestamp
 import ru.streltsov.todolist.R
-import ru.streltsov.todolist.ui.task.TaskActivity
 import java.sql.Date
 import java.text.SimpleDateFormat
 
@@ -50,9 +47,16 @@ class TaskListAdapter(private val list: ArrayList<Task>) :
         private val statusBox: CheckBox = itemView.findViewById(R.id.task_check_box_2)
 
         fun bind(task: Task) {
-            titleView.text = task.title
             statusBox.isChecked = task.status
-            if (task.dateStart != null) taskTime.text = formatDate(task.dateStart)
+            if (task.status){
+                titleView.paintFlags = titleView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                titleView.text = task.title
+            }else{
+                titleView.paintFlags = 0
+                titleView.text = task.title
+            }
+
+            if (task.dateStart != null) taskTime.text = formatDate(task.dateStart) else taskTime.text = null
             itemView.setOnClickListener {
                 mCallback.onItemClicked(list[adapterPosition])
             }
