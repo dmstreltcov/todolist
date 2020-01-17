@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import ru.streltsov.todolist.ui.auth.login.LoginActivity
-import ru.streltsov.todolist.ui.di.DaggerMyComponent
-import ru.streltsov.todolist.ui.di.MyComponent
 import ru.streltsov.todolist.ui.tasklist.TaskListActivity
 
 class MainActivity : AppCompatActivity() {
@@ -16,13 +14,10 @@ class MainActivity : AppCompatActivity() {
     //TODO зависимость
     private lateinit var mAuth: FirebaseAuth
 
-    companion object{
-        val component: MyComponent = DaggerMyComponent.builder().build()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        App.instance.getAppComponent().inject(this)
         mAuth = FirebaseAuth.getInstance()
         updateUI()
     }

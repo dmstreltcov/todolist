@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.tasklist.TaskListActivity
 import com.google.android.gms.common.api.ApiException
+import ru.streltsov.todolist.App
 import ru.streltsov.todolist.MainActivity
 import javax.inject.Inject
 
@@ -35,7 +36,7 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sign_up)
-        MainActivity.component.inject(this)
+        App.instance.getAppComponent().inject(this)
         presenter.attach(this)
         init()
     }

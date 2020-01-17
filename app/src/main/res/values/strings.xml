@@ -35,8 +35,8 @@
     <string name="action_search">Поиск</string>
     <string name="action_close">Отмена</string>
     <string name="logo">logo</string>
-    <string name="no_account_title">Don\'t have an account?</string>
-    <string name="create_account">Create now</string>
+    <string name="no_account_title">Don\'t have an account?  <u>Create now</u></string>
+    <string name="create_account"><u>Create now</u></string>
 
     <string-array name="remind_type">
         <item>Нет</item>

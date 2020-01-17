@@ -1,4 +1,4 @@
-package ru.streltsov.todolist.ui.di
+package ru.streltsov.todolist.ui.di.module
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

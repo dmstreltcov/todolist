@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_task_list.*
+import ru.streltsov.todolist.App
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.data.Action
+import ru.streltsov.todolist.ui.di.module.TaskListModule
 import ru.streltsov.todolist.ui.task.TaskActivity
 import ru.streltsov.todolist.ui.task.TaskType
 import javax.inject.Inject
@@ -48,7 +50,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
         Log.d(TAG, "Авторизовался")
-        MainActivity.component.inject(this)
+        App.instance.getTaskListComponent().inject(this)
         presenter.attach(this)
         initElements()
         setListeners()
@@ -75,7 +77,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     }
 
     override fun initAdapter(taskList:ArrayList<Task>) {
-        adapter = TaskListAdapter(taskList)
+        adapter = TaskListAdapter()
+        adapter.setData(taskList)
         adapter.setCallback(this)
         recyclerView.adapter = adapter
         hideProgressBar() //TODO переделать, очень плохо

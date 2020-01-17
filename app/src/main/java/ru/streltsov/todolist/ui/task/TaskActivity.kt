@@ -19,6 +19,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.activity_task.*
+import ru.streltsov.todolist.App
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.alarm.AlarmReceiver
@@ -59,7 +60,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
-        MainActivity.component.inject(this)
+        App.instance.getAppComponent().inject(this)
         presenter.attach(this)
         flag = intent.extras!!["flag"] as TaskType
         initElements()

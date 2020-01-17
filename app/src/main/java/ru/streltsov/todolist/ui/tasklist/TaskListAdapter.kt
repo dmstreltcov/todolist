@@ -1,6 +1,5 @@
 package ru.streltsov.todolist.ui.tasklist
 
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,21 +8,25 @@ import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.Timestamp
 import ru.streltsov.todolist.R
-import ru.streltsov.todolist.ui.task.TaskActivity
 import java.sql.Date
 import java.text.SimpleDateFormat
 
 
-class TaskListAdapter(private val list: ArrayList<Task>) :
-    RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
+class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
 
     private val TAG: String = "TodoList/TaskListAdapter"
     //TODO кажется зависимость
     private lateinit var mCallback: Callback
+    private lateinit var taskList: List<Task>
+
+
+    //TODO ошибка
+    fun setData(list: List<Task>) {
+        taskList = list
+        notifyDataSetChanged()
+    }
 
     interface Callback {
         fun onItemClicked(item: Task)
@@ -54,17 +57,17 @@ class TaskListAdapter(private val list: ArrayList<Task>) :
             statusBox.isChecked = task.status
             if (task.dateStart != null) taskTime.text = formatDate(task.dateStart)
             itemView.setOnClickListener {
-                mCallback.onItemClicked(list[adapterPosition])
+                mCallback.onItemClicked(taskList[adapterPosition])
             }
-            statusBox.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
-                Log.d(TAG, "${list[adapterPosition].id}")
-                mCallback.onStatusChanged(list[adapterPosition], isChecked)
-            })
+            statusBox.setOnCheckedChangeListener { _, isChecked ->
+                Log.d(TAG, "${taskList[adapterPosition].id}")
+                mCallback.onStatusChanged(taskList[adapterPosition], isChecked)
+            }
         }
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        holder.bind(list[position])
+        holder.bind(taskList[position])
     }
 
     private fun formatDate(dateStart: Timestamp?): String {
@@ -78,6 +81,6 @@ class TaskListAdapter(private val list: ArrayList<Task>) :
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return taskList.size
     }
 }

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import ru.streltsov.todolist.App
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.auth.singup.SignUpActivity
@@ -26,7 +27,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        MainActivity.component.inject(this)
+        App.instance.getAppComponent().inject(this)
         presenter.attach(this)
         init()
     }
