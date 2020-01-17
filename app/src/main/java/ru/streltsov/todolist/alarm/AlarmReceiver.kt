@@ -15,7 +15,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val id = intent.getStringExtra("id")
         NotificationHelper.createNotificationChannel(
             context,
-            false,
+            true,
             title,
             id,
             "App notification channel."

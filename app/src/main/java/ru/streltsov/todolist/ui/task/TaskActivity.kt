@@ -9,7 +9,6 @@ import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -25,7 +24,6 @@ import ru.streltsov.todolist.R
 import ru.streltsov.todolist.alarm.AlarmReceiver
 import ru.streltsov.todolist.alarm.BootCompleteReceiver
 import ru.streltsov.todolist.ui.tasklist.Task
-import ru.streltsov.todolist.ui.tasklist.TaskListPresenter
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
@@ -191,7 +189,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
         val intent = createIntent(task)
         return PendingIntent.getBroadcast(
             this,
-            System.currentTimeMillis().toInt(),
+            getTaskRequestCode(task),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -204,9 +202,13 @@ class TaskActivity : AppCompatActivity(), TaskView {
         return intent
     }
 
+    private fun getTaskRequestCode(task:Task):Int{
+        return task.id.hashCode()
+    }
+
     private fun cancelAlarm() {
         val intent = Intent(this, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
+        val pendingIntent = PendingIntent.getBroadcast(this, taskId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
         alarmManager.cancel(pendingIntent)
     }
 

@@ -92,7 +92,7 @@ class TaskPresenter @Inject constructor(private val db: TaskRepository) : BasePr
     }
 
     override fun onSuccess() {
-        view?.showMessage("Задача сохранена")
+
     }
 
     override fun onError() {
