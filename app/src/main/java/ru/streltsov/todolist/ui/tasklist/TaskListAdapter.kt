@@ -1,5 +1,6 @@
 package ru.streltsov.todolist.ui.tasklist
 
+import android.graphics.Paint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -52,15 +53,21 @@ class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
         private val statusBox: CheckBox = itemView.findViewById(R.id.task_check_box_2)
 
         fun bind(task: Task) {
-            titleView.text = task.title
-            statusBox.isChecked = task.status
-            if (task.dateStart != null) taskTime.text = formatDate(task.dateStart)
+            if (task.status){
+                titleView.paintFlags = titleView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                titleView.text = task.title
+            }else{
+                titleView.paintFlags = 0
+                titleView.text = task.title
+            }
+            if (task.dateStart != null) taskTime.text = formatDate(task.dateStart) else taskTime.text = null
             itemView.setOnClickListener {
                 mCallback.onItemClicked(taskList[adapterPosition])
             }
             statusBox.setOnCheckedChangeListener { _, isChecked ->
-                Log.d(TAG, "${taskList[adapterPosition].id}")
+                Log.d(TAG, "${taskList[adapterPosition].id} + ${taskList[adapterPosition].status}")
                 mCallback.onStatusChanged(taskList[adapterPosition], isChecked)
+                notifyItemChanged(adapterPosition)
             }
         }
     }

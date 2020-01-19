@@ -158,5 +158,6 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun onStatusChanged(item: Task, status: Boolean) {
         presenter.changeStatus(item.id!!, status)
+
     }
 }
