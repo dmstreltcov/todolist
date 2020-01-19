@@ -1,20 +1,23 @@
 package ru.streltsov.todolist
 
-import android.annotation.SuppressLint
 import android.app.Application
 import ru.streltsov.todolist.ui.di.component.AppComponent
 import ru.streltsov.todolist.ui.di.component.DaggerAppComponent
 import ru.streltsov.todolist.ui.di.component.TaskListComponent
 import ru.streltsov.todolist.ui.di.module.TaskListModule
 
-@SuppressLint("Registered")
 class App : Application() {
 
     private lateinit var appComponent: AppComponent
 
-    private fun initDagger(): App {
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+        initDagger()
+    }
+
+    private fun initDagger() {
         appComponent = DaggerAppComponent.builder().build()
-        return this
     }
 
     fun getAppComponent(): AppComponent {
@@ -25,6 +28,7 @@ class App : Application() {
         appComponent.plus(TaskListModule())
 
     companion object {
-        val instance: App = App().initDagger()
+        lateinit var instance: App
+            private set
     }
 }
