@@ -12,6 +12,7 @@ import com.google.firebase.Timestamp
 import ru.streltsov.todolist.R
 import java.sql.Date
 import java.text.SimpleDateFormat
+import java.util.*
 
 
 class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
@@ -80,6 +81,7 @@ class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
         try {
             val format = SimpleDateFormat("HH:mm dd MMM")
             val date = Date(dateStart!!.seconds * 1000)
+            Log.d(TAG, "isTaskExpired: ${isTaskExpired(dateStart)}")
             return format.format(date)
         } catch (e: Exception) {
             return e.toString()
@@ -89,4 +91,10 @@ class TaskListAdapter : RecyclerView.Adapter<TaskListAdapter.TaskViewHolder>() {
     override fun getItemCount(): Int {
         return taskList.size
     }
+
+    private fun isTaskExpired(endDate:Timestamp) : Boolean {
+        val toDay: Long = System.currentTimeMillis()
+        return (toDay > endDate.seconds*1000)
+    }
+
 }
