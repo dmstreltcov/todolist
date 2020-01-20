@@ -80,17 +80,6 @@
         android:indeterminateDuration="1200"
         android:layout_centerHorizontal="true"
         />
-<!--    <Button-->
-<!--        android:background="@color/colorSea"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:id="@+id/sign_up_btn"-->
-<!--        android:text="@string/sign_up_btn"-->
-<!--        android:layout_marginEnd="10dp"-->
-<!--        android:textColor="@color/colorWhite"-->
-<!--        android:layout_below="@id/space"-->
-<!--        android:layout_alignEnd="@id/space"-->
-<!--        android:layout_centerHorizontal="true"/>-->
 
     <TextView
         android:id="@+id/sign_up_btn"
@@ -103,17 +92,6 @@
         android:layout_centerHorizontal="true"
         android:text="@string/no_account_title"/>
 
-<!--    <TextView-->
-<!--        android:id="@+id/sign_up_btn"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/create_account"-->
-<!--        android:linksClickable="true"-->
-<!--        android:layout_below="@id/password_input"-->
-<!--        android:layout_marginTop="100dp"-->
-<!--        android:textColor="@color/colorWhite"-->
-<!--        android:layout_toEndOf="@id/account_question"-->
-<!--        android:layout_centerHorizontal="true"/>-->
 
 
 

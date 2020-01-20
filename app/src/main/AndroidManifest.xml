@@ -13,10 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.leftmenu.LeftMenu"
-            android:label="@string/title_activity_left_menu"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
             android:name=".ui.task.TaskActivity"
             android:label="Create new task" />
         <activity android:name=".ui.auth.singup.SignUpActivity" />
