@@ -1,4 +1,4 @@
-package ru.streltsov.todolist.base
+package ru.streltsov.todolist.ui.base
 
 open class BasePresenter<V : BaseView> {
 

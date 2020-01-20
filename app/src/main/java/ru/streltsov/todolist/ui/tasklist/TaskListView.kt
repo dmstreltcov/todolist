@@ -1,6 +1,6 @@
 package ru.streltsov.todolist.ui.tasklist
 
-import ru.streltsov.todolist.base.BaseView
+import ru.streltsov.todolist.ui.base.BaseView
 import ru.streltsov.todolist.data.Action
 
 interface TaskListView : BaseView {

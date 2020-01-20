@@ -4,7 +4,7 @@ import android.util.Log
 import ru.streltsov.todolist.data.FirebaseRepository
 import com.google.firebase.auth.FirebaseUser
 import ru.streltsov.todolist.MainActivity
-import ru.streltsov.todolist.base.BasePresenter
+import ru.streltsov.todolist.ui.base.BasePresenter
 import ru.streltsov.todolist.data.Validator
 import ru.streltsov.todolist.data.repository.Callback
 import ru.streltsov.todolist.data.repository.UserRepository
