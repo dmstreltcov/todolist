@@ -1,9 +1,9 @@
 package ru.streltsov.todolist.ui.task
 
-import ru.streltsov.todolist.base.BaseView
+import ru.streltsov.todolist.ui.base.BaseView
 import ru.streltsov.todolist.ui.tasklist.Task
 
-interface TaskView : BaseView{
+interface TaskView : BaseView {
     fun setStartDateText(date:String)
     fun setStartTimeText(time:String)
     fun displayDatePickerDialog(year:Int, month:Int, day:Int)

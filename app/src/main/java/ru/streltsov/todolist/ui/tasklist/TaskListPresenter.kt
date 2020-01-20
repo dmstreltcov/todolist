@@ -1,7 +1,7 @@
 package ru.streltsov.todolist.ui.tasklist
 
 import ru.streltsov.todolist.MainActivity
-import ru.streltsov.todolist.base.BasePresenter
+import ru.streltsov.todolist.ui.base.BasePresenter
 import ru.streltsov.todolist.data.Action
 import ru.streltsov.todolist.data.FirebaseRepository
 import ru.streltsov.todolist.data.repository.TaskListRepository

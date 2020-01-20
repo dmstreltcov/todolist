@@ -1,4 +1,4 @@
-package ru.streltsov.todolist.alarm
+package ru.streltsov.todolist.ui.alarm
 
 import android.content.BroadcastReceiver
 import android.content.Context

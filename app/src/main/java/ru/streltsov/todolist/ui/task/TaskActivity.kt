@@ -21,8 +21,8 @@ import kotlinx.android.synthetic.main.activity_task.*
 import ru.streltsov.todolist.App
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
-import ru.streltsov.todolist.alarm.AlarmReceiver
-import ru.streltsov.todolist.alarm.BootCompleteReceiver
+import ru.streltsov.todolist.ui.alarm.AlarmReceiver
+import ru.streltsov.todolist.ui.alarm.BootCompleteReceiver
 import ru.streltsov.todolist.ui.tasklist.Task
 import java.lang.Exception
 import java.text.SimpleDateFormat

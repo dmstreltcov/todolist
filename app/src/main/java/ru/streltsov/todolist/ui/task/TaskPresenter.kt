@@ -1,7 +1,7 @@
 package ru.streltsov.todolist.ui.task
 
 import android.util.Log
-import ru.streltsov.todolist.base.BasePresenter
+import ru.streltsov.todolist.ui.base.BasePresenter
 import ru.streltsov.todolist.data.FirebaseRepository
 import ru.streltsov.todolist.data.repository.TaskRepository
 import ru.streltsov.todolist.ui.tasklist.Task
