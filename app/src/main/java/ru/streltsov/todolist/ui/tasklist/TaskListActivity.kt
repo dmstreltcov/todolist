@@ -79,6 +79,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     override fun initAdapter(taskList:ArrayList<Task>) {
         adapter = TaskListAdapter()
         adapter.setData(taskList)
+        adapter.notifyDataSetChanged()
         adapter.setCallback(this)
         recyclerView.adapter = adapter
         hideProgressBar() //TODO переделать, очень плохо

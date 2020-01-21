@@ -12,7 +12,7 @@ data class Task(
     val createDate: Timestamp? = null,
     val status: Boolean = false,
     val dateStart: Timestamp? = null
-    ) : Parcelable {
+    ) : Parcelable, Item {
     @SuppressLint("NewApi")
     constructor(parcel: Parcel) : this(
         parcel.readString(),
