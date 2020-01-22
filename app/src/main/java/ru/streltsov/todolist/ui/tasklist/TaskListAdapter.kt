@@ -21,24 +21,12 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
     private val TAG: String = "TodoList/TaskListAdapter"
     //TODO кажется зависимость
     private lateinit var callback: Callback
-    private var newList:ArrayList<Item> = ArrayList()
-
-
+    private lateinit var newList:ArrayList<Item>
 
     //TODO ошибка
     fun setData(list: List<Task>) {
-        newList.clear()
         newList = TaskListUtils().createNewTaskList(list)
         notifyDataSetChanged()
-    }
-
-    interface Callback {
-        fun onItemClicked(item: Task)
-        fun onStatusChanged(item: Task, status: Boolean)
-    }
-
-    fun setCallback(callback: Callback) {
-        this.callback = callback
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -117,7 +105,6 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
         try {
             val format = SimpleDateFormat("HH:mm dd MMM")
             val date = Date(dateStart!!.seconds * 1000)
-            Log.d(TAG, "isTaskExpired: ${isTaskExpired(dateStart)}")
             return format.format(date)
         } catch (e: Exception) {
             return e.toString()
@@ -128,9 +115,13 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
         return newList.size
     }
 
-    private fun isTaskExpired(endDate: Timestamp): Boolean {
-        val toDay: Long = System.currentTimeMillis()
-        return (toDay > endDate.seconds * 1000)
+    interface Callback {
+        fun onItemClicked(item: Task)
+        fun onStatusChanged(item: Task, status: Boolean)
+    }
+
+    fun setCallback(callback: Callback) {
+        this.callback = callback
     }
 
 }

@@ -8,22 +8,21 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class TaskListUtils {
-    private var newList:ArrayList<Item> = ArrayList()
-
     fun createNewTaskList(list: List<Task>) : ArrayList<Item> {
+        val newList:ArrayList<Item> = ArrayList()
         val prev = Header("Просроченный")
         val today = Header("Сегодня")
         for (task in list) {
             val day: Item = setHeaderDay(Timestamp(task.dateStart!!.seconds, task.dateStart.nanoseconds))
             when {
-                isExpired(prev, task.dateStart) -> {
+                isExpired(newList, prev, task.dateStart) -> {
                     newList.add(task)
                 }
                 task.dateStart.seconds * 1000 < System.currentTimeMillis() -> {
                     newList.add(prev)
                     newList.add(task)
                 }
-                isNewDayTask(day, task.dateStart) -> {
+                isNewDayTask(newList, day, task.dateStart) -> {
                     newList.add(task)
                 }
                 else -> {
@@ -36,6 +35,7 @@ class TaskListUtils {
     }
 
     private fun isNewDayTask(
+        newList:ArrayList<Item>,
         day: Item,
         dateStart: Timestamp
     ): Boolean {
@@ -50,7 +50,7 @@ class TaskListUtils {
         return Header("$day $month")
     }
 
-    private fun isExpired(prev: Header, dateStart: Timestamp):Boolean{
+    private fun isExpired(newList:ArrayList<Item>, prev: Header, dateStart: Timestamp):Boolean{
        return newList.contains(prev) and (dateStart.seconds * 1000 < System.currentTimeMillis())
     }
 
