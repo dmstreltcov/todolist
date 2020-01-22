@@ -10,9 +10,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import ru.streltsov.todolist.R
+import ru.streltsov.todolist.ui.utils.TaskListUtils
 import java.sql.Date
 import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -20,46 +20,16 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
 
     private val TAG: String = "TodoList/TaskListAdapter"
     //TODO кажется зависимость
-    private lateinit var mCallback: Callback
-    private lateinit var taskList: List<Task>
-    private lateinit var newList:ArrayList<Item>
+    private lateinit var callback: Callback
+    private var newList:ArrayList<Item> = ArrayList()
+
 
 
     //TODO ошибка
     fun setData(list: List<Task>) {
-        newList = ArrayList()
-        newList = createNewTaskList(list)
+        newList.clear()
+        newList = TaskListUtils().createNewTaskList(list)
         notifyDataSetChanged()
-    }
-
-    fun setHeaderDay(timestamp: Timestamp): Item {
-        val calendar = Calendar.getInstance()
-        calendar.time = timestamp.toDate()
-        val month: String = calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault())!!
-        val day: String = calendar.get(Calendar.DATE).toString()
-        return Header("$day $month")
-    }
-
-    private fun createNewTaskList(list: List<Task>) : ArrayList<Item> {
-        val prev = Header("Просроченный")
-        val today = Header("Сегодня")
-        for (task in list) {
-            val day: Item =
-                setHeaderDay(Timestamp(task.dateStart!!.seconds, task.dateStart.nanoseconds))
-            if (newList.contains(prev) and (task.dateStart.seconds * 1000 < System.currentTimeMillis())) {
-                newList.add(task)
-            } else if (task.dateStart.seconds * 1000 < System.currentTimeMillis()) {
-                newList.add(prev)
-                newList.add(task)
-            } else if ((task.dateStart.seconds * 1000 > System.currentTimeMillis()) and newList.contains(day)
-            ) {
-                newList.add(task)
-            } else {
-                newList.add(day)
-                newList.add(task)
-            }
-        }
-        return newList
     }
 
     interface Callback {
@@ -68,7 +38,7 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
     }
 
     fun setCallback(callback: Callback) {
-        mCallback = callback
+        this.callback = callback
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -116,25 +86,24 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
 
         override fun bind(item: Item) {
             if (item is Task) {
+                titleView.text = item.title
                 if (item.status) {
                     titleView.paintFlags = titleView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                    titleView.text = item.title
                 } else {
                     titleView.paintFlags = 0
-                    titleView.text = item.title
                 }
                 if (item.dateStart != null) taskTime.text =
                     formatDate(item.dateStart) else taskTime.text = null
                 itemView.setOnClickListener {
-                    mCallback.onItemClicked(newList[adapterPosition] as Task)
+                    callback.onItemClicked(item)
                 }
                 statusBox.setOnCheckedChangeListener { _, isChecked ->
                     Log.d(
                         TAG,
-                        "${(newList[adapterPosition] as Task).id} + ${(newList[adapterPosition] as Task).status}"
+                        "${(item).id} + ${(item).status}"
                     )
-                    mCallback.onStatusChanged((newList[adapterPosition] as Task), isChecked)
-                    notifyItemChanged(adapterPosition)
+                    callback.onStatusChanged(item, isChecked)
+                    notifyItemChanged(adapterPosition) //Вынести в активити
                 }
             }
         }
