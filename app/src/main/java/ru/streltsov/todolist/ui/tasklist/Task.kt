@@ -46,4 +46,8 @@ data class Task(
             return arrayOfNulls(size)
         }
     }
+
+    override fun equals(other: Any?): Boolean {
+        return other is Task && other.id == id
+    }
 }

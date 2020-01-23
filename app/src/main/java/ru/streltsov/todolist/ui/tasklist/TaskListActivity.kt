@@ -107,15 +107,13 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         adapter.notifyItemInserted(index)
     }
 
-    override fun updateTask(oldIndex: Int, newIndex: Int) {
-        if(oldIndex != newIndex){
-            adapter.notifyItemMoved(oldIndex, newIndex)
-        }
-        adapter.notifyItemChanged(newIndex)
+    override fun updateTask(task: Task) {
+        adapter.updateTask(task)
     }
 
     override fun deleteTask(index: Int) {
-        adapter.notifyItemRemoved(index)
+//        adapter.notifyItemRemoved(index)
+        adapter.notifyDataSetChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -157,8 +155,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         startActivityForResult(intent, OPEN_TASK)
     }
 
-    override fun onStatusChanged(item: Task, status: Boolean) {
+    override fun onStatusChanged(item: Task, status: Boolean, position:Int) {
         presenter.changeStatus(item.id!!, status)
-
+        adapter.notifyItemChanged(position)
     }
 }

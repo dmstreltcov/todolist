@@ -86,12 +86,8 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
                     callback.onItemClicked(item)
                 }
                 statusBox.setOnCheckedChangeListener { _, isChecked ->
-                    Log.d(
-                        TAG,
-                        "${(item).id} + ${(item).status}"
-                    )
-                    callback.onStatusChanged(item, isChecked)
-                    notifyItemChanged(adapterPosition) //Вынести в активити
+                    Log.d(TAG,"${(item).id} + ${(item).status} + $adapterPosition")
+                    callback.onStatusChanged(item, isChecked, adapterPosition)
                 }
             }
         }
@@ -117,7 +113,7 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
 
     interface Callback {
         fun onItemClicked(item: Task)
-        fun onStatusChanged(item: Task, status: Boolean)
+        fun onStatusChanged(item: Task, status: Boolean, position:Int)
     }
 
     fun setCallback(callback: Callback) {
