@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomappbar.BottomAppBar
@@ -21,6 +22,8 @@ import ru.streltsov.todolist.data.Action
 import ru.streltsov.todolist.ui.di.module.TaskListModule
 import ru.streltsov.todolist.ui.task.TaskActivity
 import ru.streltsov.todolist.ui.task.TaskType
+import ru.streltsov.todolist.ui.utils.ItemsDiffUtils
+import ru.streltsov.todolist.ui.utils.TaskListUtils
 import javax.inject.Inject
 
 
@@ -43,13 +46,15 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     private lateinit var addTaskBtn: FloatingActionButton
     private lateinit var actionBarToolbar: BottomAppBar
     private lateinit var progressBar: ProgressBar
-
+    private lateinit var list:List<Item>
+    private lateinit var uid:String
     @Inject lateinit var presenter: TaskListPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
         Log.d(TAG, "Авторизовался")
+        uid = intent.getStringExtra("uid")!!
         App.instance.getTaskListComponent().inject(this)
         presenter.attach(this)
         initElements()
@@ -78,8 +83,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun initAdapter(taskList:ArrayList<Task>) {
         adapter = TaskListAdapter()
+        list = TaskListUtils().createNewTaskList(taskList)
         adapter.setData(taskList)
-        adapter.notifyDataSetChanged()
         adapter.setCallback(this)
         recyclerView.adapter = adapter
         hideProgressBar() //TODO переделать, очень плохо
@@ -107,13 +112,18 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         adapter.notifyItemInserted(index)
     }
 
-    override fun updateTask(task: Task) {
-        adapter.updateTask(task)
+    override fun updateTask(oldIndex: Int, newIndex: Int) {
+        if(oldIndex != newIndex){
+            adapter.notifyItemMoved(oldIndex, newIndex)
+        }
+        adapter.notifyItemChanged(newIndex)
     }
 
     override fun deleteTask(index: Int) {
-//        adapter.notifyItemRemoved(index)
-        adapter.notifyDataSetChanged()
+        val itemsDiffUtils = ItemsDiffUtils(adapter.getData(), list)
+        val diffResult = DiffUtil.calculateDiff(itemsDiffUtils)
+//        adapter.setData(list)
+        diffResult.dispatchUpdatesTo(adapter)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -155,8 +165,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         startActivityForResult(intent, OPEN_TASK)
     }
 
-    override fun onStatusChanged(item: Task, status: Boolean, position:Int) {
+    override fun onStatusChanged(item: Task, status: Boolean, position: Int) {
         presenter.changeStatus(item.id!!, status)
-        adapter.notifyItemChanged(position)
+
     }
 }

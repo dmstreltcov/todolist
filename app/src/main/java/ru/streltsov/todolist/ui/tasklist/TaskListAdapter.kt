@@ -29,6 +29,10 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
         notifyDataSetChanged()
     }
 
+    fun getData():List<Item>{
+        return newList
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return when (viewType) {
             0 -> TaskViewHolder(

@@ -1,15 +1,15 @@
 package ru.streltsov.todolist.data.repository
 
 import ru.streltsov.todolist.ui.tasklist.Task
+import java.lang.Exception
 
-interface TaskRepository{
-    fun addTask(task: Task, _callback:TaskCallback)
-    fun deleteTask(id:String, _callback:TaskCallback)
-    fun getTaskById(id:String, _callback:TaskCallback)
+class TaskRepository : TaskRepositoryImpl.TaskCallback {
 
+    override fun sendInfo() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-    interface TaskCallback : Callback{
-        fun sendInfo()
-        fun returnTask(task: Task)
+    override fun returnTask(task: Task) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -1,13 +1,12 @@
 package ru.streltsov.todolist.ui.tasklist
 
-import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.ui.base.BasePresenter
 import ru.streltsov.todolist.data.Action
-import ru.streltsov.todolist.data.FirebaseRepository
-import ru.streltsov.todolist.data.repository.TaskListRepository
+import ru.streltsov.todolist.data.repository.TaskListRepositoryImpl
+import java.lang.Exception
 import javax.inject.Inject
 
-class TaskListPresenter @Inject constructor(private val db:TaskListRepository) : BasePresenter<TaskListView>(), TaskListRepository.TaskListCallback {
+class TaskListPresenter @Inject constructor(private val db:TaskListRepositoryImpl) : BasePresenter<TaskListView>(), TaskListRepositoryImpl.TaskListCallback {
 
      fun getAllTasks() {
         view?.showProgressBar()
@@ -15,7 +14,7 @@ class TaskListPresenter @Inject constructor(private val db:TaskListRepository) :
     }
 
      fun getTasksByDay() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+         db.getTasksByDay()
     }
 
      fun changeStatus(id: String, status: Boolean) {
@@ -48,15 +47,5 @@ class TaskListPresenter @Inject constructor(private val db:TaskListRepository) :
 
     override fun deleteTask(index: Int) {
         view?.deleteTask(index)
-    }
-
-    override fun onSuccess() {
-        //TODO - удалить
-        // Почему пустой
-    }
-
-    override fun onError() {
-        //TODO - удалить
-        // Почему пустой
     }
 }

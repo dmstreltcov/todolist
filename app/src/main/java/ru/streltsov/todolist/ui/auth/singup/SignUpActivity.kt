@@ -52,10 +52,10 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
         }
     }
 
-    override fun updateUI() {
+    override fun updateUI(uid:String) {
         Log.d(TAG, "TodoList/Update UI")
         val intent: Intent = Intent(this, TaskListActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.putExtra("uid", uid)
         startActivity(intent)
         finish()
     }

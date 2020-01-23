@@ -1,22 +1,31 @@
 package ru.streltsov.todolist.data.repository
 
-import android.os.Parcelable
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseUser
+import ru.streltsov.todolist.data.provides.UserProviderImpl
+import ru.streltsov.todolist.exceptions.AuthException
+import javax.inject.Inject
 
-interface UserRepository{
-    fun login(email: String,password: String, _callback: UserCallback)  //<- вот это мне не совсем нравится, какой-то костыль
-    fun signUp(email: String, password: String, _callback: UserCallback)
 
-    interface UserCallback : Callback{
+class UserRepository @Inject constructor(private val provider: UserProviderImpl) : UserRepositoryImpl, UserRepositoryImpl.UserCallback {
+  lateinit var uid: String
 
-    }
+  override fun signInByEmail(email: String, password: String) {
+    provider.signInByEmail(email, password, this)
+  }
 
-    //TODO добавить осмысленный колбэк на возвращение результата
-    /*
-    Получить id пользователя
-    Авторизоваться
-    Зарегистрироваться
-     */
+  override fun signUp(email: String, password: String) {
+    provider.signUpByEmail(email, password, this)
+  }
+
+  override fun getUserId() = uid
+
+  override fun onSuccess(user: FirebaseUser) {
+    uid = user.uid
+  }
+
+  override fun onError(exception: Exception) {
+    throw AuthException(exception)
+  }
+
 
 }

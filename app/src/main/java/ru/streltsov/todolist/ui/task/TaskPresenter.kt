@@ -2,14 +2,14 @@ package ru.streltsov.todolist.ui.task
 
 import android.util.Log
 import ru.streltsov.todolist.ui.base.BasePresenter
-import ru.streltsov.todolist.data.FirebaseRepository
-import ru.streltsov.todolist.data.repository.TaskRepository
+import ru.streltsov.todolist.data.repository.TaskRepositoryImpl
 import ru.streltsov.todolist.ui.tasklist.Task
+import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
 
-class TaskPresenter @Inject constructor(private val db: TaskRepository) : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
+class TaskPresenter @Inject constructor(private val db: TaskRepositoryImpl) : BasePresenter<TaskView>(), TaskRepositoryImpl.TaskCallback {
 
     private val TAG: String = "TodoList/Task Presenter"
 
@@ -91,11 +91,11 @@ class TaskPresenter @Inject constructor(private val db: TaskRepository) : BasePr
         view?.hideProgressBar()
     }
 
-    override fun onSuccess() {
+    override fun onSuccess(uid: String) {
 
     }
 
-    override fun onError() {
+    override fun onError(exception: Exception) {
         view?.showMessage("Возникла ошибка. Попробуйте снова")
     }
 

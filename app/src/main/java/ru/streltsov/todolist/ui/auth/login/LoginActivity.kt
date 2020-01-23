@@ -48,7 +48,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
     }
 
     override fun signUp() {
-        val intent: Intent = Intent(this, SignUpActivity::class.java)
+        val intent = Intent(this, SignUpActivity::class.java)
         startActivity(intent)
     }
 
@@ -62,9 +62,10 @@ class LoginActivity : AppCompatActivity(), LoginView {
         progressBar.visibility = View.GONE
     }
 
-    override fun updateUI() {
+    override fun updateUI(uid:String) {
         Log.d(TAG, "TodoList/Update UI")
         val intent: Intent = Intent(this, TaskListActivity::class.java)
+        intent.putExtra("uid", uid)
         startActivity(intent)
         finish()
     }

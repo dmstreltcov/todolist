@@ -1,52 +1,16 @@
 package ru.streltsov.todolist.data
 
-import android.os.Parcelable
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import ru.streltsov.todolist.data.repository.*
-import ru.streltsov.todolist.data.repository.TaskRepository.TaskCallback
+import ru.streltsov.todolist.data.repository.TaskRepositoryImpl.TaskCallback
 import ru.streltsov.todolist.ui.tasklist.Task
 import javax.inject.Inject
 
-class FirebaseRepository @Inject constructor(
-    private val mAuth: FirebaseAuth,
-    private val db:FirebaseFirestore) : UserRepository, TaskRepository, TaskListRepository {
+class FirebaseRepository{
 
-    private val TAG: String = "TodoList/Firebase DataBase"
-
-    //TODO зависимость
-    private var mList = ArrayList<Task>()
-
-    private fun createRequest(): CollectionReference {
-        return db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
-    }
-
-    /*  Авторизация/Регистрация     */
-
-    override fun login(email: String, password: String, _callback: UserRepository.UserCallback) {
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                _callback.onSuccess()
-            } else {
-                _callback.onError()
-            }
-        }
-    }
-
-    override fun signUp(email: String, password: String, _callback: UserRepository.UserCallback) {
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                _callback.onSuccess()
-            } else {
-                _callback.onError()
-            }
-        }
-    }
-
-    /*   TasksListProvider    */
-
-    override fun getAllTasks(_callback: TaskListRepository.TaskListCallback) {
+    override fun getAllTasks(_callback: TaskListRepositoryImpl.TaskListCallback) {
         createRequest().orderBy("dateStart")
 
             .addSnapshotListener { snapshot,
@@ -94,11 +58,25 @@ class FirebaseRepository @Inject constructor(
             }
     }
 
-    override fun getTasksByDay() {
-        TODO("Сделать") //To change body of created functions use File | Settings | File Templates.
+    fun getAllTask(): ArrayList<Task> {
+        val list = ArrayList<Task>()
+        createRequest().orderBy("dateStart").get()
+            .addOnSuccessListener { result ->
+                for(document in result){
+                    list.add(document.toObject(Task::class.java))
+                }
+            }
+            .addOnFailureListener{ exception -> Log.e(TAG, "Error: ", exception) }
+        Log.d(TAG, "${list}")
+        return list
     }
 
-    override fun changeStatus(id: String, status: Boolean, _callback: TaskListRepository.TaskListCallback) {
+    override fun getTasksByDay() {
+        val tasks = getAllTask()
+        Log.d(TAG, "${tasks}")
+    }
+
+    override fun changeStatus(id: String, status: Boolean, _callback: TaskListRepositoryImpl.TaskListCallback) {
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks").document(id)
             .update(
                 mapOf(
@@ -128,15 +106,15 @@ class FirebaseRepository @Inject constructor(
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
             .document(task.id!!).set(task)
             .addOnSuccessListener {
-                _callback.onSuccess()
+                _callback.onSuccess(it.user.uid)
             }.addOnFailureListener {
-                _callback.onError()
+                _callback.onError(it)
             }
     }
 
     override fun deleteTask(id: String, _callback: TaskCallback) {
         db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
-            .document(id).delete().addOnSuccessListener { _callback.onSuccess() }
+            .document(id).delete().addOnSuccessListener { _callback.onSuccess(it.user.uid) }
             .addOnFailureListener {
                 _callback.sendInfo()
             }
