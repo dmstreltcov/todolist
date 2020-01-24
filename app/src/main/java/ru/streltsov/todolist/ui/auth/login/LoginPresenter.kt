@@ -1,7 +1,7 @@
 package ru.streltsov.todolist.ui.auth.login
 
 import ru.streltsov.todolist.data.Validator
-import ru.streltsov.todolist.data.repository.UserRepositoryImpl
+import ru.streltsov.todolist.data.repository.auth.UserRepositoryImpl
 import ru.streltsov.todolist.ui.base.BasePresenter
 import javax.inject.Inject
 
@@ -13,8 +13,10 @@ class LoginPresenter @Inject constructor(private val repository: UserRepositoryI
   fun onLoginButton(email: String, password: String) {
     if (validate(email, password)) {
       view?.showProgress()
-      repository.signInByEmail(email, password)
-      view?.updateUI(repository.getUserId())
+      repository.apply {
+        signInByEmail(email, password)
+        view?.updateUI()
+      }
     }
   }
 

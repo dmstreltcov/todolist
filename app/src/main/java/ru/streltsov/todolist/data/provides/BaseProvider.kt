@@ -5,11 +5,13 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import javax.inject.Inject
 
-abstract class BaseProvider @Inject constructor(
+abstract class BaseProvider (
     private val mAuth: FirebaseAuth,
     private val db: FirebaseFirestore
 ) {
   protected fun createRequest() : CollectionReference{
     return db.collection("users").document(mAuth.currentUser!!.uid).collection("tasks")
   }
+
+  protected fun getCurrentUserId():String = mAuth.currentUser!!.uid
 }

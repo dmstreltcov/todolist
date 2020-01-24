@@ -54,7 +54,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
         Log.d(TAG, "Авторизовался")
-        uid = intent.getStringExtra("uid")!!
+//        uid = intent.getStringExtra("uid")!!
         App.instance.getTaskListComponent().inject(this)
         presenter.attach(this)
         initElements()
@@ -66,9 +66,9 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     private fun initElements() {
         recyclerView = findViewById(R.id.tasklist)
         addTaskBtn = findViewById(R.id.add_task)
+        actionBarToolbar = findViewById(R.id.bottomAppBar)
         linearLayout = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = linearLayout
-        actionBarToolbar = findViewById(R.id.bottomAppBar)
         progressBar = progressBarList
         setSupportActionBar(actionBarToolbar)
     }
@@ -138,7 +138,6 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun showProgressBar() {
         progressBar.visibility = View.VISIBLE
-
         tasklist.visibility = View.GONE
         bottomAppBar.visibility = View.GONE
         add_task.hide()

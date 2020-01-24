@@ -1,10 +1,8 @@
 package ru.streltsov.todolist.ui.auth.singup
 
-import android.util.Log
 import ru.streltsov.todolist.ui.base.BasePresenter
 import ru.streltsov.todolist.data.Validator
-import ru.streltsov.todolist.data.repository.UserRepositoryImpl
-import java.lang.Exception
+import ru.streltsov.todolist.data.repository.auth.UserRepositoryImpl
 import javax.inject.Inject
 
 class SignUpPresenter @Inject constructor(private val repository: UserRepositoryImpl) : BasePresenter<SignUpView>(), Validator {
@@ -15,7 +13,7 @@ class SignUpPresenter @Inject constructor(private val repository: UserRepository
         view?.showProgress()
         if (validate(email, password)) {
             repository.signUp(email, password)
-            view?.updateUI(repository.getUserId())
+            view?.updateUI()
         }
     }
 

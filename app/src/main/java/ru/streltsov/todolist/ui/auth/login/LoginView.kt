@@ -6,5 +6,5 @@ interface LoginView : BaseView {
     fun signUp()
     fun showProgress()
     fun hideProgress()
-    fun updateUI(uid:String)
+    fun updateUI()
 }

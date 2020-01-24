@@ -1,51 +1,33 @@
 package ru.streltsov.todolist.ui.tasklist
 
+import ru.streltsov.todolist.data.repository.tasklist.TaskListRepositoryImpl
 import ru.streltsov.todolist.ui.base.BasePresenter
-import ru.streltsov.todolist.data.Action
-import ru.streltsov.todolist.data.repository.TaskListRepositoryImpl
-import java.lang.Exception
 import javax.inject.Inject
 
-class TaskListPresenter @Inject constructor(private val db:TaskListRepositoryImpl) : BasePresenter<TaskListView>(), TaskListRepositoryImpl.TaskListCallback {
+class TaskListPresenter @Inject constructor(private val repository: TaskListRepositoryImpl) : BasePresenter<TaskListView>(), TaskListPresenterImpl.Callback {
 
-     fun getAllTasks() {
-        view?.showProgressBar()
-        db.getAllTasks(this)
-    }
+  fun getAllTasks() {
+    view?.showProgressBar()
+    repository.getAllTasks(this)
+  }
 
-     fun getTasksByDay() {
-         db.getTasksByDay()
-    }
+  fun getTaskList() {
+    val list = repository.getTaskList()
+    view?.initAdapter(list)
+  }
 
-     fun changeStatus(id: String, status: Boolean) {
-        when (status) {
-            true -> db.changeStatus(id, status, this)
-            false -> db.changeStatus(id, status,this)
-        }
-    }
+  fun getTasksByDay() {
+//         repository.getTasksByDay()
+  }
 
-    override fun returnTaskList(data: ArrayList<Task>) {
-        view?.initAdapter(data)
-        view?.hideProgressBar()
+  fun changeStatus(id: String, status: Boolean) {
+    when (status) {
+      true -> repository.changeStatus(id, status)
+      false -> repository.changeStatus(id, status)
     }
+  }
 
-    override fun sendMessage(message: String) {
-        view?.showMessage(message)
-    }
-
-    override fun updateList(index: Int, action: Action) {
-        view?.updateList(index, action)
-    }
-
-    override fun addTask(index: Int) {
-        view?.addTask(index)
-    }
-
-    override fun updateTask(oldIndex: Int, newIndex: Int) {
-        view?.updateTask(oldIndex, newIndex)
-    }
-
-    override fun deleteTask(index: Int) {
-        view?.deleteTask(index)
-    }
+  override fun setTaskList(list: ArrayList<Task>) {
+    view?.initAdapter(list)
+  }
 }

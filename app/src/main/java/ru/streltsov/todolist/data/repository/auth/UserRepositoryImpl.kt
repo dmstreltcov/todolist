@@ -1,4 +1,4 @@
-package ru.streltsov.todolist.data.repository
+package ru.streltsov.todolist.data.repository.auth
 
 import com.google.firebase.auth.FirebaseUser
 import java.lang.Exception
@@ -6,7 +6,7 @@ import java.lang.Exception
 interface UserRepositoryImpl {
   fun signInByEmail(email: String, password: String)
   fun signUp(email: String, password: String)
-  fun getUserId(): String
+//  fun getUserId(): String
 
   interface UserCallback{
     fun onSuccess(user:FirebaseUser)
