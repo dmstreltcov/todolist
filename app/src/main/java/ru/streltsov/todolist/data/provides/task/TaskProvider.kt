@@ -9,11 +9,11 @@ import javax.inject.Inject
 
 class TaskProvider @Inject constructor(
     private val mAuth: FirebaseAuth,
-    private val db: FirebaseFirestore) : BaseProvider(mAuth, db), TaskProviderImpl {
+    private val db: FirebaseFirestore) : BaseProvider(), TaskProviderImpl {
 
 
   override fun deleteTask(id: String, callback: TaskRepositoryImpl.TaskCallback) {
-    db.collection("users").document(getCurrentUserId()).collection("tasks")
+    db.collection("users").document().collection("tasks")
         .document(id).delete()
         .addOnSuccessListener {
         }
@@ -22,7 +22,7 @@ class TaskProvider @Inject constructor(
   }
 
   override fun addTask(task: Task, callback: TaskRepositoryImpl.TaskCallback) {
-    db.collection("users").document(getCurrentUserId()).collection("tasks")
+    db.collection("users").document().collection("tasks")
         .document(task.id!!).set(task)
         .addOnSuccessListener {
         }.addOnFailureListener {

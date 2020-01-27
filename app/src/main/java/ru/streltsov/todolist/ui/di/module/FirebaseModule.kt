@@ -16,6 +16,11 @@ class FirebaseModule {
     }
 
     @Provides
+    fun provideCurrentUser():String{
+        return FirebaseAuth.getInstance().currentUser!!.uid
+    }
+
+    @Provides
     fun provideFirebaseFirestore():FirebaseFirestore{
         return FirebaseFirestore.getInstance()
     }

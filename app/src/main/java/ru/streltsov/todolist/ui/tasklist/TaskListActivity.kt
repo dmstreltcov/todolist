@@ -158,7 +158,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     }
 
     override fun onItemClicked(item: Task) {
-        val intent: Intent = Intent(this, TaskActivity::class.java)
+        val intent = Intent(this, TaskActivity::class.java)
         intent.putExtra("taskID", item.id)
         intent.putExtra("flag", TaskType.EDIT)
         startActivityForResult(intent, OPEN_TASK)

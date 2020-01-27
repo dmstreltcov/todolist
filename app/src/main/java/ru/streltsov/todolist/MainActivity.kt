@@ -1,45 +1,45 @@
 package ru.streltsov.todolist
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import ru.streltsov.todolist.ui.auth.login.LoginActivity
 import ru.streltsov.todolist.ui.tasklist.TaskListActivity
+import javax.inject.Inject
 
+const val TAG: String = "TodoList/MainActivity"
 class MainActivity : AppCompatActivity() {
 
-    private val TAG: String = "TodoList/MainActivity"
-    //TODO зависимость
-    private lateinit var mAuth: FirebaseAuth
+  @Inject
+  lateinit var mAuth: FirebaseAuth
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        App.instance.getAppComponent().inject(this)
-        mAuth = FirebaseAuth.getInstance()
-        updateUI()
-    }
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+    App.instance.getAppComponent().inject(this)
+    updateUI()
+  }
 
-    private fun updateUI() {
-        when (mAuth.currentUser) {
-            null -> onLoginPage()
-            else -> onTaskListPage()
-        }
+  private fun updateUI() {
+    when (mAuth.currentUser) {
+      null -> onLoginPage()
+      else -> onTaskListPage()
     }
+  }
 
-    private fun onLoginPage() {
-        Log.d(TAG, "Переход на страницу авторизации")
-        val intent: Intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
+  private fun onLoginPage() {
+    Log.d(TAG, "Переход на страницу авторизации")
+    val intent = Intent(this, LoginActivity::class.java)
+    startActivity(intent)
+    finish()
+  }
 
-    private fun onTaskListPage() {
-        Log.d(TAG, "Переход на страницу со списком задач")
-        val intent: Intent = Intent(this, TaskListActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
+  private fun onTaskListPage() {
+    Log.d(TAG, "Переход на страницу со списком задач")
+    val intent = Intent(this, TaskListActivity::class.java)
+    startActivity(intent)
+    finish()
+  }
 }

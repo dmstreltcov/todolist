@@ -1,5 +1,6 @@
 package ru.streltsov.todolist.data.provides.auth
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import ru.streltsov.todolist.data.repository.auth.UserRepositoryImpl
 import javax.inject.Inject
@@ -8,11 +9,13 @@ class UserProvider @Inject constructor(private val mAuth: FirebaseAuth) : UserPr
 
   override fun signInByEmail(email: String, password: String, callback: UserRepositoryImpl.UserCallback) {
     mAuth.signInWithEmailAndPassword(email, password)
-        .addOnSuccessListener {
-          callback.onSuccess(it.user!!)
-        }
-        .addOnFailureListener {
-          callback.onError(it)
+        .addOnCompleteListener {
+            if(it.isSuccessful){
+                Log.d("TaskListProvider", "${it.result?.user?.uid}")
+                callback.onSuccess(it.result!!.user)
+            }else{
+                callback.onError(it.exception!!)
+            }
         }
   }
 
