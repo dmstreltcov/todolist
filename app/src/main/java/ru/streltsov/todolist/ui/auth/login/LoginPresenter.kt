@@ -41,4 +41,8 @@ class LoginPresenter @Inject constructor(private val repository: UserRepositoryI
     override fun onSuccess() {
         view?.updateUI()
     }
+
+    override fun onError() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 }

@@ -7,5 +7,6 @@ interface TaskProviderImpl {
   fun addTask(task: Task, callback: TaskRepositoryImpl.TaskCallback)
   fun deleteTask(id:String, callback: TaskRepositoryImpl.TaskCallback)
   fun updateTask(id:String, data:HashMap<String, String>, callback: TaskRepositoryImpl.TaskCallback)
+  fun getTaskById(id:String, callback: TaskRepositoryImpl.TaskCallback)
 
 }

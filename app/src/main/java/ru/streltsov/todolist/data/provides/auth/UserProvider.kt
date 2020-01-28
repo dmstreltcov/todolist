@@ -12,7 +12,7 @@ class UserProvider @Inject constructor(private val mAuth: FirebaseAuth) : UserPr
         .addOnCompleteListener {
             if(it.isSuccessful){
                 Log.d("TaskListProvider", "${it.result?.user?.uid}")
-                callback.onSuccess(it.result!!.user)
+                callback.onSuccess()
             }else{
                 callback.onError(it.exception!!)
             }
@@ -22,7 +22,7 @@ class UserProvider @Inject constructor(private val mAuth: FirebaseAuth) : UserPr
   override fun signUpByEmail(email: String, password: String, callback: UserRepositoryImpl.UserCallback) {
     mAuth.createUserWithEmailAndPassword(email, password)
         .addOnSuccessListener {
-          callback.onSuccess(it.user!!)
+          callback.onSuccess()
         }
         .addOnFailureListener {
           callback.onError(it)

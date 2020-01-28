@@ -11,7 +11,7 @@ class TaskRepository @Inject constructor(private val provider: TaskProviderImpl)
     }
 
     override fun returnTask(task: Task) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun addTask(task: Task, callback: TaskRepositoryImpl.TaskCallback) {
@@ -23,6 +23,6 @@ class TaskRepository @Inject constructor(private val provider: TaskProviderImpl)
     }
 
     override fun getTaskById(id: String, callback: TaskRepositoryImpl.TaskCallback) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 }

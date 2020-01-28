@@ -1,5 +1,6 @@
 package ru.streltsov.todolist.ui.auth.login
 
-interface LoginPresenterCallback {
-    fun onSuccess()
-}
+import ru.streltsov.todolist.ui.base.Callback
+
+
+interface LoginPresenterCallback : Callback { }

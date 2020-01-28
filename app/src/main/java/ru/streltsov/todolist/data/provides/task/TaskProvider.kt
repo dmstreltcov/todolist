@@ -8,7 +8,6 @@ import ru.streltsov.todolist.ui.tasklist.Task
 import javax.inject.Inject
 
 class TaskProvider @Inject constructor(
-    private val mAuth: FirebaseAuth,
     private val db: FirebaseFirestore) : BaseProvider(), TaskProviderImpl {
 
 
@@ -32,6 +31,10 @@ class TaskProvider @Inject constructor(
   override fun updateTask(id: String, data: HashMap<String, String>, callback: TaskRepositoryImpl.TaskCallback) {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
+
+    override fun getTaskById(id: String, callback: TaskRepositoryImpl.TaskCallback) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
 
 }
