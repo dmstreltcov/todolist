@@ -1,19 +1,21 @@
 package ru.streltsov.todolist.ui.tasklist
 
-import ru.streltsov.todolist.data.repository.tasklist.TaskListRepositoryImpl
+import ru.streltsov.todolist.data.provides.impl.TaskListProvider
 import ru.streltsov.todolist.ui.base.BasePresenter
+import ru.streltsov.todolist.ui.base.Callback
+import java.lang.Exception
 import javax.inject.Inject
 
-class TaskListPresenter @Inject constructor(private val repository: TaskListRepositoryImpl) : BasePresenter<TaskListView>(), TaskListPresenterImpl.Callback {
+class TaskListPresenter @Inject constructor(private val provider: TaskListProvider) : BasePresenter<TaskListView>(), Callback.TaskListCallback {
 
   fun getAllTasks() {
     view?.showProgressBar()
-    repository.getAllTasks(this)
+    provider.getAllTasks(this)
   }
 
   fun getTaskList() {
-    val list = repository.getTaskList()
-    view?.initAdapter(list)
+//    val list = repository.getTaskList()
+//    view?.initAdapter(list)
   }
 
   fun getTasksByDay() {
@@ -21,13 +23,25 @@ class TaskListPresenter @Inject constructor(private val repository: TaskListRepo
   }
 
   fun changeStatus(id: String, status: Boolean) {
-    when (status) {
-      true -> repository.changeStatus(id, status)
-      false -> repository.changeStatus(id, status)
-    }
+//    when (status) {
+//      true -> repository.changeStatus(id, status)
+//      false -> repository.changeStatus(id, status)
+//    }
   }
 
-  override fun setTaskList(list: ArrayList<Task>) {
+  fun setTaskList(list: ArrayList<Task>) {
+//    view?.initAdapter(list)
+  }
+
+  override fun returnList(list: ArrayList<Task>) {
     view?.initAdapter(list)
+  }
+
+  override fun onSuccess() {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
+  override fun onError(exception: Exception) {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 }

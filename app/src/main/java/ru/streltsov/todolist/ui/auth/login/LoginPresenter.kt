@@ -1,20 +1,22 @@
 package ru.streltsov.todolist.ui.auth.login
 
 import ru.streltsov.todolist.data.Validator
-import ru.streltsov.todolist.data.repository.auth.UserRepositoryImpl
 import ru.streltsov.todolist.ui.base.BasePresenter
+import ru.streltsov.todolist.ui.base.Callback
+import ru.streltsov.todolist.usecases.SignInUseCase
+import java.lang.Exception
 import javax.inject.Inject
 
 
-class LoginPresenter @Inject constructor(private val repository: UserRepositoryImpl) :
-    BasePresenter<LoginView>(), Validator, LoginPresenterCallback {
+class LoginPresenter @Inject constructor(val usecase:SignInUseCase) :
+    BasePresenter<LoginView>(), Validator, Callback {
 
     private val TAG: String = "TodoList/LoginPresenter"
 
     fun onLoginButton(email: String, password: String) {
         if (validate(email, password)) {
+            usecase(email, password, this)
             view?.showProgress()
-            repository.signInByEmail(email, password, this)
         }
     }
 
@@ -42,7 +44,7 @@ class LoginPresenter @Inject constructor(private val repository: UserRepositoryI
         view?.updateUI()
     }
 
-    override fun onError() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onError(exception: Exception) {
+        exception.printStackTrace()
     }
 }

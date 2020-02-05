@@ -9,7 +9,7 @@ import ru.streltsov.todolist.ui.task.TaskActivity
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, ProvidesModule::class, RepositoryModule::class, FirebaseModule::class])
+@Component(modules = [AppModule::class, ProvidesModule::class, FirebaseModule::class, UseCasesModule::class])
 interface AppComponent {
 
     fun plus(module: TaskListModule): TaskListComponent

@@ -1,21 +1,24 @@
 package ru.streltsov.todolist.ui.task
 
 import android.util.Log
+import ru.streltsov.todolist.data.provides.TaskProviderImpl
+import ru.streltsov.todolist.data.provides.impl.TaskProvider
 import ru.streltsov.todolist.ui.base.BasePresenter
-import ru.streltsov.todolist.data.repository.task.TaskRepositoryImpl
+import ru.streltsov.todolist.ui.base.Callback
 import ru.streltsov.todolist.ui.tasklist.Task
+import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
 
-class TaskPresenter @Inject constructor(private val repository: TaskRepositoryImpl) : BasePresenter<TaskView>(), TaskRepositoryImpl.TaskCallback {
+class TaskPresenter @Inject constructor(private val repository: TaskProvider) : BasePresenter<TaskView>(), Callback.TaskCallback{
 
     private val TAG: String = "TodoList/Task Presenter"
 
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {
             Log.d("onSaveTask", "Created new task")
-            repository.addTask(task, this)
+//            repository.addTask(task)
             return true
         }
         return false
@@ -63,7 +66,7 @@ class TaskPresenter @Inject constructor(private val repository: TaskRepositoryIm
 
     fun deleteTask(id: String) {
         try {
-            repository.deleteTask(id, this)
+            repository.deleteTask(id)
         } catch (e: NullPointerException) {
             view?.showMessage("Не удалось удалить задачу")
             e.printStackTrace()
@@ -81,12 +84,20 @@ class TaskPresenter @Inject constructor(private val repository: TaskRepositoryIm
         }
     }
 
-    override fun sendInfo() {
-        view?.showMessage("Задача удалена")
-    }
-
     override fun returnTask(task: Task) {
         view?.showData(task)
         view?.hideProgressBar()
     }
+
+    override fun onSuccess() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onError(exception: Exception) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+//    override fun sendInfo() {
+//        view?.showMessage("Задача удалена")
+//    }
 }
