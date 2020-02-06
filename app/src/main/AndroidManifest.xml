@@ -13,13 +13,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.tasklist.TaskListActivity"
+            android:label="@string/title_activity_drawler_menu"
+            android:parentActivityName=".ui.tasklist.TaskListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.streltsov.todolist.ui.tasklist.TaskListActivity" />
+        </activity>
+        <activity
             android:name=".ui.task.TaskActivity"
             android:label="Create new task" />
         <activity android:name=".ui.auth.singup.SignUpActivity" />
         <activity android:name=".ui.auth.login.LoginActivity" />
-        <activity
-            android:name=".ui.tasklist.TaskListActivity"
-            android:label="Сегодня" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
