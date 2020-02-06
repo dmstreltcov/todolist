@@ -19,7 +19,7 @@
         <activity android:name=".ui.auth.login.LoginActivity" />
         <activity
             android:name=".ui.tasklist.TaskListActivity"
-            android:label="Task list" />
+            android:label="Сегодня" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

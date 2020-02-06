@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,15 +38,17 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     private val TASK_SAVED = 1412
     private val TASK_DELETED = 1413
     private val TAG: String = "TaskListActivity"
-    private lateinit var recyclerView: RecyclerView
     private lateinit var linearLayout: LinearLayoutManager
     //TODO зависимость
     private lateinit var adapter: TaskListAdapter
 //    @Inject lateinit var _adapter:TaskListAdapter
 
+    private lateinit var recyclerView: RecyclerView
     private lateinit var addTaskBtn: FloatingActionButton
-    private lateinit var actionBarToolbar: BottomAppBar
+    private lateinit var actionBarToolbar: Toolbar
     private lateinit var progressBar: ProgressBar
+
+
     private lateinit var list:List<Item>
     private lateinit var uid:String
     @Inject lateinit var presenter: TaskListPresenter
@@ -54,7 +57,6 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
         Log.d(TAG, "Авторизовался")
-//        uid = intent.getStringExtra("uid")!!
         App.instance.getTaskListComponent().inject(this)
         presenter.attach(this)
         initElements()
@@ -66,7 +68,7 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     private fun initElements() {
         recyclerView = findViewById(R.id.tasklist)
         addTaskBtn = findViewById(R.id.add_task)
-        actionBarToolbar = findViewById(R.id.bottomAppBar)
+        actionBarToolbar = findViewById(R.id.toolbar)
         linearLayout = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = linearLayout
         progressBar = progressBarList
@@ -140,14 +142,14 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     override fun showProgressBar() {
         progressBar.visibility = View.VISIBLE
         tasklist.visibility = View.GONE
-        bottomAppBar.visibility = View.GONE
+        toolbar.visibility = View.GONE
         add_task.hide()
     }
 
     override fun hideProgressBar() {
         progressBar.visibility = View.GONE
         tasklist.visibility = View.VISIBLE
-        bottomAppBar.visibility = View.VISIBLE
+        toolbar.visibility = View.VISIBLE
         add_task.show()
     }
 
