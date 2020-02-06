@@ -22,15 +22,17 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
     //TODO кажется зависимость
     private lateinit var callback: Callback
     private lateinit var newList:ArrayList<Item>
+    private lateinit var lists:ArrayList<Task>
 
     //TODO ошибка
     fun setData(list: List<Task>) {
-        newList = TaskListUtils().createNewTaskList(list)
+//        newList = TaskListUtils().createNewTaskList(list)
+        lists = list as ArrayList<Task>
         notifyDataSetChanged()
     }
 
     fun getData():List<Item>{
-        return newList
+        return lists
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
@@ -53,7 +55,7 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (newList[position]) {
+        return when (lists[position]) {
             is Task -> 0
             else -> 1
         }
@@ -98,7 +100,7 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
-        holder.bind(newList[position])
+        holder.bind(lists[position])
     }
 
     private fun formatDate(dateStart: Timestamp?): String {
@@ -112,7 +114,7 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return newList.size
+        return lists.size
     }
 
     interface Callback {

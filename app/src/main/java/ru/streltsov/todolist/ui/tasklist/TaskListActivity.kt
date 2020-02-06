@@ -83,7 +83,8 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
 
     override fun initAdapter(taskList:ArrayList<Task>) {
         adapter = TaskListAdapter()
-        list = TaskListUtils().createNewTaskList(taskList)
+//        list = TaskListUtils().createNewTaskList(taskList)
+
         adapter.setData(taskList)
         adapter.setCallback(this)
         recyclerView.adapter = adapter

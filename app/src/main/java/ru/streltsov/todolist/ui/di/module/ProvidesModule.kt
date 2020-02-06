@@ -1,6 +1,7 @@
 package ru.streltsov.todolist.ui.di.module
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -24,8 +25,8 @@ class ProvidesModule {
     }
 
     @Provides
-    fun provideTaskProvider(db: FirebaseFirestore): TaskProvider {
-        return TaskProviderImpl(db)
+    fun provideTaskProvider(db: FirebaseFirestore, user:FirebaseUser): TaskProvider {
+        return TaskProviderImpl(db, user)
     }
 
 }

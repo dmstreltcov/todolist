@@ -1,6 +1,7 @@
 package ru.streltsov.todolist.ui.di.module
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
@@ -16,8 +17,8 @@ class FirebaseModule {
     }
 
     @Provides
-    fun provideCurrentUser():String{
-        return FirebaseAuth.getInstance().currentUser!!.uid
+    fun provideCurrentUser(): FirebaseUser {
+        return FirebaseAuth.getInstance().currentUser!!
     }
 
     @Provides

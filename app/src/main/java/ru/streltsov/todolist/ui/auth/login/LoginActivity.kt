@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputEditText
 import ru.streltsov.todolist.App
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.auth.singup.SignUpActivity
@@ -16,11 +17,13 @@ import javax.inject.Inject
 const val TAG: String = "LoginActivity"
 
 class LoginActivity : AppCompatActivity(), LoginView {
-  private lateinit var email: EditText
-  private lateinit var password: EditText
+  private lateinit var email: TextInputEditText
+  private lateinit var password: TextInputEditText
   private lateinit var loginBtn: Button
   private lateinit var signUpBtn: TextView
-  private lateinit var progressBar: ProgressBar
+  private lateinit var forgotPassword: TextView
+  private lateinit var enterByGoogle: TextView
+//  private lateinit var progressBar: ProgressBar
 
   @Inject
   lateinit var presenter: LoginPresenter
@@ -34,11 +37,13 @@ class LoginActivity : AppCompatActivity(), LoginView {
   }
 
   private fun init() {
-    email = findViewById(R.id.email_input)
-    password = findViewById(R.id.password_input)
-    loginBtn = findViewById(R.id.log_in_btn)
-    signUpBtn = findViewById(R.id.sign_up_btn)
-    progressBar = findViewById(R.id.progressBar)
+    email = findViewById(R.id.email_et_input)
+    password = findViewById(R.id.password_et_input)
+    loginBtn = findViewById(R.id.enter_btn)
+    signUpBtn = findViewById(R.id.registration_link)
+    forgotPassword = findViewById(R.id.forgot_password_link)
+    enterByGoogle = findViewById(R.id.enter_by_google_link)
+//    progressBar = findViewById(R.id.progressBar)
 
     loginBtn.setOnClickListener {
       presenter.onLoginButton(email.text.toString(), password.text.toString())
@@ -55,12 +60,12 @@ class LoginActivity : AppCompatActivity(), LoginView {
 
   override fun showProgress() {
     loginBtn.visibility = View.GONE
-    progressBar.visibility = View.VISIBLE
+//    progressBar.visibility = View.VISIBLE
   }
 
   override fun hideProgress() {
     loginBtn.visibility = View.VISIBLE
-    progressBar.visibility = View.GONE
+//    progressBar.visibility = View.GONE
   }
 
   override fun updateUI() {

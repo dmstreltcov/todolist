@@ -21,10 +21,6 @@ class TaskListProviderImpl @Inject constructor(
         return db.collection("users").document(auth.currentUser!!.uid).collection("tasks")
     }
 
-    fun getCurrentUserId(): String {
-        return auth.currentUser!!.uid
-    }
-
     override fun getAllTasks(callback: Callback.TaskListCallback) {
         val list:ArrayList<Task> = ArrayList()
         createRequest().get()

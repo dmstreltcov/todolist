@@ -18,7 +18,7 @@ class TaskPresenter @Inject constructor(private val repository: TaskProvider) : 
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {
             Log.d("onSaveTask", "Created new task")
-//            repository.addTask(task)
+            repository.addTask(task, this)
             return true
         }
         return false
@@ -90,7 +90,7 @@ class TaskPresenter @Inject constructor(private val repository: TaskProvider) : 
     }
 
     override fun onSuccess() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.d("Task status", "Task created")
     }
 
     override fun onError(exception: Exception) {
