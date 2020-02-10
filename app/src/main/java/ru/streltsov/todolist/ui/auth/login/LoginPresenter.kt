@@ -1,36 +1,23 @@
 package ru.streltsov.todolist.ui.auth.login
 
-import android.util.Log
-import ru.streltsov.todolist.data.FirebaseRepository
-import com.google.firebase.auth.FirebaseUser
-import ru.streltsov.todolist.base.BasePresenter
 import ru.streltsov.todolist.data.Validator
-import ru.streltsov.todolist.data.repository.Callback
-import ru.streltsov.todolist.data.repository.UserRepository
+import ru.streltsov.todolist.ui.base.BasePresenter
+import ru.streltsov.todolist.ui.base.Callback
+import ru.streltsov.todolist.usecases.SignInUseCase
+import java.lang.Exception
+import javax.inject.Inject
 
 
-class LoginPresenter  : BasePresenter<LoginView>(), Validator, UserRepository.UserCallback {
+class LoginPresenter @Inject constructor(val usecase:SignInUseCase) :
+    BasePresenter<LoginView>(), Validator, Callback {
 
     private val TAG: String = "TodoList/LoginPresenter"
-    //TODO Убрать зависимость от бд
-    private var db: UserRepository = FirebaseRepository(this)
 
     fun onLoginButton(email: String, password: String) {
         if (validate(email, password)) {
+            usecase(email, password, this)
             view?.showProgress()
-            db.login(email, password)
         }
-    }
-
-    override fun onSuccess() {
-        Log.d(TAG, "TodoList/Login with email: success")
-        view?.updateUI()
-    }
-
-    override fun onError() {
-        Log.d(TAG, "TodoList/Login with email: failed")
-        view?.showMessage("Такой пользователь отсутствует")
-        view?.hideProgress()
     }
 
     fun onSignUpButton() {
@@ -51,5 +38,13 @@ class LoginPresenter  : BasePresenter<LoginView>(), Validator, UserRepository.Us
             }
             else -> true
         }
+    }
+
+    override fun onSuccess() {
+        view?.updateUI()
+    }
+
+    override fun onError(exception: Exception) {
+        exception.printStackTrace()
     }
 }

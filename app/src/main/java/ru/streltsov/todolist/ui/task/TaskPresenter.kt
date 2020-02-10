@@ -1,22 +1,24 @@
 package ru.streltsov.todolist.ui.task
 
 import android.util.Log
-import ru.streltsov.todolist.base.BasePresenter
-import ru.streltsov.todolist.data.FirebaseRepository
-import ru.streltsov.todolist.data.repository.TaskRepository
+import ru.streltsov.todolist.data.provides.TaskProviderImpl
+import ru.streltsov.todolist.data.provides.impl.TaskProvider
+import ru.streltsov.todolist.ui.base.BasePresenter
+import ru.streltsov.todolist.ui.base.Callback
 import ru.streltsov.todolist.ui.tasklist.Task
+import java.lang.Exception
 import java.util.*
+import javax.inject.Inject
 
 
-class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
-    private var db: TaskRepository = FirebaseRepository(this)
+class TaskPresenter @Inject constructor(private val repository: TaskProvider) : BasePresenter<TaskView>(), Callback.TaskCallback{
 
     private val TAG: String = "TodoList/Task Presenter"
 
     fun onSaveTask(task: Task): Boolean {
         if (validate(task)) {
             Log.d("onSaveTask", "Created new task")
-            db.addTask(task)
+            repository.addTask(task, this)
             return true
         }
         return false
@@ -24,7 +26,7 @@ class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
 
     fun getTaskById(id: String) {
         view?.showProgressBar()
-        db.getTaskById(id)
+        repository.getTaskById(id, this)
     }
 
     fun onDateStartClicked() {
@@ -64,7 +66,7 @@ class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
 
     fun deleteTask(id: String) {
         try {
-            db.deleteTask(id)
+            repository.deleteTask(id)
         } catch (e: NullPointerException) {
             view?.showMessage("Не удалось удалить задачу")
             e.printStackTrace()
@@ -82,22 +84,20 @@ class TaskPresenter : BasePresenter<TaskView>(), TaskRepository.TaskCallback {
         }
     }
 
-    override fun sendInfo() {
-        view?.showMessage("Задача удалена")
-    }
-
     override fun returnTask(task: Task) {
         view?.showData(task)
         view?.hideProgressBar()
     }
 
     override fun onSuccess() {
-        view?.showMessage("Задача сохранена")
+        Log.d("Task status", "Task created")
     }
 
-    override fun onError() {
-        view?.showMessage("Возникла ошибка. Попробуйте снова")
+    override fun onError(exception: Exception) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-
+//    override fun sendInfo() {
+//        view?.showMessage("Задача удалена")
+//    }
 }

@@ -1,58 +1,47 @@
 package ru.streltsov.todolist.ui.tasklist
 
-import ru.streltsov.todolist.base.BasePresenter
-import ru.streltsov.todolist.data.Action
-import ru.streltsov.todolist.data.FirebaseRepository
-import ru.streltsov.todolist.data.repository.TaskListRepository
+import ru.streltsov.todolist.data.provides.impl.TaskListProvider
+import ru.streltsov.todolist.ui.base.BasePresenter
+import ru.streltsov.todolist.ui.base.Callback
+import java.lang.Exception
+import javax.inject.Inject
 
-class TaskListPresenter : BasePresenter<TaskListView>(), TaskListRepository.TaskListCallback {
+class TaskListPresenter @Inject constructor(private val provider: TaskListProvider) : BasePresenter<TaskListView>(), Callback.TaskListCallback {
 
-    private var db: TaskListRepository = FirebaseRepository(this)
+  fun getAllTasks() {
+    view?.showProgressBar()
+    provider.getAllTasks(this)
+  }
 
-    fun onLoadData() {
-        view?.showProgressBar()
-        db.getAllTasks()
-    }
+  fun getTaskList() {
+//    val list = repository.getTaskList()
+//    view?.initAdapter(list)
+  }
 
-    fun onChangeStatus(id: String?, boolean: Boolean) {
-        when (boolean) {
-            true -> db.changeStatus(id!!, boolean)
-            false -> db.changeStatus(id!!, boolean)
-        }
-    }
+  fun getTasksByDay() {
+//         repository.getTasksByDay()
+  }
 
-    override fun returnTaskList(data: ArrayList<Task>) {
-        view?.initAdapter(data)
-        view?.hideProgressBar()
-    }
+  fun changeStatus(id: String, status: Boolean) {
+//    when (status) {
+//      true -> repository.changeStatus(id, status)
+//      false -> repository.changeStatus(id, status)
+//    }
+  }
 
-    override fun sendMessage(message: String) {
-        view?.showMessage(message)
-    }
+  fun setTaskList(list: ArrayList<Task>) {
+//    view?.initAdapter(list)
+  }
 
-    override fun updateList(index: Int, action: Action) {
-        view?.updateList(index, action)
-    }
+  override fun returnList(list: ArrayList<Task>) {
+    view?.initAdapter(list)
+  }
 
-    override fun addTask(index: Int) {
-        view?.addTask(index)
-    }
+  override fun onSuccess() {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
 
-    override fun updateTask(oldIndex: Int, newIndex: Int) {
-        view?.updateTask(oldIndex, newIndex)
-    }
-
-    override fun deleteTask(index: Int) {
-        view?.deleteTask(index)
-    }
-
-    override fun onSuccess() {
-        //TODO - удалить
-        // Почему пустой
-    }
-
-    override fun onError() {
-        //TODO - удалить
-        // Почему пустой
-    }
+  override fun onError(exception: Exception) {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
 }

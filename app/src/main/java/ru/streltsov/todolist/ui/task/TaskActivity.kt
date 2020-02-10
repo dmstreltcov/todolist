@@ -9,7 +9,6 @@ import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -19,12 +18,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.activity_task.*
+import ru.streltsov.todolist.App
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
-import ru.streltsov.todolist.alarm.AlarmReceiver
-import ru.streltsov.todolist.alarm.BootCompleteReceiver
+import ru.streltsov.todolist.ui.alarm.AlarmReceiver
+import ru.streltsov.todolist.ui.alarm.BootCompleteReceiver
 import ru.streltsov.todolist.ui.tasklist.Task
-import ru.streltsov.todolist.ui.tasklist.TaskListPresenter
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
@@ -50,6 +49,8 @@ class TaskActivity : AppCompatActivity(), TaskView {
 
     private lateinit var flag: TaskType
     private var taskId: String = ""
+
+    //TODO зависимость
     private lateinit var alarmManager: AlarmManager
     private var timeAlarm: Long = 0
 
@@ -57,7 +58,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task)
-        MainActivity.component.inject(this)
+        App.instance.getAppComponent().inject(this)
         presenter.attach(this)
         flag = intent.extras!!["flag"] as TaskType
         initElements()
@@ -188,7 +189,7 @@ class TaskActivity : AppCompatActivity(), TaskView {
         val intent = createIntent(task)
         return PendingIntent.getBroadcast(
             this,
-            System.currentTimeMillis().toInt(),
+            getTaskRequestCode(task),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -201,9 +202,13 @@ class TaskActivity : AppCompatActivity(), TaskView {
         return intent
     }
 
+    private fun getTaskRequestCode(task:Task):Int{
+        return task.id.hashCode()
+    }
+
     private fun cancelAlarm() {
         val intent = Intent(this, AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
+        val pendingIntent = PendingIntent.getBroadcast(this, taskId.hashCode(), intent, PendingIntent.FLAG_UPDATE_CURRENT)
         alarmManager.cancel(pendingIntent)
     }
 

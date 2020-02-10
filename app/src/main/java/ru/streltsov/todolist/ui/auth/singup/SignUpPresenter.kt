@@ -1,20 +1,21 @@
 package ru.streltsov.todolist.ui.auth.singup
 
-import android.util.Log
-import ru.streltsov.todolist.base.BasePresenter
-import ru.streltsov.todolist.data.FirebaseRepository
+import ru.streltsov.todolist.ui.base.BasePresenter
 import ru.streltsov.todolist.data.Validator
-import ru.streltsov.todolist.data.repository.UserRepository
+import ru.streltsov.todolist.data.provides.impl.UserProvider
+import ru.streltsov.todolist.ui.base.Callback
+import java.lang.Exception
+import javax.inject.Inject
 
-class SignUpPresenter : BasePresenter<SignUpView>(), Validator, UserRepository.UserCallback {
+class SignUpPresenter @Inject constructor(private val provider: UserProvider) :
+    BasePresenter<SignUpView>(), Validator, Callback {
 
     private val TAG: String = "TodoList/SignUpPresenter"
-    private var db: UserRepository = FirebaseRepository(this)
 
     fun onSignUp(email: String, password: String) {
         view?.showProgress()
         if (validate(email, password)) {
-            db.signUp(email, password)
+            provider.signUpByEmail(email, password, this)
         }
     }
 
@@ -35,13 +36,10 @@ class SignUpPresenter : BasePresenter<SignUpView>(), Validator, UserRepository.U
     }
 
     override fun onSuccess() {
-        Log.d(TAG, "TodoList/SignUp with email: success")
         view?.updateUI()
     }
 
-    override fun onError() {
-        Log.d(TAG, "TodoList/Signup with email: failed")
-        view?.showMessage("Не удалось зарегистрироваться")
-        view?.hideProgress()
+    override fun onError(exception: Exception) {
+        exception.printStackTrace()
     }
 }

@@ -3,22 +3,28 @@ package ru.streltsov.todolist.ui.tasklist
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.activity_task_list.*
+import ru.streltsov.todolist.App
 import ru.streltsov.todolist.MainActivity
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.data.Action
+import ru.streltsov.todolist.ui.di.module.TaskListModule
 import ru.streltsov.todolist.ui.task.TaskActivity
 import ru.streltsov.todolist.ui.task.TaskType
+import ru.streltsov.todolist.ui.utils.ItemsDiffUtils
+import ru.streltsov.todolist.ui.utils.TaskListUtils
 import javax.inject.Inject
 
 
@@ -32,33 +38,39 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     private val TASK_SAVED = 1412
     private val TASK_DELETED = 1413
     private val TAG: String = "TaskListActivity"
-    private lateinit var recyclerView: RecyclerView
     private lateinit var linearLayout: LinearLayoutManager
+    //TODO зависимость
     private lateinit var adapter: TaskListAdapter
-    private lateinit var query: Query
+//    @Inject lateinit var _adapter:TaskListAdapter
+
+    private lateinit var recyclerView: RecyclerView
     private lateinit var addTaskBtn: FloatingActionButton
-    private lateinit var actionBarToolbar: BottomAppBar
+    private lateinit var actionBarToolbar: Toolbar
     private lateinit var progressBar: ProgressBar
 
+
+    private lateinit var list:List<Item>
+    private lateinit var uid:String
     @Inject lateinit var presenter: TaskListPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_list)
-        MainActivity.component.inject(this)
+        Log.d(TAG, "Авторизовался")
+        App.instance.getTaskListComponent().inject(this)
         presenter.attach(this)
         initElements()
         setListeners()
-        presenter.onLoadData()
+        presenter.getAllTasks()
     }
 
 
     private fun initElements() {
         recyclerView = findViewById(R.id.tasklist)
         addTaskBtn = findViewById(R.id.add_task)
+        actionBarToolbar = findViewById(R.id.toolbar)
         linearLayout = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         recyclerView.layoutManager = linearLayout
-        actionBarToolbar = findViewById(R.id.bottomAppBar)
         progressBar = progressBarList
         setSupportActionBar(actionBarToolbar)
     }
@@ -72,7 +84,10 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     }
 
     override fun initAdapter(taskList:ArrayList<Task>) {
-        adapter = TaskListAdapter(taskList)
+        adapter = TaskListAdapter()
+//        list = TaskListUtils().createNewTaskList(taskList)
+
+        adapter.setData(taskList)
         adapter.setCallback(this)
         recyclerView.adapter = adapter
         hideProgressBar() //TODO переделать, очень плохо
@@ -108,7 +123,10 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     }
 
     override fun deleteTask(index: Int) {
-        adapter.notifyItemRemoved(index)
+        val itemsDiffUtils = ItemsDiffUtils(adapter.getData(), list)
+        val diffResult = DiffUtil.calculateDiff(itemsDiffUtils)
+//        adapter.setData(list)
+        diffResult.dispatchUpdatesTo(adapter)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -121,25 +139,17 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        //TODO - удалить
-        // Решить что с этим методом делать
-    }
-
     override fun showProgressBar() {
         progressBar.visibility = View.VISIBLE
-
         tasklist.visibility = View.GONE
-        bottomAppBar.visibility = View.GONE
+        toolbar.visibility = View.GONE
         add_task.hide()
     }
 
     override fun hideProgressBar() {
         progressBar.visibility = View.GONE
-
         tasklist.visibility = View.VISIBLE
-        bottomAppBar.visibility = View.VISIBLE
+        toolbar.visibility = View.VISIBLE
         add_task.show()
     }
 
@@ -151,13 +161,14 @@ class TaskListActivity : AppCompatActivity(), TaskListView, TaskListAdapter.Call
     }
 
     override fun onItemClicked(item: Task) {
-        val intent: Intent = Intent(this, TaskActivity::class.java)
+        val intent = Intent(this, TaskActivity::class.java)
         intent.putExtra("taskID", item.id)
         intent.putExtra("flag", TaskType.EDIT)
         startActivityForResult(intent, OPEN_TASK)
     }
 
-    override fun onStatusChanged(item: Task, status: Boolean) {
-        presenter.onChangeStatus(item.id, status)
+    override fun onStatusChanged(item: Task, status: Boolean, position: Int) {
+        presenter.changeStatus(item.id!!, status)
+
     }
 }

@@ -1,7 +1,6 @@
 package ru.streltsov.todolist.ui.auth.login
 
-import com.google.firebase.auth.FirebaseUser
-import ru.streltsov.todolist.base.BaseView
+import ru.streltsov.todolist.ui.base.BaseView
 
 interface LoginView : BaseView {
     fun signUp()
