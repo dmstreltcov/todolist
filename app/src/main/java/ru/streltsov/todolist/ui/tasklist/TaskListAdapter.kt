@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import ru.streltsov.todolist.R
-import ru.streltsov.todolist.ui.utils.TaskListUtils
 import java.sql.Date
 import java.text.SimpleDateFormat
 import kotlin.collections.ArrayList
@@ -23,15 +22,13 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>(), AutoUpdatableAda
     //TODO кажется зависимость
     private lateinit var callback: Callback
     private lateinit var newList:ArrayList<Item>
-    private var lists:List<Task> by Delegates.observable(emptyList()){
-            property, old, new -> autoNotify(old, new){ o, n -> o.id == n.id}
+    private var lists:List<Item> by Delegates.observable(emptyList()){
+            property, old, new -> autoNotify(old, new){}
     }
 
     //TODO ошибка
-    fun setData(list: List<Task>) {
-//        newList = TaskListUtils().createNewTaskList(list)
+    fun setData(list: List<Item>) {
         lists = list
-        notifyDataSetChanged()
     }
 
     fun getData():List<Item>{
