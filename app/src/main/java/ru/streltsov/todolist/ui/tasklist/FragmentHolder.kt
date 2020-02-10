@@ -18,7 +18,7 @@ import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.task.TaskActivity
 import ru.streltsov.todolist.ui.task.TaskType
 
-class TaskListActivity : AppCompatActivity() {
+class FragmentHolder : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
 

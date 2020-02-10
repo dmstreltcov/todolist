@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import ru.streltsov.todolist.ui.auth.login.LoginActivity
-import ru.streltsov.todolist.ui.tasklist.TaskListActivity
+import ru.streltsov.todolist.ui.tasklist.FragmentHolder
 import javax.inject.Inject
 
 const val TAG: String = "TodoList/MainActivity"
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun onTaskListPage() {
     Log.d(TAG, "Переход на страницу со списком задач")
-    val intent = Intent(this, TaskListActivity::class.java)
+    val intent = Intent(this, FragmentHolder::class.java)
     startActivity(intent)
     finish()
   }

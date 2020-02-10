@@ -14,20 +14,23 @@ import ru.streltsov.todolist.ui.utils.TaskListUtils
 import java.sql.Date
 import java.text.SimpleDateFormat
 import kotlin.collections.ArrayList
+import kotlin.properties.Delegates
 
 
-class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
+class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>(), AutoUpdatableAdapter {
 
     private val TAG: String = "TodoList/TaskListAdapter"
     //TODO кажется зависимость
     private lateinit var callback: Callback
     private lateinit var newList:ArrayList<Item>
-    private lateinit var lists:ArrayList<Task>
+    private var lists:List<Task> by Delegates.observable(emptyList()){
+            property, old, new -> autoNotify(old, new){ o, n -> o.id == n.id}
+    }
 
     //TODO ошибка
     fun setData(list: List<Task>) {
 //        newList = TaskListUtils().createNewTaskList(list)
-        lists = list as ArrayList<Task>
+        lists = list
         notifyDataSetChanged()
     }
 
@@ -125,5 +128,7 @@ class TaskListAdapter : RecyclerView.Adapter<BaseViewHolder>() {
     fun setCallback(callback: Callback) {
         this.callback = callback
     }
+
+
 
 }

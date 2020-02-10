@@ -3,6 +3,7 @@ package ru.streltsov.todolist.data.provides
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import ru.streltsov.todolist.data.provides.impl.TaskListProvider
@@ -23,14 +24,40 @@ class TaskListProviderImpl @Inject constructor(
 
     override fun getAllTasks(callback: Callback.TaskListCallback) {
         val list:ArrayList<Task> = ArrayList()
-        createRequest().get()
-            .addOnSuccessListener {
-                for (document in it.documents){
-                    list.add(document.toObject(Task::class.java)!!)
-                }
-                callback.returnList(list)
+        createRequest().orderBy("createDate").addSnapshotListener { snapshot, exception ->
+            if (exception != null){
+                Log.w("EXCEPTION", exception)
+                return@addSnapshotListener
             }
+
+            for (doc in snapshot!!.documentChanges){
+                when(doc.type){
+                    DocumentChange.Type.ADDED -> callback.returnList(snapshot.documents.map { it.toObject(Task::class.java) } as ArrayList<Task>)
+                    DocumentChange.Type.MODIFIED -> callback.returnList(snapshot.documents.map { it.toObject(Task::class.java) } as ArrayList<Task>)
+                    DocumentChange.Type.REMOVED ->callback.returnList(snapshot.documents.map { it.toObject(Task::class.java) } as ArrayList<Task>)
+                }
+            }
+
+        }
+
+
+
+
+
+
+
+
+
+//            .addOnSuccessListener {
+//                for (document in it.documents){
+//                    list.add(document.toObject(Task::class.java)!!)
+//                }
+//                callback.returnList(list)
+//            }
     }
+
+
+
 
     override fun getTasksByDay() {
 

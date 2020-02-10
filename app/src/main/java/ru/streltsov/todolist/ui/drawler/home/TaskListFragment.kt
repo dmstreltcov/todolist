@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ru.streltsov.todolist.App
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.data.Action
@@ -20,7 +19,8 @@ import ru.streltsov.todolist.ui.tasklist.*
 import ru.streltsov.todolist.ui.utils.ItemsDiffUtils
 import javax.inject.Inject
 
-class HomeFragment : Fragment(), TaskListView, TaskListAdapter.Callback {
+class TaskListFragment : Fragment(), TaskListView, TaskListAdapter.Callback {
+
     private val OPEN_TASK = 1002
     private lateinit var linearLayout: LinearLayoutManager
     //TODO зависимость

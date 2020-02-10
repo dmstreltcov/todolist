@@ -13,13 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.tasklist.TaskListActivity"
+            android:name=".ui.tasklist.FragmentHolder"
             android:label="@string/title_activity_drawler_menu"
-            android:parentActivityName=".ui.tasklist.TaskListActivity"
+            android:parentActivityName=".ui.tasklist.FragmentHolder"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.streltsov.todolist.ui.tasklist.TaskListActivity" />
+                android:value="ru.streltsov.todolist.ui.tasklist.FragmentHolder" />
         </activity>
         <activity
             android:name=".ui.task.TaskActivity"
