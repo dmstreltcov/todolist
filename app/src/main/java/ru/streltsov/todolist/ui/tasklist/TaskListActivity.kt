@@ -1,9 +1,7 @@
 package ru.streltsov.todolist.ui.tasklist
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import androidx.navigation.findNavController
@@ -16,27 +14,13 @@ import com.google.android.material.navigation.NavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.view.Menu
-import android.view.View
-import android.widget.ProgressBar
-import android.widget.Toast
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_task_list.*
-import ru.streltsov.todolist.App
 import ru.streltsov.todolist.R
-import ru.streltsov.todolist.data.Action
 import ru.streltsov.todolist.ui.task.TaskActivity
 import ru.streltsov.todolist.ui.task.TaskType
-import ru.streltsov.todolist.ui.utils.ItemsDiffUtils
-import javax.inject.Inject
 
 class TaskListActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-//    private lateinit var taskList:RecyclerView
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,8 +30,12 @@ class TaskListActivity : AppCompatActivity() {
 
         val addTaskBtn: FloatingActionButton = findViewById(R.id.add_task_button)
         addTaskBtn.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+            val intent = Intent(this, TaskActivity::class.java)
+            intent.putExtra("flag", TaskType.NEW)
+            startActivity(intent)
+
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show()
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -56,8 +44,8 @@ class TaskListActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send
+                R.id.nav_today_list, R.id.nav_week_list, R.id.nav_incoming,
+                R.id.nav_settings, R.id.nav_calendar, R.id.nav_add_list
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -65,8 +53,7 @@ class TaskListActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.drawler_menu, menu)
+        menuInflater.inflate(R.menu.menu_task_list, menu)
         return true
     }
 

@@ -66,7 +66,7 @@
     <string name="menu_today">Сегодня</string>
     <string name="menu_week">Следующие 7 дней</string>
     <string name="menu_incoming">Входящие</string>
-    <string name="menu_all">Все</string>
+    <string name="menu_all">Настройки</string>
     <string name="menu_calendar">Календарь</string>
     <string name="menu_add_list">Добавить список</string>
 

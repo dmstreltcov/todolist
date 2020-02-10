@@ -3,41 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_today_list">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="ru.streltsov.todolist.ui.ui.home.HomeFragment"
+        android:id="@+id/nav_today_list"
+        android:name="ru.streltsov.todolist.ui.drawler.home.HomeFragment"
         android:label="@string/menu_today"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="ru.streltsov.todolist.ui.ui.gallery.GalleryFragment"
+        android:id="@+id/nav_week_list"
+        android:name="ru.streltsov.todolist.ui.drawler.gallery.WeekFragment"
         android:label="@string/menu_week"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_week_list" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="ru.streltsov.todolist.ui.ui.slideshow.SlideshowFragment"
+        android:id="@+id/nav_incoming"
+        android:name="ru.streltsov.todolist.ui.drawler.slideshow.IncomingFragment"
         android:label="@string/menu_incoming"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_incoming_list" />
 
     <fragment
-        android:id="@+id/nav_tools"
-        android:name="ru.streltsov.todolist.ui.ui.tools.ToolsFragment"
+        android:id="@+id/nav_settings"
+        android:name="ru.streltsov.todolist.ui.drawler.tools.SettingsFragment"
         android:label="@string/menu_all"
-        tools:layout="@layout/fragment_tools" />
+        tools:layout="@layout/fragment_settings" />
 
     <fragment
-        android:id="@+id/nav_share"
-        android:name="ru.streltsov.todolist.ui.ui.share.ShareFragment"
+        android:id="@+id/nav_calendar"
+        android:name="ru.streltsov.todolist.ui.drawler.share.CalendarFragment"
         android:label="@string/menu_calendar"
-        tools:layout="@layout/fragment_share" />
+        tools:layout="@layout/fragment_calendar" />
 
     <fragment
-        android:id="@+id/nav_send"
-        android:name="ru.streltsov.todolist.ui.ui.send.SendFragment"
+        android:id="@+id/nav_add_list"
+        android:name="ru.streltsov.todolist.ui.drawler.send.AddListFragment"
         android:label="@string/menu_add_list"
-        tools:layout="@layout/fragment_send" />
+        tools:layout="@layout/fragment_add_list" />
 </navigation>
