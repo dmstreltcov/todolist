@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputEditText
+import kotlinx.android.synthetic.main.activity_login.*
 import ru.streltsov.todolist.App
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.auth.singup.SignUpActivity
@@ -23,7 +24,6 @@ class LoginActivity : AppCompatActivity(), LoginView {
   private lateinit var signUpBtn: TextView
   private lateinit var forgotPassword: TextView
   private lateinit var enterByGoogle: TextView
-//  private lateinit var progressBar: ProgressBar
 
   @Inject
   lateinit var presenter: LoginPresenter
@@ -43,7 +43,6 @@ class LoginActivity : AppCompatActivity(), LoginView {
     signUpBtn = findViewById(R.id.registration_link)
     forgotPassword = findViewById(R.id.forgot_password_link)
     enterByGoogle = findViewById(R.id.enter_by_google_link)
-//    progressBar = findViewById(R.id.progressBar)
 
     loginBtn.setOnClickListener {
       presenter.onLoginButton(email.text.toString(), password.text.toString())
@@ -59,13 +58,13 @@ class LoginActivity : AppCompatActivity(), LoginView {
   }
 
   override fun showProgress() {
-    loginBtn.visibility = View.GONE
-//    progressBar.visibility = View.VISIBLE
+    loginBtn.isEnabled = false
+    progress_bar_horizontal.visibility = View.VISIBLE
   }
 
   override fun hideProgress() {
-    loginBtn.visibility = View.VISIBLE
-//    progressBar.visibility = View.GONE
+    loginBtn.isEnabled = true
+    progress_bar_horizontal.visibility = View.GONE
   }
 
   override fun updateUI() {

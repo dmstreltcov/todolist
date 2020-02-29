@@ -5,6 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.auth.login.LoginActivity">
 
+    <ProgressBar
+        android:id="@+id/progress_bar_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:indeterminate="true"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
