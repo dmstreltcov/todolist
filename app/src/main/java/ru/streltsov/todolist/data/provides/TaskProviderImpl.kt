@@ -1,5 +1,6 @@
 package ru.streltsov.todolist.data.provides
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import ru.streltsov.todolist.data.provides.impl.TaskProvider
@@ -33,7 +34,10 @@ class TaskProviderImpl @Inject constructor(private val db: FirebaseFirestore, pr
     }
 
     override fun getTaskById(id: String, callback: Callback.TaskCallback) {
-
+        db.collection("users").document(user.uid).collection("tasks").document(id).get()
+            .addOnSuccessListener {
+                callback.returnTask(it.toObject(Task::class.java)!!)
+            }
     }
 
 

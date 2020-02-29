@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import ru.streltsov.todolist.App
 import ru.streltsov.todolist.R
-import ru.streltsov.todolist.ui.tasklist.TaskListActivity
+import ru.streltsov.todolist.ui.tasklist.FragmentHolder
 import javax.inject.Inject
 
 const val TAG: String = "SignUpActivity"
@@ -47,7 +47,7 @@ class SignUpActivity : AppCompatActivity(), SignUpView {
 
   override fun updateUI() {
     Log.d(TAG, "TodoList/Update UI")
-    val intent = Intent(this, TaskListActivity::class.java)
+    val intent = Intent(this, FragmentHolder::class.java)
     startActivity(intent)
     finish()
   }

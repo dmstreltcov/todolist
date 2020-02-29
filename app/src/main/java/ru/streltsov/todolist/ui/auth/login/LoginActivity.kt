@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import ru.streltsov.todolist.App
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.ui.auth.singup.SignUpActivity
-import ru.streltsov.todolist.ui.tasklist.TaskListActivity
+import ru.streltsov.todolist.ui.tasklist.FragmentHolder
 import javax.inject.Inject
 
 const val TAG: String = "LoginActivity"
@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity(), LoginView {
 
   override fun updateUI() {
     Log.d(TAG, "Update UI")
-    val intent = Intent(this, TaskListActivity::class.java)
+    val intent = Intent(this, FragmentHolder::class.java)
     startActivity(intent)
     finish()
   }

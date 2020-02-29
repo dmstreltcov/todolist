@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_today_list"
-        android:name="ru.streltsov.todolist.ui.drawler.home.HomeFragment"
+        android:name="ru.streltsov.todolist.ui.drawler.home.TaskListFragment"
         android:label="@string/menu_today"
         tools:layout="@layout/fragment_home" />
 

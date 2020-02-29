@@ -7,20 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ru.streltsov.todolist.App
 import ru.streltsov.todolist.R
 import ru.streltsov.todolist.data.Action
 import ru.streltsov.todolist.ui.task.TaskActivity
 import ru.streltsov.todolist.ui.task.TaskType
 import ru.streltsov.todolist.ui.tasklist.*
-import ru.streltsov.todolist.ui.utils.ItemsDiffUtils
+import ru.streltsov.todolist.ui.utils.TaskListUtils
 import javax.inject.Inject
 
-class HomeFragment : Fragment(), TaskListView, TaskListAdapter.Callback {
+class TaskListFragment : Fragment(), TaskListView, TaskListAdapter.Callback {
+
     private val OPEN_TASK = 1002
     private lateinit var linearLayout: LinearLayoutManager
     //TODO зависимость
@@ -44,18 +43,13 @@ class HomeFragment : Fragment(), TaskListView, TaskListAdapter.Callback {
     }
 
     override fun initAdapter(taskList: ArrayList<Task>) {
+
         adapter = TaskListAdapter()
-        adapter.setData(taskList)
+        val util = TaskListUtils()
+
+        adapter.setData(util.createTodayTaskList(taskList))
         adapter.setCallback(this)
         recyclerView.adapter = adapter
-    }
-
-    override fun updateList(index: Int, action: Action) {
-        when (action) {
-            Action.REMOVED -> adapter.notifyItemRemoved(index)
-            Action.MODIFIED -> adapter.notifyItemChanged(index)
-            Action.ADDED -> adapter.notifyItemInserted(index)
-        }
     }
 
     override fun addTask(index: Int) {
@@ -70,9 +64,9 @@ class HomeFragment : Fragment(), TaskListView, TaskListAdapter.Callback {
     }
 
     override fun deleteTask(index: Int) {
-        val itemsDiffUtils = ItemsDiffUtils(adapter.getData(), list)
-        val diffResult = DiffUtil.calculateDiff(itemsDiffUtils)
-        diffResult.dispatchUpdatesTo(adapter)
+//        val itemsDiffUtils = ItemsDiffUtils(adapter.getData(), list)
+//        val diffResult = DiffUtil.calculateDiff(itemsDiffUtils)
+//        diffResult.dispatchUpdatesTo(adapter)
     }
 
 
